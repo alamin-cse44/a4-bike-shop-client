@@ -4,7 +4,7 @@ import { createTheme } from "@mui/material/styles";
 const primary = "#314C3D"; // Dark Green
 const primaryLight = "#D5E4DB"; // Light Green
 const primaryBright = "#018037"; // Bright Green
-const black = "#252E42"; // Black
+const black = "#0F172A"; // Black
 const blackDark = "#1F283B"; // Darker Black
 const blackLight = "#2F3B52"; // Lighter Black
 
@@ -29,7 +29,7 @@ const theme = createTheme({
       contrastText: primaryLight,
     },
     secondary: {
-      main: primaryLight,
+      main: black,
       contrastText: primary,
     },
     error: {

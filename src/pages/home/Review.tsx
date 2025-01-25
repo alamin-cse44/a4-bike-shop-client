@@ -93,7 +93,8 @@ const Review = () => {
                 background: "#fff",
                 height: "250px",
                 position: "relative",
-                border: "1px solid green",
+                // border: "1px solid green",
+                boxShadow: 3
               }}
             >
               <Typography
