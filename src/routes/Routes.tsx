@@ -7,6 +7,7 @@ import Product from "../pages/product/Product";
 import DashboardLayoutSlots from "../pages/dashboard/Dashboard";
 import Orders from "../pages/dashboard/Orders";
 import DProducts from "../pages/dashboard/DProducts";
+import ProtectedRoute from "./ProtectedRoute";
 
 export const router = createBrowserRouter([
   {
@@ -33,16 +34,20 @@ export const router = createBrowserRouter([
   },
   {
     path: "/dashboard",
-    element: <DashboardLayoutSlots />,
+    element: (
+      <ProtectedRoute>
+        <DashboardLayoutSlots />
+      </ProtectedRoute>
+    ),
     children: [
       {
         path: "orders",
-        element: <Orders />
+        element: <Orders />,
       },
       {
         path: "dashboard-products",
-        element: <DProducts />
-      }
+        element: <DProducts />,
+      },
     ],
-  }
+  },
 ]);
