@@ -12,6 +12,10 @@ import {
   Container,
 } from "@mui/material";
 import { Link } from "react-router-dom";
+import { useAppDispatch } from "../../redux/hooks";
+import { useLoginMutation } from "../../redux/features/auth/authApi";
+import { setUser } from "../../redux/features/auth/authSlice";
+import { verifyToken } from "../../utils/verifyToken";
 
 const validationSchema = Yup.object().shape({
   email: Yup.string()
@@ -19,14 +23,15 @@ const validationSchema = Yup.object().shape({
     .required("Email is required"),
   password: Yup.string()
     .min(8, "Password must be 8 characters or longer")
-    .matches(
-      /(?=.*[A-Z])(?=.*[!@#&*])(?=.*[0-9])/,
-      "Password should be 8 or longer and contain upper, lower, special character, and number"
-    )
+    // .matches(
+    //   /(?=.*[A-Z])(?=.*[!@#&*])(?=.*[0-9])/,
+    //   "Password should be 8 or longer and contain upper, lower, special character, and number"
+    // )
     .required("Password is required"),
 });
 
 const Login: FC = () => {
+  const dispatch = useAppDispatch();
   const [showPassword, setShowPassword] = useState(false);
   const {
     register,
@@ -35,24 +40,26 @@ const Login: FC = () => {
     formState: { errors },
   } = useForm({
     resolver: yupResolver(validationSchema),
+    defaultValues: {
+      email: "alamin23712@gmail.com",
+      password: "pass1234",
+    },
   });
 
-  const handleSignup = async (data: any) => {
-    const formData = new FormData();
-    formData.append("image", data.file[0]);
+  const [login, {error}] = useLoginMutation();
 
-    // try {
-    //   const response = await fetch(
-    //     `https://api.imgbb.com/1/upload?key=${process.env.NEXT_PUBLIC_IMGBB_API_KEY}`,
-    //     {
-    //       method: 'POST',
-    //       body: formData,
-    //     }
-    //   );
+  const handleLogin = async (data: any) => {
+    // console.log("login", data);
 
-    // } catch (error) {
-    //   console.error('Error during signup:', error);
-    // }
+    const userInfo = {
+      email: data.email,
+      password: data.password,
+    }
+
+    const res = await login(userInfo).unwrap();
+    const user = verifyToken(res.data.accessToken);
+    console.log(user)
+    dispatch(setUser({user: user, token: res.data.accessToken}))
   };
 
   return (
@@ -75,7 +82,7 @@ const Login: FC = () => {
             <Typography variant="h4" align="center" gutterBottom>
               Login
             </Typography>
-            <form onSubmit={handleSubmit(handleSignup)}>
+            <form onSubmit={handleSubmit(handleLogin)}>
               <TextField
                 label="Your email"
                 type="email"

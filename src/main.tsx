@@ -7,7 +7,7 @@ import theme from "./styles/theme.ts";
 import { RouterProvider } from "react-router-dom";
 import { router } from "./routes/Routes.tsx";
 import { Provider } from "react-redux";
-import { store } from "./redux/api/store.ts";
+import { store } from "./redux/store.ts";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
