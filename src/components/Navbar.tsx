@@ -117,9 +117,15 @@ const Navbar: FC = () => {
               </Link>
               <Link
                 to="/dashboard"
-                style={{ color: "inherit", textDecoration: "none" }}
+                style={{ color: "inherit", textDecoration: "none", marginRight: "20px" }}
               >
                 <Typography variant="body1">Dashboard</Typography>
+              </Link>
+              <Link
+                to="/login"
+                style={{ color: "inherit", textDecoration: "none" }}
+              >
+                <Typography variant="body1">Login</Typography>
               </Link>
             </Box>
             <IconButton onClick={toggleDrawer} color="inherit">
