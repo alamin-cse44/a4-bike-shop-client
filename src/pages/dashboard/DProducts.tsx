@@ -15,6 +15,7 @@ import {
 } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import AddproductForm from "../../components/AddProductForm";
+import ProductTable from "../../components/ProductTable";
 
 const DProducts = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -46,7 +47,7 @@ const DProducts = () => {
             }}
           >
             <Typography variant="h6">
-              Cart Information
+              Product Information
             </Typography>
             <Fab  size="small" color="secondary" aria-label="add">
               <CloseIcon />
@@ -55,6 +56,9 @@ const DProducts = () => {
           <AddproductForm />
         </Box>
       </Drawer>
+
+      {/* product table */}
+      <ProductTable />
     </Box>
   );
 };
