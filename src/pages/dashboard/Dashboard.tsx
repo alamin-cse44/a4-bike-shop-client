@@ -11,6 +11,7 @@ import DashboardIcon from "@mui/icons-material/Dashboard";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import SearchIcon from "@mui/icons-material/Search";
+import CategoryIcon from '@mui/icons-material/Category';
 import { AppProvider, type Navigation } from "@toolpad/core/AppProvider";
 import {
   DashboardLayout,
@@ -18,9 +19,10 @@ import {
   type SidebarFooterProps,
 } from "@toolpad/core/DashboardLayout";
 import { useDemoRouter } from "@toolpad/core/internal";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Orders from "./Orders";
 import { Container } from "@mui/material";
+import DProducts from "./DProducts";
 
 const NAVIGATION: Navigation = [
   {
@@ -36,6 +38,11 @@ const NAVIGATION: Navigation = [
     segment: "orders",
     title: "Orders",
     icon: <ShoppingCartIcon />,
+  },
+  {
+    segment: "products",
+    title: "Products",
+    icon: <CategoryIcon />,
   },
 ];
 
@@ -72,6 +79,7 @@ function DemoPageContent({ pathname }: { pathname: string }) {
       <Container sx={{mt: 5}}>
         {pathname === "/dashboard" && "Dashboard contents"}
         {pathname === "/orders" && <Orders />}
+        {pathname === "/products" && <DProducts />}
       </Container>
     </>
   );

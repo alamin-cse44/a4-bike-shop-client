@@ -6,6 +6,7 @@ import Login from "../pages/auth/Login";
 import Product from "../pages/product/Product";
 import DashboardLayoutSlots from "../pages/dashboard/Dashboard";
 import Orders from "../pages/dashboard/Orders";
+import DProducts from "../pages/dashboard/DProducts";
 
 export const router = createBrowserRouter([
   {
@@ -37,6 +38,10 @@ export const router = createBrowserRouter([
       {
         path: "orders",
         element: <Orders />
+      },
+      {
+        path: "dashboard-products",
+        element: <DProducts />
       }
     ],
   }
