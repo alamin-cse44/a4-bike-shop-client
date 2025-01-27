@@ -164,7 +164,7 @@ const Navbar: FC = () => {
 
       {/* Drawer for Cart (opens from the right side) */}
       <Drawer anchor="right" open={drawerOpen} onClose={toggleDrawer}>
-        <Box sx={{ width: 250, padding: 2 }}>
+        <Box sx={{ width: 350, padding: 2 }}>
           <Typography variant="h6">Cart Information</Typography>
           {/* Add your cart items or details here */}
         </Box>
@@ -182,6 +182,9 @@ const Navbar: FC = () => {
             </ListItem>
             <ListItem component={Link} to="/dashboard">
               <ListItemText primary="Dashboard" />
+            </ListItem>
+            <ListItem component={Link} to="/login">
+              <ListItemText primary="Login" />
             </ListItem>
           </List>
         </Box>

@@ -11,7 +11,7 @@ import DashboardIcon from "@mui/icons-material/Dashboard";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import SearchIcon from "@mui/icons-material/Search";
-import CategoryIcon from '@mui/icons-material/Category';
+import CategoryIcon from "@mui/icons-material/Category";
 import { AppProvider, type Navigation } from "@toolpad/core/AppProvider";
 import {
   DashboardLayout,
@@ -21,8 +21,10 @@ import {
 import { useDemoRouter } from "@toolpad/core/internal";
 import { Link } from "react-router-dom";
 import Orders from "./Orders";
-import { Container } from "@mui/material";
+import { Button, Container } from "@mui/material";
 import DProducts from "./DProducts";
+import { useAppDispatch } from "../../redux/hooks";
+import { logout } from "../../redux/features/auth/authSlice";
 
 const NAVIGATION: Navigation = [
   {
@@ -76,7 +78,7 @@ function DemoPageContent({ pathname }: { pathname: string }) {
       >
         <Typography>Dashboard content for {pathname}</Typography>
       </Box> */}
-      <Container sx={{mt: 5}}>
+      <Container sx={{ mt: 5 }}>
         {pathname === "/dashboard" && "Dashboard contents"}
         {pathname === "/orders" && <Orders />}
         {pathname === "/products" && <DProducts />}
@@ -123,20 +125,18 @@ function ToolbarActionsSearch() {
 }
 
 function SidebarFooter({ mini }: SidebarFooterProps) {
-  return (
-    <Typography
-      variant="caption"
-      sx={{ m: 1, whiteSpace: "nowrap", overflow: "hidden" }}
-    >
-      {mini ? "© MUI" : `© ${new Date().getFullYear()} Made with love by MUI`}
-    </Typography>
-  );
+  return <Box mb={2}>{/* <Button variant="contained">LogOut</Button> */}</Box>;
 }
 
-function CustomAppTitle() {
+function CustomAppTitle({dispatch}: {dispatch: any}) {
+  const handleLogout = () => {
+    dispatch(logout());
+    
+  };
+
   return (
     <Stack direction="row" alignItems="center" spacing={2}>
-      <CloudCircleIcon fontSize="large" color="primary" />
+      {/* <CloudCircleIcon fontSize="large" color="primary" /> */}
       <Link
         to={"/"}
         style={{
@@ -146,10 +146,13 @@ function CustomAppTitle() {
       >
         <Typography variant="h6">My App</Typography>
       </Link>
-      <Chip size="small" label="BETA" color="info" />
-      <Tooltip title="Connected to production">
+      {/* <Chip size="small" label="BETA" color="info" /> */}
+      <Button onClick={handleLogout} variant="contained">
+        LogOut
+      </Button>
+      {/* <Tooltip title="Connected to production">
         <CheckCircleIcon color="success" fontSize="small" />
-      </Tooltip>
+      </Tooltip> */}
     </Stack>
   );
 }
@@ -164,7 +167,7 @@ interface DemoProps {
 
 export default function DashboardLayoutSlots(props: DemoProps) {
   const { window } = props;
-
+  const dispatch = useAppDispatch();
   const router = useDemoRouter("/dashboard");
   console.log("pathname: ", router);
   // Remove this const when copying and pasting into your project.
@@ -179,7 +182,7 @@ export default function DashboardLayoutSlots(props: DemoProps) {
     >
       <DashboardLayout
         slots={{
-          appTitle: CustomAppTitle,
+          appTitle: () => <CustomAppTitle dispatch={dispatch} />,
           toolbarActions: ToolbarActionsSearch,
           sidebarFooter: SidebarFooter,
         }}

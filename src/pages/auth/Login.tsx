@@ -1,5 +1,5 @@
 import { FC, useState } from "react";
-import { useForm } from "react-hook-form";
+import { FieldValues, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import { IoMdEyeOff, IoMdEye } from "react-icons/io";
@@ -11,11 +11,12 @@ import {
   Typography,
   Container,
 } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../../redux/hooks";
 import { useLoginMutation } from "../../redux/features/auth/authApi";
-import { setUser } from "../../redux/features/auth/authSlice";
+import { setUser, TUser } from "../../redux/features/auth/authSlice";
 import { verifyToken } from "../../utils/verifyToken";
+import { toast } from "sonner";
 
 const validationSchema = Yup.object().shape({
   email: Yup.string()
@@ -32,6 +33,7 @@ const validationSchema = Yup.object().shape({
 
 const Login: FC = () => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const {
     register,
@@ -46,20 +48,26 @@ const Login: FC = () => {
     },
   });
 
-  const [login, {error}] = useLoginMutation();
+  const [login] = useLoginMutation();
 
-  const handleLogin = async (data: any) => {
-    // console.log("login", data);
+  const handleLogin = async (data: FieldValues) => {
+    const toastId = toast.loading("Logging in...");
 
-    const userInfo = {
-      email: data.email,
-      password: data.password,
+    try {
+      const userInfo = {
+        email: data.email,
+        password: data.password,
+      };
+
+      const res = await login(userInfo).unwrap();
+      const user = verifyToken(res.data.accessToken) as TUser;
+      console.log(user);
+      dispatch(setUser({ user: user, token: res.data.accessToken }));
+      toast.success("Logged in successfully", { id: toastId, duration: 2000 });
+      navigate("/dashboard");
+    } catch (error) {
+      toast.error("Invalid email or password", { id: toastId, duration: 2000 });
     }
-
-    const res = await login(userInfo).unwrap();
-    const user = verifyToken(res.data.accessToken);
-    console.log(user)
-    dispatch(setUser({user: user, token: res.data.accessToken}))
   };
 
   return (
