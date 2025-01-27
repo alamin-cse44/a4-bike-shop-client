@@ -1,8 +1,11 @@
 import ProductCard from "../../components/ProductCard";
 import img from "../../assets/first.webp";
 import { Typography } from "@mui/material";
+import { useGetAllBikesQuery } from "../../redux/features/bike/bikeApi";
 
 const ProductList = () => {
+  const { data } = useGetAllBikesQuery(undefined);
+  console.log("bikes", data);
   return (
     <>
       <Typography
