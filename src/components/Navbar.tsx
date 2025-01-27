@@ -16,6 +16,7 @@ import {
 } from "@mui/material";
 import { FaShoppingCart, FaUserCircle, FaBars } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import logo from "../assets/logo.png";
 
 const Navbar: FC = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -44,7 +45,7 @@ const Navbar: FC = () => {
 
   return (
     <AppBar position="sticky">
-      <Container >
+      <Container>
         <Toolbar
           sx={{
             display: "flex",
@@ -61,9 +62,16 @@ const Navbar: FC = () => {
             >
               <FaBars />
             </IconButton>
-            <Typography variant="h6" component="div">
-              Logo
-            </Typography>
+            <Link
+              to="/"
+              style={{
+                color: "inherit",
+                textDecoration: "none",
+                marginRight: "20px",
+              }}
+            >
+             <img src={logo} alt="footer_img" color="white" width={80} />
+            </Link>
           </Box>
 
           {/* Middle: Search Bar */}
@@ -117,7 +125,11 @@ const Navbar: FC = () => {
               </Link>
               <Link
                 to="/dashboard"
-                style={{ color: "inherit", textDecoration: "none", marginRight: "20px" }}
+                style={{
+                  color: "inherit",
+                  textDecoration: "none",
+                  marginRight: "20px",
+                }}
               >
                 <Typography variant="body1">Dashboard</Typography>
               </Link>

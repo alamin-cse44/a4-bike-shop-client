@@ -93,7 +93,7 @@ const Review = () => {
                 background: "#fff",
                 height: "250px",
                 position: "relative",
-                // border: "1px solid green",
+                border: "1px solid green",
                 boxShadow: 3
               }}
             >
@@ -117,6 +117,7 @@ const Review = () => {
                   left: "40%",
                   transform: "translateX(-50%)",
                   display: "flex",
+                  alignItems: "center",
                 }}
               >
                 <Avatar sx={{ width: 40, height: 40, mb: 1 }}>
@@ -132,14 +133,14 @@ const Review = () => {
                   >
                     {review?.name}
                   </Typography>
-                  <Typography
+                  {/* <Typography
                     variant="body2"
                     sx={{
                       fontSize: { xs: "14px", md: "14px" },
                     }}
                   >
                     {review?.title}
-                  </Typography>
+                  </Typography> */}
                 </Box>
               </Box>
             </Paper>
