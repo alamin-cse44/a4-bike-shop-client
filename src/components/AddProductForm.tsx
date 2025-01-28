@@ -15,7 +15,7 @@ const validationSchema = Yup.object().shape({
   quantity: Yup.number().required("Quantity is required"),
   description: Yup.string(),
   // type: Yup.string().required("User type is required"),
-  // image: Yup.mixed(),
+  image: Yup.mixed().required("Image is required"),
 });
 
 const AddproductForm: FC = () => {
@@ -41,60 +41,66 @@ const AddproductForm: FC = () => {
   const handleCreateProduct: SubmitHandler<FieldValues> = async (data) => {
     const toastId = toast.loading("Product is creating...");
     console.log(data);
+    const formData = new FormData();
+    // console.log("formData", formData);
+    formData.append("file", data.image[0]);
+    formData.append("upload_preset", "first_preset_name");
+    formData.append("cloud_name", import.meta.env.VITE_CLOUD_NAME);
 
-    const bikeInfo = {
-      name: data.name,
-      brand: data.brand,
-      model: data.model,
-      price: data.price,
-      quantity: data.quantity,
-      description: data?.description,
-    };
     try {
-      const res = await createBikes(bikeInfo) as TResponse<TBike>;
-      console.log("res", res);
-      if (res.error) {
-        toast.error(res.error.data.message, { id: toastId, duration: 2000 });
+      const response = await fetch(
+        `https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUD_NAME}/image/upload`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+
+      const img_result = await response.json();
+      // console.log("image response: ", img_result.url);
+      if (img_result.url) {
+        const bikeInfo = {
+          name: data.name,
+          brand: data.brand,
+          model: data.model,
+          price: data.price,
+          quantity: data.quantity,
+          description: data?.description,
+          image: img_result.url,
+        };
+        // console.log("final data", bikeInfo);
+        try {
+          const res = (await createBikes(bikeInfo)) as TResponse<TBike>;
+          console.log("res", res);
+          if (res.error) {
+            toast.error(res.error.data.message, {
+              id: toastId,
+              duration: 2000,
+            });
+          } else {
+            toast.success("Product is created successfully", {
+              id: toastId,
+              duration: 2000,
+            });
+          }
+        } catch (error) {
+          toast.error("Failed to create product", {
+            id: toastId,
+            duration: 2000,
+          });
+        }
       } else {
-        toast.success("Product is created successfully", {
+        toast.error("Failed to upload your image!", {
           id: toastId,
           duration: 2000,
         });
       }
     } catch (error) {
-      toast.error("Failed to create product", { id: toastId, duration: 2000 });
+      toast.error("Failed to upload your image!", {
+        id: toastId,
+        duration: 2000,
+      });
     }
-
-    // const formData = new FormData();
-    // console.log("formData", formData);
-    // formData.append("image", data.file[0]);
-
-    // try {
-    //   const response = await fetch(
-    //     `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_IMGBB_API_KEY}`,
-    //     {
-    //       method: "POST",
-    //       body: formData,
-    //     }
-    //   );
-
-    //   const result = await response.json();
-    //   console.log("image response: ", result);
-    //   if (result.success) {
-    //     const bike = {
-    //       name: data.name,
-    //       brand: data.brand,
-    //       model: data.model,
-    //       price: data.price,
-    //       quantity: data.quantity,
-    //       description: data.description,
-    //       image: result.data.url,
-    //     };
-    //     console.log("final data", bike);
-    //   }
-    // } catch (error) {
-    //   console.error("Error during product creation:", error);
-    // }
   };
 
   return (
@@ -172,20 +178,20 @@ const AddproductForm: FC = () => {
               <option value="moderator">Moderator</option>
               <option value="member">Member</option>
             </TextField> */}
-            {/* <Box position="relative">
+            <Box position="relative">
               <TextField
                 type="file"
                 variant="outlined"
                 margin="normal"
                 fullWidth
                 {...register("image")}
-                // error={!!errors.image}
-                // helperText={errors.image?.message}
+                error={!!errors.image}
+                helperText={errors.image?.message}
               />
               {errors.image && (
                 <Typography color="error">{errors.image.message}</Typography>
               )}
-            </Box> */}
+            </Box>
             <Button
               type="submit"
               sx={{ my: 2, color: "white", borderRadius: 1 }}
