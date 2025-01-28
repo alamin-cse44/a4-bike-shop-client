@@ -1,5 +1,5 @@
 import { FC, useState } from "react";
-import { useForm } from "react-hook-form";
+import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import { IoMdEyeOff, IoMdEye } from "react-icons/io";
@@ -11,29 +11,29 @@ import {
   Typography,
   Container,
 } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+import { useCreateUserMutation } from "../../redux/features/user/userManagementApi";
+import { TResponse, TUserRegistration } from "../../types";
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().required("Name is required"),
   email: Yup.string()
     .email("Invalid email format")
     .required("Email is required"),
-  type: Yup.string().required("User type is required"),
   password: Yup.string()
     .min(8, "Password must be 8 characters or longer")
-    .matches(
-      /(?=.*[A-Z])(?=.*[!@#&*])(?=.*[0-9])/,
-      "Password should be 8 or longer and contain upper, lower, special character, and number"
-    )
+    // .matches(
+    //   /(?=.*[A-Z])(?=.*[!@#&*])(?=.*[0-9])/,
+    //   "Password should be 8 or longer and contain upper, lower, special character, and number"
+    // )
     .required("Password is required"),
-  file: Yup.mixed().required("File is required"),
-  terms: Yup.boolean().oneOf(
-    [true],
-    "You must accept the terms and conditions"
-  ),
+  image: Yup.mixed().required("Image is required"),
+  // type: Yup.string().required("User type is required"),
 });
 
 const Signup: FC = () => {
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const {
     register,
@@ -42,24 +42,70 @@ const Signup: FC = () => {
     formState: { errors },
   } = useForm({
     resolver: yupResolver(validationSchema),
+    defaultValues: {
+      name: "Rehan",
+      email: "rehan@gmail.com",
+      password: "pass1234",
+    },
   });
 
-  const handleSignup = async (data: any) => {
+  const [createUser] = useCreateUserMutation();
+
+  const handleSignup: SubmitHandler<FieldValues> = async (data) => {
+    const toastId = toast.loading("Registration is on process...");
+    // console.log("data", data);
     const formData = new FormData();
-    formData.append("image", data.file[0]);
+    // console.log("formData", formData);
+    formData.append("file", data.image[0]);
+    formData.append("upload_preset", "first_preset_name");
+    formData.append("cloud_name", import.meta.env.VITE_CLOUD_NAME);
 
-    // try {
-    //   const response = await fetch(
-    //     `https://api.imgbb.com/1/upload?key=${process.env.NEXT_PUBLIC_IMGBB_API_KEY}`,
-    //     {
-    //       method: 'POST',
-    //       body: formData,
-    //     }
-    //   );
+    try {
+      const response = await fetch(
+        `https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUD_NAME}/image/upload`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
 
-    // } catch (error) {
-    //   console.error('Error during signup:', error);
-    // }
+      const img_result = await response.json();
+      // console.log("image response: ", img_result.url);
+      if (img_result.url) {
+        const userInfo = {
+          name: data.name,
+          email: data.email,
+          password: data.password,
+          image: img_result.url,
+        };
+        // console.log("final data", userInfo);
+        try {
+          const res = (await createUser(userInfo)) as TResponse<TUserRegistration>;
+          console.log("res", res);
+          if (res.error) {
+            toast.error(res.error.data.message, {
+              id: toastId,
+              duration: 2000,
+            });
+          } else {
+            toast.success("Successfully Registered!", {
+              id: toastId,
+              duration: 2000,
+            });
+            navigate("/dashboard");
+          }
+        } catch (error) {
+          toast.error("Failed to registe", {
+            id: toastId,
+            duration: 2000,
+          });
+        }
+      } else {
+        toast.error("Failed to upload your image!", { id: toastId, duration: 2000 });
+      }
+    } catch (error) {
+      toast.error("Failed to upload your image!", { id: toastId, duration: 2000 });
+    }
   };
 
   return (
@@ -153,12 +199,12 @@ const Signup: FC = () => {
                   variant="outlined"
                   margin="normal"
                   fullWidth
-                  {...register("file")}
-                  error={!!errors.file}
-                  helperText={errors.file?.message}
+                  {...register("image")}
+                  error={!!errors.image}
+                  helperText={errors.image?.message}
                 />
-                {errors.file && (
-                  <Typography color="error">{errors.file.message}</Typography>
+                {errors.image && (
+                  <Typography color="error">{errors.image.message}</Typography>
                 )}
               </Box>
               <Button
