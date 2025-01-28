@@ -9,7 +9,14 @@ const bikeApi = baseApi.injectEndpoints({
           method: "GET",
         }),
       }),
+      createBikes: builder.mutation({
+        query: (bikeInfo) => ({
+            url: "/bikes",
+            method: "POST",
+            body: bikeInfo,
+        })
+      })
     }),
 })
 
-export const { useGetAllBikesQuery } = bikeApi;
+export const { useGetAllBikesQuery, useCreateBikesMutation } = bikeApi;
