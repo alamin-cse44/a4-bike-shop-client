@@ -5,7 +5,8 @@ import { useGetAllBikesQuery } from "../../redux/features/bike/bikeApi";
 
 const ProductList = () => {
   const { data } = useGetAllBikesQuery(undefined);
-  console.log("bikes", data);
+  // [{name: "name", value: "Bike 1"}]
+  console.log("bikes", data?.data);
   return (
     <>
       <Typography

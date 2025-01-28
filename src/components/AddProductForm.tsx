@@ -1,12 +1,11 @@
 import { FC } from "react";
-import { FieldValues, useForm } from "react-hook-form";
+import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import { Box, Grid, TextField, Button, Typography } from "@mui/material";
 import { toast } from "sonner";
-import { useAppDispatch } from "../redux/hooks";
 import { useCreateBikesMutation } from "../redux/features/bike/bikeApi";
-import { TBike } from "../types";
+import { TBike, TResponse } from "../types";
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().required("Bike name is required"),
@@ -20,7 +19,6 @@ const validationSchema = Yup.object().shape({
 });
 
 const AddproductForm: FC = () => {
-  const dispatch = useAppDispatch();
   const {
     register,
     reset,
@@ -40,7 +38,7 @@ const AddproductForm: FC = () => {
 
   const [createBikes] = useCreateBikesMutation();
 
-  const handleCreateProduct = async (data: Partial<TBike>) => {
+  const handleCreateProduct: SubmitHandler<FieldValues> = async (data) => {
     const toastId = toast.loading("Product is creating...");
     console.log(data);
 
@@ -53,9 +51,11 @@ const AddproductForm: FC = () => {
       description: data?.description,
     };
     try {
-      const res = await createBikes(bikeInfo);
+      const res = await createBikes(bikeInfo) as TResponse<TBike>;
       console.log("res", res);
-      if (res?.data.success === true) {
+      if (res.error) {
+        toast.error(res.error.data.message, { id: toastId, duration: 2000 });
+      } else {
         toast.success("Product is created successfully", {
           id: toastId,
           duration: 2000,
