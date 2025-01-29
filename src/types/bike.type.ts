@@ -3,6 +3,7 @@ export type TBike = {
   name: string;
   brand: string;
   model: string;
+  image: string;
   description: string;
   price: number;
   quantity: number;

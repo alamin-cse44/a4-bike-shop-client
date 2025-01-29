@@ -15,7 +15,7 @@ import {
 } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import AddproductForm from "../../components/AddProductForm";
-import ProductTable from "../../components/ProductTable";
+import ProductTable from "../../components/data-table/ProductTable";
 
 const DProducts = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
