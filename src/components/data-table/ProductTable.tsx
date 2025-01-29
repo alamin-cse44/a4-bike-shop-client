@@ -20,8 +20,11 @@ import Switch from "@mui/material/Switch";
 import DeleteIcon from "@mui/icons-material/Delete";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import { visuallyHidden } from "@mui/utils";
-import { TBike } from "../../types";
-import { useGetAllBikesQuery } from "../../redux/features/bike/bikeApi";
+import { TBike, TResponse } from "../../types";
+import { useDeleteBikesMutation, useGetAllBikesQuery } from "../../redux/features/bike/bikeApi";
+import { Button, Fab } from "@mui/material";
+import EditIcon from "@mui/icons-material/Edit";
+import { toast } from "sonner";
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
@@ -69,13 +72,13 @@ const headCells: readonly HeadCell[] = [
   },
   {
     id: "brand",
-    numeric: true,
+    numeric: false,
     disablePadding: false,
     label: "Brand",
   },
   {
     id: "model",
-    numeric: true,
+    numeric: false,
     disablePadding: false,
     label: "Model",
   },
@@ -91,6 +94,12 @@ const headCells: readonly HeadCell[] = [
     disablePadding: false,
     label: "Quantity",
   },
+  // {
+  //   id: "action",
+  //   numeric: true,
+  //   disablePadding: false,
+  //   label: "Action",
+  // },
 ];
 
 interface EnhancedTableProps {
@@ -199,11 +208,23 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
         </Typography>
       )}
       {numSelected > 0 ? (
-        <Tooltip title="Delete">
-          <IconButton>
-            <DeleteIcon />
-          </IconButton>
-        </Tooltip>
+        <>
+          <Tooltip title="Delete" sx={{ mr: 1 }}>
+            <Button
+              variant="contained"
+              color="error"
+              startIcon={<DeleteIcon />}
+            ></Button>
+          </Tooltip>
+
+          <Tooltip title="Update">
+            <Button
+              variant="contained"
+              color="primary"
+              startIcon={<EditIcon />}
+            ></Button>
+          </Tooltip>
+        </>
       ) : (
         <Tooltip title="Filter list">
           <IconButton>
@@ -287,10 +308,88 @@ export default function ProductTable() {
     [order, orderBy, page, rowsPerPage, rows]
   );
 
+  const [deleteBikes] = useDeleteBikesMutation();
+
+  const handleDelete = (rowId: string) => {
+    toast.custom(
+      (t) => (
+        <Box
+          sx={{
+            backgroundColor: "white",
+            boxShadow: 3,
+            borderRadius: 2,
+            p: 2,
+            textAlign: "center",
+          }}
+        >
+          <Typography variant="h6" sx={{ fontWeight: "medium" }}>
+            Are you sure you want to delete this item?
+          </Typography>
+          <Box
+            sx={{ display: "flex", justifyContent: "center", gap: 2, mt: 2 }}
+          >
+            {/* Confirm Button */}
+            <Button
+              onClick={async () => {
+                await deleteRow(rowId);
+                toast.dismiss(t); // Close toast after deletion
+              }}
+              variant="contained"
+              color="error"
+              sx={{ "&:hover": { backgroundColor: "error.dark" } }}
+            >
+              Yes, Delete
+            </Button>
+
+            {/* Cancel Button */}
+            <Button
+              onClick={() => toast.dismiss(t)}
+              variant="outlined"
+              sx={{
+                borderColor: "grey.300",
+                color: "text.secondary",
+                "&:hover": {
+                  borderColor: "grey.400",
+                  backgroundColor: "grey.100",
+                },
+              }}
+            >
+              No, Cancel
+            </Button>
+          </Box>
+        </Box>
+      ),
+      {
+        position: "top-center", // ✅ Positions the toast in the center
+        duration: 20000, // Keeps the toast open for interaction
+      }
+    );
+  };
+
+  const deleteRow = async (rowId: string) => {
+    try {
+      const res = (await deleteBikes(rowId)) as TResponse<TBike>;
+      console.log("res", res);
+      if (res.error) {
+        toast.error(res.error.data.message, {
+          duration: 2000,
+        });
+      } else {
+        toast.success("The Bike is Deleted successfully", {
+          duration: 2000,
+        });
+      }
+    } catch (error) {
+      toast.error("Failed to delete product", {
+        duration: 2000,
+      });
+    }
+  };
+
   return (
     <Box sx={{ width: "100%", mt: 5 }}>
       <Paper sx={{ width: "100%", mb: 2 }}>
-        <EnhancedTableToolbar numSelected={selected.length} />
+        {/* <EnhancedTableToolbar numSelected={selected.length} /> */}
         <TableContainer>
           <Table
             sx={{ minWidth: 750 }}
@@ -348,7 +447,21 @@ export default function ProductTable() {
                     <TableCell align="right">{row.brand}</TableCell>
                     <TableCell align="right">{row.model}</TableCell>
                     <TableCell align="right">{row.price}</TableCell>
-                    <TableCell align="right">{row.quantity}</TableCell>
+                    <TableCell align="right">
+                      {row.quantity}
+                      <Fab
+                        onClick={() => handleDelete(row._id)}
+                        size="small"
+                        color="error"
+                        aria-label="delete"
+                        sx={{ ml: 5, mr: 2 }}
+                      >
+                        <DeleteIcon />
+                      </Fab>
+                      <Fab size="small" color="secondary" aria-label="edit">
+                        <EditIcon />
+                      </Fab>
+                    </TableCell>
                   </TableRow>
                 );
               })}
