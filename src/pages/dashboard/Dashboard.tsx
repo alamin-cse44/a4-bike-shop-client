@@ -25,6 +25,7 @@ import { Button, Container } from "@mui/material";
 import DProducts from "./DProducts";
 import { useAppDispatch } from "../../redux/hooks";
 import { logout } from "../../redux/features/auth/authSlice";
+import UserProfile from "./UserProfile";
 
 const NAVIGATION: Navigation = [
   {
@@ -79,7 +80,7 @@ function DemoPageContent({ pathname }: { pathname: string }) {
         <Typography>Dashboard content for {pathname}</Typography>
       </Box> */}
       <Container sx={{ mt: 5 }}>
-        {pathname === "/dashboard" && "Dashboard contents"}
+        {pathname === "/dashboard" && <UserProfile />}
         {pathname === "/orders" && <Orders />}
         {pathname === "/products" && <DProducts />}
       </Container>
