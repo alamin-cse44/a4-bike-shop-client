@@ -55,6 +55,7 @@ const bikeApi = baseApi.injectEndpoints({
           method: "GET",
         };
       },
+      providesTags: [{ type: "Bike", id: "LIST" }],
     }),
   }),
 });

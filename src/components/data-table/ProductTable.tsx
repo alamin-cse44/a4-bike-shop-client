@@ -301,7 +301,10 @@ export default function ProductTable() {
 
             {/* Cancel Button */}
             <Button
-              onClick={() => toast.dismiss(t)}
+              onClick={() => {
+                toast.dismiss(t);
+                setSelected([]);
+              }}
               variant="outlined"
               sx={{
                 borderColor: "grey.300",
@@ -350,7 +353,7 @@ export default function ProductTable() {
   // Toggle cart drawer
   const toggleDrawer = () => {
     setDrawerOpen(!drawerOpen);
-    if(drawerOpen === true) {
+    if (drawerOpen === true) {
       setSelected([]);
     }
   };
@@ -477,7 +480,12 @@ export default function ProductTable() {
               }}
             >
               <Typography variant="h6">Update Your Product</Typography>
-              <Fab onClick={toggleDrawer} size="small" color="secondary" aria-label="add">
+              <Fab
+                onClick={toggleDrawer}
+                size="small"
+                color="secondary"
+                aria-label="add"
+              >
                 <CloseIcon />
               </Fab>
             </Box>

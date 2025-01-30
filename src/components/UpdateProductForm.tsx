@@ -31,9 +31,7 @@ const UpdateProductForm: FC<Id> = ({ id }) => {
     data: bikeData,
     isLoading,
     error,
-  } = useGetSignleBikeQuery(id, {
-    skip: !id, // ✅ Prevents query execution when id is not provided
-  });
+  } = useGetSignleBikeQuery(id);
 
   console.log("single data", bikeData?.data);
 
@@ -105,6 +103,7 @@ const UpdateProductForm: FC<Id> = ({ id }) => {
             duration: 2000,
           });
         } else {
+        //   reset();
           toast.success("Product is updated successfully", {
             id: toastId,
             duration: 2000,
