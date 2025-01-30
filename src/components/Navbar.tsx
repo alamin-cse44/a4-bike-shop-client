@@ -70,7 +70,7 @@ const Navbar: FC = () => {
                 marginRight: "20px",
               }}
             >
-             <img src={logo} alt="footer_img" color="white" width={80} />
+              <img src={logo} alt="footer_img" color="white" width={80} />
             </Link>
           </Box>
 
@@ -103,6 +103,16 @@ const Navbar: FC = () => {
                 alignItems: "center",
               }}
             >
+              <Link
+                to="/"
+                style={{
+                  color: "inherit",
+                  textDecoration: "none",
+                  marginRight: "20px",
+                }}
+              >
+                <Typography variant="body1">Home</Typography>
+              </Link>
               <Link
                 to="/product"
                 style={{

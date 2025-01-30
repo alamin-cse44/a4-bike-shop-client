@@ -26,8 +26,8 @@ const ProductList = () => {
           gap: "16px",
         }}
       >
-        {products.map((product) => (
-          <ProductCard key={product.id} product={product} />
+        {data?.data?.map((product) => (
+          <ProductCard key={product._id} product={product} />
         ))}
       </div>
     </>

@@ -8,8 +8,9 @@ import {
   Typography,
 } from "@mui/material";
 import { FaCartPlus } from "react-icons/fa";
+import { TBike } from "../types";
 
-const ProductCard = ({ product }) => {
+const ProductCard = ({ product }: { product: TBike }) => {
   return (
     <Card sx={{ position: "relative", height: "380px" }}>
       <CardMedia
@@ -36,16 +37,16 @@ const ProductCard = ({ product }) => {
               color="text.secondary"
               style={{ textDecoration: "line-through" }}
             >
-              ${product.originalPrice}
+              {/* {product?.originalPrice} */}
             </Typography>
           </Box>
           <Box display="flex" justifyContent="" alignItems="center">
             <Rating
               name="read-only"
-              value={product.rating}
+              value={4.5}
               readOnly
               precision={0.1}
-              sx={{ fontSize: "20px" }}
+              sx={{ fontSize: "20px", color: "#FCD800" }}
             />
             <Typography
               sx={{
@@ -56,7 +57,7 @@ const ProductCard = ({ product }) => {
                 top: "10px",
               }}
             >
-              {product.rating}
+              4.8
             </Typography>
           </Box>
         </Box>
@@ -65,14 +66,15 @@ const ProductCard = ({ product }) => {
             background: "red",
             pl: 1.5,
             borderRadius: 5,
-            width: "30%",
+            width: "20%",
             position: "absolute",
             top: "10px",
             color: "white",
           }}
           variant="body2"
         >
-          {product.discount}% OFF
+          {/* {product.discount}% OFF */}
+          New
         </Typography>
 
         <Box
