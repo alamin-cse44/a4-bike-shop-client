@@ -4,7 +4,10 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import { Box, Grid, TextField, Button, Typography } from "@mui/material";
 import { toast } from "sonner";
-import { useCreateBikesMutation } from "../redux/features/bike/bikeApi";
+import {
+  useCreateBikesMutation,
+  useGetSignleBikeQuery,
+} from "../redux/features/bike/bikeApi";
 import { TBike, TResponse } from "../types";
 
 const validationSchema = Yup.object().shape({
@@ -18,7 +21,22 @@ const validationSchema = Yup.object().shape({
   image: Yup.mixed().required("Image is required"),
 });
 
-const AddProductForm: FC = () => {
+type Id = {
+  id?: string;
+};
+
+const UpdateProductForm: FC<Id> = ({ id }) => {
+  const [createBikes] = useCreateBikesMutation();
+  const {
+    data: bikeData,
+    isLoading,
+    error,
+  } = useGetSignleBikeQuery(id, {
+    skip: !id, // ✅ Prevents query execution when id is not provided
+  });
+
+  console.log("single data", bikeData?.data);
+
   const {
     register,
     reset,
@@ -27,18 +45,21 @@ const AddProductForm: FC = () => {
   } = useForm({
     resolver: yupResolver(validationSchema),
     defaultValues: {
-      name: "Test Bike Name",
-      brand: "Test Brand",
-      model: "Test Model",
-      price: 1000,
-      quantity: 10,
-      description: "Test Description",
+      name: bikeData?.data?.name,
+      brand: bikeData?.data?.brand,
+      model: bikeData?.data?.model,
+      price: bikeData?.data?.price,
+      quantity: bikeData?.data?.quantity,
+      description: bikeData?.data?.quantity,
+      image: bikeData?.data?.image,
     },
   });
 
-  const [createBikes] = useCreateBikesMutation();
+  if (isLoading) {
+    return toast("Loading...");
+  }
 
-  const handleCreateProduct: SubmitHandler<FieldValues> = async (data) => {
+  const handleUpdateProduct: SubmitHandler<FieldValues> = async (data) => {
     const toastId = toast.loading("Product is creating...");
     console.log(data);
     const formData = new FormData();
@@ -107,9 +128,10 @@ const AddProductForm: FC = () => {
     <Grid mt={4}>
       <Grid item xs={12} md={12}>
         <Box bgcolor="white" p={2} borderRadius={3} boxShadow={0}>
-          <form onSubmit={handleSubmit(handleCreateProduct)}>
+          <form onSubmit={handleSubmit(handleUpdateProduct)}>
             <TextField
               label="Bike name"
+              defaultValue={bikeData?.data?.name}
               variant="outlined"
               margin="normal"
               fullWidth
@@ -119,6 +141,7 @@ const AddProductForm: FC = () => {
             />
             <TextField
               label="Brand Name"
+              defaultValue={bikeData?.data?.brand}
               variant="outlined"
               margin="normal"
               fullWidth
@@ -128,6 +151,7 @@ const AddProductForm: FC = () => {
             />
             <TextField
               label="Model Number"
+              defaultValue={bikeData?.data?.model}
               variant="outlined"
               margin="normal"
               fullWidth
@@ -138,6 +162,7 @@ const AddProductForm: FC = () => {
             <TextField
               type="number"
               label="Price"
+              defaultValue={bikeData?.data?.price}
               variant="outlined"
               margin="normal"
               fullWidth
@@ -148,6 +173,7 @@ const AddProductForm: FC = () => {
             <TextField
               type="number"
               label="Bike Quantity"
+              defaultValue={bikeData?.data?.quantity}
               variant="outlined"
               margin="normal"
               fullWidth
@@ -159,6 +185,7 @@ const AddProductForm: FC = () => {
               multiline
               maxRows={4}
               label="Description"
+              defaultValue={bikeData?.data?.description}
               variant="outlined"
               margin="normal"
               fullWidth
@@ -181,6 +208,7 @@ const AddProductForm: FC = () => {
             <Box position="relative">
               <TextField
                 type="file"
+                defaultValue={bikeData?.data?.image}
                 variant="outlined"
                 margin="normal"
                 fullWidth
@@ -199,7 +227,7 @@ const AddProductForm: FC = () => {
               color="secondary"
               fullWidth
             >
-              Create Product
+              Update Product
             </Button>
           </form>
         </Box>
@@ -208,4 +236,4 @@ const AddProductForm: FC = () => {
   );
 };
 
-export default AddProductForm;
+export default UpdateProductForm;

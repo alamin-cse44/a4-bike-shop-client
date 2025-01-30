@@ -21,11 +21,17 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import { visuallyHidden } from "@mui/utils";
 import { TBike, TResponse } from "../../types";
-import { useDeleteBikesMutation, useGetAllBikesQuery } from "../../redux/features/bike/bikeApi";
-import { Button, Fab } from "@mui/material";
+import {
+  useDeleteBikesMutation,
+  useGetAllBikesQuery,
+} from "../../redux/features/bike/bikeApi";
+import { Button, Drawer, Fab } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
+import CloseIcon from "@mui/icons-material/Close";
 import { toast } from "sonner";
 import { headCells } from "./ProductTableColumns";
+import AddproductForm from "../AddProductForm";
+import UpdateProductForm from "../UpdateProductForm";
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
@@ -50,8 +56,6 @@ function getComparator<Key extends keyof any>(
     ? (a, b) => descendingComparator(a, b, orderBy)
     : (a, b) => -descendingComparator(a, b, orderBy);
 }
-
-
 
 interface EnhancedTableProps {
   numSelected: number;
@@ -198,8 +202,10 @@ export default function ProductTable() {
   const rows: TBike[] = data?.data || [];
 
   console.log("seleted rows", selected);
+  const UpdateProductID = selected[0];
+  console.log("id", UpdateProductID);
 
-  console.log("data", rows);
+  // console.log("data", rows);
 
   const handleRequestSort = (
     event: React.MouseEvent<unknown>,
@@ -259,6 +265,7 @@ export default function ProductTable() {
     [order, orderBy, page, rowsPerPage, rows]
   );
 
+  // Delete functionality
   const [deleteBikes] = useDeleteBikesMutation();
 
   const handleDelete = (rowId: string) => {
@@ -337,6 +344,21 @@ export default function ProductTable() {
     }
   };
 
+  // Update product functionality
+  const [drawerOpen, setDrawerOpen] = React.useState(false);
+
+  // Toggle cart drawer
+  const toggleDrawer = () => {
+    setDrawerOpen(!drawerOpen);
+    if(drawerOpen === true) {
+      setSelected([]);
+    }
+  };
+
+  const handleUpdate = (id: string) => {
+    setDrawerOpen(!drawerOpen);
+  };
+
   return (
     <Box sx={{ width: "100%", mt: 5 }}>
       <Paper sx={{ width: "100%", mb: 2 }}>
@@ -409,7 +431,12 @@ export default function ProductTable() {
                       >
                         <DeleteIcon />
                       </Fab>
-                      <Fab size="small" color="secondary" aria-label="edit">
+                      <Fab
+                        onClick={() => toggleDrawer()}
+                        size="small"
+                        color="secondary"
+                        aria-label="edit"
+                      >
                         <EditIcon />
                       </Fab>
                     </TableCell>
@@ -438,6 +465,26 @@ export default function ProductTable() {
         control={<Switch checked={dense} onChange={handleChangeDense} />}
         label="Dense padding"
       />
+      {drawerOpen && (
+        <Drawer anchor="right" open={drawerOpen} onClose={toggleDrawer}>
+          <Box sx={{ width: 350, padding: 2 }}>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                mt: 8,
+              }}
+            >
+              <Typography variant="h6">Update Your Product</Typography>
+              <Fab onClick={toggleDrawer} size="small" color="secondary" aria-label="add">
+                <CloseIcon />
+              </Fab>
+            </Box>
+            <UpdateProductForm id={UpdateProductID} />
+          </Box>
+        </Drawer>
+      )}
     </Box>
   );
 }

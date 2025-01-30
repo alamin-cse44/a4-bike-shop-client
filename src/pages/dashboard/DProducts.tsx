@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { useState } from "react";
 import {
   Box,
   Typography,
@@ -8,14 +8,10 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import {
-  FaShoppingCart,
-  FaUserCircle,
-  FaBars,
   FaPlusCircle,
 } from "react-icons/fa";
-import { Link } from "react-router-dom";
-import AddproductForm from "../../components/AddProductForm";
 import ProductTable from "../../components/data-table/ProductTable";
+import AddProductForm from "../../components/AddProductForm";
 
 const DProducts = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -49,11 +45,11 @@ const DProducts = () => {
             <Typography variant="h6">
               Product Information
             </Typography>
-            <Fab  size="small" color="secondary" aria-label="add">
+            <Fab onClick={toggleDrawer} size="small" color="secondary" aria-label="add">
               <CloseIcon />
             </Fab>
           </Box>
-          <AddproductForm />
+          <AddProductForm />
         </Box>
       </Drawer>
 

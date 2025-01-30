@@ -10,12 +10,12 @@ const bikeApi = baseApi.injectEndpoints({
         return {
           url: "/bikes",
           method: "GET",
-        //   params: params,
+          //   params: params,
         };
       },
       // we can return data from here to ignore the others response
       transformResponse: (response: TResponseRedux<TBike[]>) => {
-        console.log("inside redux", response);
+        // console.log("inside redux", response);
         return {
           data: response?.data,
         };
@@ -29,7 +29,7 @@ const bikeApi = baseApi.injectEndpoints({
         body: bikeInfo,
       }),
       // Invalidate the 'Bike' list after creation
-      invalidatesTags: [{ type: 'Bike', id: 'LIST' }],
+      invalidatesTags: [{ type: "Bike", id: "LIST" }],
     }),
     deleteBikes: builder.mutation({
       query: (id) => ({
@@ -37,9 +37,22 @@ const bikeApi = baseApi.injectEndpoints({
         method: "DELETE",
       }),
       // Invalidate the 'Bike' list after creation
-      invalidatesTags: [{ type: 'Bike', id: 'LIST' }],
+      invalidatesTags: [{ type: "Bike", id: "LIST" }],
+    }),
+    getSignleBike: builder.query({
+      query: (id) => {
+        return {
+          url: `/bikes/${id}`,
+          method: "GET",
+        };
+      },
     }),
   }),
 });
 
-export const { useGetAllBikesQuery, useCreateBikesMutation, useDeleteBikesMutation } = bikeApi;
+export const {
+  useGetAllBikesQuery,
+  useCreateBikesMutation,
+  useDeleteBikesMutation,
+  useGetSignleBikeQuery,
+} = bikeApi;
