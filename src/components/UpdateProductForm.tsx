@@ -126,7 +126,7 @@ const UpdateProductForm: FC<Id> = ({ id }) => {
   return (
     <Grid mt={4}>
       <Grid item xs={12} md={12}>
-        <Box bgcolor="white" p={2} borderRadius={3} boxShadow={0}>
+        <Box p={2} borderRadius={3} boxShadow={0}>
           <form onSubmit={handleSubmit(handleUpdateProduct)}>
             <TextField
               label="Bike name"

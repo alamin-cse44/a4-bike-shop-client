@@ -1,12 +1,13 @@
 import ProductCard from "../../components/ProductCard";
 import img from "../../assets/first.webp";
-import { Typography } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 import { useGetAllBikesQuery } from "../../redux/features/bike/bikeApi";
+import { Link } from "react-router-dom";
 
 const ProductList = () => {
   const { data } = useGetAllBikesQuery(undefined);
-  // [{name: "name", value: "Bike 1"}]
-  console.log("bikes", data?.data);
+
+  const bikes = data?.data?.slice(0, 6);
   return (
     <>
       <Typography
@@ -26,9 +27,22 @@ const ProductList = () => {
           gap: "16px",
         }}
       >
-        {data?.data?.map((product) => (
+        {bikes?.map((product) => (
           <ProductCard key={product._id} product={product} />
         ))}
+      </div>
+
+      {/* View More Button */}
+      <div style={{ textAlign: "center", marginTop: "40px" }}>
+        <Button
+          component={Link}
+          to="/product"
+          variant="contained"
+          color="primary"
+          sx={{color: "white", fontWeight: "bold"}}
+        >
+          View More
+        </Button>
       </div>
     </>
   );

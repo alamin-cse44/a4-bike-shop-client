@@ -13,10 +13,15 @@ import {
   ListItemText,
   Menu,
   MenuItem,
+  Avatar,
+  Button,
 } from "@mui/material";
 import { FaShoppingCart, FaUserCircle, FaBars } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import logo from "../assets/logo.png";
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
+import { logout, selectCurrentUser } from "../redux/features/auth/authSlice";
+import { useGetSignleUserQuery } from "../redux/features/user/userManagementApi";
 
 const Navbar: FC = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -41,6 +46,15 @@ const Navbar: FC = () => {
   // Close profile menu
   const handleProfileMenuClose = () => {
     setAnchorEl(null);
+  };
+
+  const dispatch = useAppDispatch();
+  const user = useAppSelector(selectCurrentUser);
+
+  const { data } = useGetSignleUserQuery(user?.userEmail);
+
+  const handleLogout = () => {
+    dispatch(logout());
   };
 
   return (
@@ -143,19 +157,33 @@ const Navbar: FC = () => {
               >
                 <Typography variant="body1">Dashboard</Typography>
               </Link>
+            </Box>
+
+            {user?.userEmail ? (
+              <>
+                <IconButton onClick={toggleDrawer} color="inherit">
+                  <FaShoppingCart />
+                </IconButton>
+                <IconButton onClick={handleProfileMenuOpen} color="inherit">
+                  <Avatar
+                    src={data?.data?.image}
+                    alt={"usr name"}
+                    sx={{ width: 35, height: 35 }}
+                  />
+                </IconButton>
+              </>
+            ) : (
               <Link
                 to="/login"
-                style={{ color: "inherit", textDecoration: "none" }}
+                style={{
+                  color: "inherit",
+                  textDecoration: "none",
+                  marginLeft: "15px",
+                }}
               >
                 <Typography variant="body1">Login</Typography>
               </Link>
-            </Box>
-            <IconButton onClick={toggleDrawer} color="inherit">
-              <FaShoppingCart />
-            </IconButton>
-            <IconButton onClick={handleProfileMenuOpen} color="inherit">
-              <FaUserCircle />
-            </IconButton>
+            )}
             {/* Profile Menu */}
             <Menu
               anchorEl={anchorEl}
@@ -165,8 +193,20 @@ const Navbar: FC = () => {
                 "aria-labelledby": "basic-button",
               }}
             >
-              <MenuItem onClick={handleProfileMenuClose}>Profile</MenuItem>
-              <MenuItem onClick={handleProfileMenuClose}>Logout</MenuItem>
+              <MenuItem>
+                <Link
+                  to="/dashboard"
+                  style={{ color: "inherit", textDecoration: "none" }}
+                >
+                  <Typography variant="body1">Profile</Typography>
+                </Link>
+              </MenuItem>
+
+              <MenuItem onClick={handleProfileMenuClose}>
+                <Button onClick={handleLogout} variant="outlined" color="error">
+                  Logout
+                </Button>
+              </MenuItem>
             </Menu>
           </Box>
         </Toolbar>

@@ -9,24 +9,10 @@ import EditIcon from "@mui/icons-material/Edit";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { logout, selectCurrentUser } from "../../redux/features/auth/authSlice";
-import profile from "../../assets/profile.jpg";
 import { useGetSignleUserQuery } from "../../redux/features/user/userManagementApi";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 
-interface UserProfileProps {
-  userInfo: {
-    name: string;
-    email: string;
-    role: string;
-    active: boolean;
-    ordersCount: number;
-    cartItems: number;
-    profileImage: string;
-  };
-  onEdit: () => void;
-  onLogout: () => void;
-}
 
 const UserProfile = () => {
   const dispatch = useAppDispatch();
