@@ -358,10 +358,6 @@ export default function ProductTable() {
     }
   };
 
-  const handleUpdate = (id: string) => {
-    setDrawerOpen(!drawerOpen);
-  };
-
   return (
     <Box sx={{ width: "100%", mt: 5 }}>
       <Paper sx={{ width: "100%", mb: 2 }}>

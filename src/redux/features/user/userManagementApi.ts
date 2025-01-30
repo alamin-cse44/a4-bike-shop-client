@@ -9,7 +9,18 @@ const userManagementApi = baseApi.injectEndpoints({
         body: userInfo,
       }),
     }),
+    getSignleUser: builder.query({
+      query: (email) => {
+        return {
+          url: `/users/single-user/${email}`,
+          method: "GET",
+        };
+      },
+      // providesTags: [{ type: "Bike", id: "LIST" }],
+    }),
+    // last bracket
   }),
 });
 
-export const { useCreateUserMutation } = userManagementApi;
+export const { useCreateUserMutation, useGetSignleUserQuery } =
+  userManagementApi;
