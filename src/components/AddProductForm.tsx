@@ -89,11 +89,6 @@ const AddProductForm: FC = () => {
             duration: 2000,
           });
         }
-      } else {
-        toast.error("Please select your image!", {
-          id: toastId,
-          duration: 2000,
-        });
       }
     } catch (error) {
       toast.error("Failed to upload your image!", {

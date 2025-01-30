@@ -2,11 +2,11 @@ import { FC } from "react";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
-import { Box, Grid, TextField, Button, Typography } from "@mui/material";
+import { Box, Grid, TextField, Button } from "@mui/material";
 import { toast } from "sonner";
 import {
-  useCreateBikesMutation,
   useGetSignleBikeQuery,
+  useUpdateBikesMutation,
 } from "../redux/features/bike/bikeApi";
 import { TBike, TResponse } from "../types";
 
@@ -18,7 +18,7 @@ const validationSchema = Yup.object().shape({
   quantity: Yup.number().required("Quantity is required"),
   description: Yup.string(),
   // type: Yup.string().required("User type is required"),
-  image: Yup.mixed().required("Image is required"),
+  image: Yup.mixed(),
 });
 
 type Id = {
@@ -26,7 +26,7 @@ type Id = {
 };
 
 const UpdateProductForm: FC<Id> = ({ id }) => {
-  const [createBikes] = useCreateBikesMutation();
+  const [updateBikes] = useUpdateBikesMutation();
   const {
     data: bikeData,
     isLoading,
@@ -44,27 +44,19 @@ const UpdateProductForm: FC<Id> = ({ id }) => {
     formState: { errors },
   } = useForm({
     resolver: yupResolver(validationSchema),
-    defaultValues: {
-      name: bikeData?.data?.name,
-      brand: bikeData?.data?.brand,
-      model: bikeData?.data?.model,
-      price: bikeData?.data?.price,
-      quantity: bikeData?.data?.quantity,
-      description: bikeData?.data?.quantity,
-      image: bikeData?.data?.image,
-    },
   });
 
   if (isLoading) {
-    return toast("Loading...");
+    return <div>"Loading..."</div>;
   }
 
   const handleUpdateProduct: SubmitHandler<FieldValues> = async (data) => {
-    const toastId = toast.loading("Product is creating...");
+    const toastId = toast.loading("Product is updating...");
     console.log(data);
+
     const formData = new FormData();
     // console.log("formData", formData);
-    formData.append("file", data.image[0]);
+    formData.append("file", data?.image[0]);
     formData.append("upload_preset", "first_preset_name");
     formData.append("cloud_name", import.meta.env.VITE_CLOUD_NAME);
 
@@ -79,8 +71,10 @@ const UpdateProductForm: FC<Id> = ({ id }) => {
 
       const img_result = await response.json();
       // console.log("image response: ", img_result.url);
+      let bikeInfo;
       if (img_result.url) {
-        const bikeInfo = {
+        bikeInfo = {
+          _id: id,
           name: data.name,
           brand: data.brand,
           model: data.model,
@@ -89,29 +83,35 @@ const UpdateProductForm: FC<Id> = ({ id }) => {
           description: data?.description,
           image: img_result.url,
         };
-        // console.log("final data", bikeInfo);
-        try {
-          const res = (await createBikes(bikeInfo)) as TResponse<TBike>;
-          console.log("res", res);
-          if (res.error) {
-            toast.error(res.error.data.message, {
-              id: toastId,
-              duration: 2000,
-            });
-          } else {
-            toast.success("Product is created successfully", {
-              id: toastId,
-              duration: 2000,
-            });
-          }
-        } catch (error) {
-          toast.error("Failed to create product", {
+      } else {
+        bikeInfo = {
+          _id: id,
+          name: data.name,
+          brand: data.brand,
+          model: data.model,
+          price: data.price,
+          quantity: data.quantity,
+          description: data?.description,
+          image: bikeData?.data?.image || "",
+        };
+      }
+      console.log("final data", bikeInfo);
+      try {
+        const res = (await updateBikes(bikeInfo)) as TResponse<TBike>;
+        console.log("res", res);
+        if (res.error) {
+          toast.error(res.error.data.message, {
+            id: toastId,
+            duration: 2000,
+          });
+        } else {
+          toast.success("Product is updated successfully", {
             id: toastId,
             duration: 2000,
           });
         }
-      } else {
-        toast.error("Please select your image!", {
+      } catch (error) {
+        toast.error("Failed to update product", {
           id: toastId,
           duration: 2000,
         });
@@ -208,17 +208,17 @@ const UpdateProductForm: FC<Id> = ({ id }) => {
             <Box position="relative">
               <TextField
                 type="file"
-                defaultValue={bikeData?.data?.image}
+                // defaultValue={bikeData?.data?.image}
                 variant="outlined"
                 margin="normal"
                 fullWidth
                 {...register("image")}
-                error={!!errors.image}
-                helperText={errors.image?.message}
+                // error={!!errors.image}
+                // helperText={errors.image?.message}
               />
-              {errors.image && (
+              {/* {errors.image && (
                 <Typography color="error">{errors.image.message}</Typography>
-              )}
+              )} */}
             </Box>
             <Button
               type="submit"

@@ -39,6 +39,15 @@ const bikeApi = baseApi.injectEndpoints({
       // Invalidate the 'Bike' list after creation
       invalidatesTags: [{ type: "Bike", id: "LIST" }],
     }),
+    updateBikes: builder.mutation({
+      query: (bikeInfo) => ({
+        url: `/bikes/${bikeInfo._id}`,
+        method: "PATCH",
+        body: bikeInfo,
+      }),
+      // Invalidate the 'Bike' list after creation
+      invalidatesTags: [{ type: "Bike", id: "LIST" }],
+    }),
     getSignleBike: builder.query({
       query: (id) => {
         return {
@@ -54,5 +63,6 @@ export const {
   useGetAllBikesQuery,
   useCreateBikesMutation,
   useDeleteBikesMutation,
+  useUpdateBikesMutation,
   useGetSignleBikeQuery,
 } = bikeApi;
