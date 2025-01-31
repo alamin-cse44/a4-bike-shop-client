@@ -100,7 +100,8 @@ function EnhancedTableHead(props: EnhancedTableProps) {
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
-            align={headCell.numeric ? "right" : "left"}
+            // align={headCell.numeric ? "right" : "left"}
+
             padding={headCell.disablePadding ? "none" : "normal"}
             sortDirection={orderBy === headCell.id ? order : false}
           >
@@ -416,10 +417,10 @@ export default function ProductTable() {
                     >
                       {row.name}
                     </TableCell>
-                    <TableCell align="right">{row.brand}</TableCell>
-                    <TableCell align="right">{row.model}</TableCell>
-                    <TableCell align="right">{row.price}</TableCell>
-                    <TableCell align="right">
+                    <TableCell align="left">{row.brand}</TableCell>
+                    <TableCell align="left">{row.model}</TableCell>
+                    <TableCell align="left">{row.price}</TableCell>
+                    <TableCell align="left">
                       <Box sx={{display: "flex", alignItems: "center"}}>
                       {row.quantity}
                         <Fab
