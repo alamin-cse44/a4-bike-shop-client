@@ -255,7 +255,7 @@ const Navbar: FC = () => {
             </Fab>
           </Box>
           {/* component */}
-          <Carts />
+          <Carts toggleDrawer={toggleDrawer}/>
         </Box>
       </Drawer>
 

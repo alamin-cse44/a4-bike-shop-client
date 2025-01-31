@@ -6,16 +6,16 @@ import {
   useGetCartByEmailQuery,
 } from "../../redux/features/cart/cartApi";
 import { toast } from "sonner";
-import {  TCart, TResponse } from "../../types";
+import { TCart, TResponse } from "../../types";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { Link } from "react-router-dom";
 
-const Carts = () => {
+const Carts = (toggleDrawer: any) => {
   const user = useAppSelector(selectCurrentUser);
   const [deleteCart] = useDeleteCartMutation();
 
   const { data: cartItems } = useGetCartByEmailQuery(user?.userEmail);
-//   console.log("cartItems", cartItems);
+  //   console.log("cartItems", cartItems);
   if (!cartItems?.data) return toast.loading("Loading...");
 
   let cartPrice = cartItems?.data?.reduce(
@@ -45,11 +45,11 @@ const Carts = () => {
 
   return (
     <Box>
-      <Box  sx={{ height: "75vh", overflow: "auto" }}>
+      <Box sx={{ height: "75vh", overflow: "auto" }}>
         {cartItems.data?.map((item: TCart) => (
-          <Box key={item._id}  sx={{ display: "flex",p: 2, }} >
+          <Box key={item._id} sx={{ display: "flex", p: 2 }}>
             {/* <Divider /> */}
-            <Box >
+            <Box>
               <Box display={"flex"} gap={2}>
                 <img
                   src={item?.product?.image}
@@ -86,11 +86,12 @@ const Carts = () => {
 
       <div style={{ textAlign: "center", marginTop: "1px" }}>
         <Typography variant="body2" my={2} fontWeight={"bold"}>
-          Sub total priace : {cartPrice}
+          Sub total price : {cartPrice}
         </Typography>
         <Button
+          // onClick={toggleDrawer}
           component={Link}
-          to="/product"
+          to="/checkout"
           variant="contained"
           color="primary"
           sx={{ color: "white", fontWeight: "bold" }}

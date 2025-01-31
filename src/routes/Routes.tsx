@@ -9,6 +9,7 @@ import Orders from "../pages/dashboard/Orders";
 import DProducts from "../pages/dashboard/DProducts";
 import ProtectedRoute from "./ProtectedRoute";
 import ProductDetails from "../pages/product/ProductDetails";
+import Checkout from "../pages/product/Checkout";
 
 export const router = createBrowserRouter([
   {
@@ -28,6 +29,10 @@ export const router = createBrowserRouter([
         element: <ProductDetails />,
       },
       {
+        path: "/checkout",
+        element: <Checkout />,
+      },
+      {
         path: "signup",
         element: <Signup />,
       },
@@ -36,6 +41,10 @@ export const router = createBrowserRouter([
         element: <Login />,
       },
     ],
+  },
+  {
+    path: "/checkout",
+    element: <Checkout />,
   },
   {
     path: "/dashboard",
