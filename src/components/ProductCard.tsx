@@ -13,6 +13,7 @@ import { useAppSelector } from "../redux/hooks";
 import { selectCurrentUser } from "../redux/features/auth/authSlice";
 import { toast } from "sonner";
 import { useCreateCartMutation } from "../redux/features/cart/cartApi";
+import { Link } from "react-router-dom";
 
 const ProductCard = ({ product }: { product: TBike }) => {
   const user = useAppSelector(selectCurrentUser);
@@ -122,14 +123,15 @@ const ProductCard = ({ product }: { product: TBike }) => {
           }}
         >
           <Button
-            // onClick={handleAddToCart}
+            component={Link}
+            to={`/product/${product._id}`}
             variant="contained"
             color="secondary"
             fullWidth
             sx={{ color: "white" }}
             startIcon={<FaJediOrder color="white" />}
           >
-            Order Now
+            View Details
           </Button>
         </Box>
       </CardContent>

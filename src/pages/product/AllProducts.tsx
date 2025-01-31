@@ -1,11 +1,11 @@
 import ProductCard from "../../components/ProductCard";
-import { Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { useGetAllBikesQuery } from "../../redux/features/bike/bikeApi";
 
 const AllProducts = () => {
   const { data } = useGetAllBikesQuery(undefined);
-    // [{name: "name", value: "Bike 1"}]
-    console.log("bikes", data?.data);
+  // [{name: "name", value: "Bike 1"}]
+  console.log("bikes", data?.data);
   return (
     <>
       <Typography
@@ -18,6 +18,7 @@ const AllProducts = () => {
       >
         Our Products
       </Typography>
+      {!data?.data && <Box height={"90vh"}>Loading...</Box>}
       <div
         style={{
           display: "grid",
@@ -34,5 +35,3 @@ const AllProducts = () => {
 };
 
 export default AllProducts;
-
-
