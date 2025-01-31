@@ -420,24 +420,26 @@ export default function ProductTable() {
                     <TableCell align="right">{row.model}</TableCell>
                     <TableCell align="right">{row.price}</TableCell>
                     <TableCell align="right">
+                      <Box sx={{display: "flex", alignItems: "center"}}>
                       {row.quantity}
-                      <Fab
-                        onClick={() => handleDelete(row._id)}
-                        size="small"
-                        color="error"
-                        aria-label="delete"
-                        sx={{ ml: 5, mr: 2 }}
-                      >
-                        <DeleteIcon />
-                      </Fab>
-                      <Fab
-                        onClick={() => toggleDrawer()}
-                        size="small"
-                        color="secondary"
-                        aria-label="edit"
-                      >
-                        <EditIcon />
-                      </Fab>
+                        <Fab
+                          onClick={() => handleDelete(row._id)}
+                          size="small"
+                          color="error"
+                          aria-label="delete"
+                          sx={{ ml: 2, mr: 2 }}
+                        >
+                          <DeleteIcon />
+                        </Fab>
+                        <Fab
+                          onClick={() => toggleDrawer()}
+                          size="small"
+                          color="secondary"
+                          aria-label="edit"
+                        >
+                          <EditIcon />
+                        </Fab>
+                      </Box>
                     </TableCell>
                   </TableRow>
                 );

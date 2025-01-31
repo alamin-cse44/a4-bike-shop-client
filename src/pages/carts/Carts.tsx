@@ -1,4 +1,4 @@
-import { Box, Button, Divider, Fab, Grid, Typography } from "@mui/material";
+import { Box, Button, Divider, Fab, Typography } from "@mui/material";
 import { useAppSelector } from "../../redux/hooks";
 import { selectCurrentUser } from "../../redux/features/auth/authSlice";
 import {
@@ -6,7 +6,7 @@ import {
   useGetCartByEmailQuery,
 } from "../../redux/features/cart/cartApi";
 import { toast } from "sonner";
-import { TBike, TCart, TResponse } from "../../types";
+import {  TCart, TResponse } from "../../types";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { Link } from "react-router-dom";
 
@@ -15,7 +15,7 @@ const Carts = () => {
   const [deleteCart] = useDeleteCartMutation();
 
   const { data: cartItems } = useGetCartByEmailQuery(user?.userEmail);
-  console.log("cartItems", cartItems);
+//   console.log("cartItems", cartItems);
   if (!cartItems?.data) return toast.loading("Loading...");
 
   let cartPrice = cartItems?.data?.reduce(
