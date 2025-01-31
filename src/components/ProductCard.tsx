@@ -7,7 +7,7 @@ import {
   Rating,
   Typography,
 } from "@mui/material";
-import { FaCartPlus } from "react-icons/fa";
+import { FaCartPlus, FaJediOrder } from "react-icons/fa";
 import { TBike } from "../types";
 import { useAppSelector } from "../redux/hooks";
 import { selectCurrentUser } from "../redux/features/auth/authSlice";
@@ -45,10 +45,22 @@ const ProductCard = ({ product }: { product: TBike }) => {
         alt={product.name}
       />
       <CardContent>
-        <Typography gutterBottom variant="h6" component="div">
-          {product.name}
-        </Typography>
-        <Box display="flex" justifyContent="space-between" alignItems="center">
+        <Box sx={{display: "flex", alignItems: "center", justifyContent: "space-between"}}>
+          <Typography gutterBottom variant="body1">
+            {product.name}
+          </Typography>
+          <Button
+            onClick={handleAddToCart}
+            sx={{
+              background: "white",
+              borderRadius: 5,
+            }}
+            variant="outlined"
+          >
+            <FaCartPlus color="black" size={20} />
+          </Button>
+        </Box>
+        <Box mt={2} display="flex" justifyContent="space-between" alignItems="center">
           <Box display="flex" justifyContent="" alignItems="center">
             <Typography
               sx={{ fontWeight: "bold", mr: 0.5, fontSize: "20px" }}
@@ -110,14 +122,14 @@ const ProductCard = ({ product }: { product: TBike }) => {
           }}
         >
           <Button
-            onClick={handleAddToCart}
+            // onClick={handleAddToCart}
             variant="contained"
             color="secondary"
             fullWidth
             sx={{ color: "white" }}
-            startIcon={<FaCartPlus color="white" />}
+            startIcon={<FaJediOrder color="white" />}
           >
-            Add to Cart
+            Order Now
           </Button>
         </Box>
       </CardContent>
