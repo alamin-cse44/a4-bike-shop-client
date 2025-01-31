@@ -9,8 +9,33 @@ import {
 } from "@mui/material";
 import { FaCartPlus } from "react-icons/fa";
 import { TBike } from "../types";
+import { useAppSelector } from "../redux/hooks";
+import { selectCurrentUser } from "../redux/features/auth/authSlice";
+import { toast } from "sonner";
+import { useCreateCartMutation } from "../redux/features/cart/cartApi";
 
 const ProductCard = ({ product }: { product: TBike }) => {
+  const user = useAppSelector(selectCurrentUser);
+  const [createCart] = useCreateCartMutation();
+
+  const handleAddToCart = async () => {
+    if (user) {
+      const cartInfo = {
+        userEmail: user?.userEmail,
+        product: product?._id,
+      };
+      const res = await createCart(cartInfo);
+      console.log("Cart created", res);
+      toast.success("Product added to cart", {
+        position: "top-right",
+      });
+    } else {
+      toast.error("Please log in to add product to cart", {
+        position: "top-center",
+        duration: 1000,
+      });
+    }
+  };
   return (
     <Card sx={{ position: "relative", height: "380px" }}>
       <CardMedia
@@ -85,6 +110,7 @@ const ProductCard = ({ product }: { product: TBike }) => {
           }}
         >
           <Button
+            onClick={handleAddToCart}
             variant="contained"
             color="secondary"
             fullWidth

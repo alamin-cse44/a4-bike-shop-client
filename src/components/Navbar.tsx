@@ -15,13 +15,17 @@ import {
   MenuItem,
   Avatar,
   Button,
+  styled,
 } from "@mui/material";
-import { FaShoppingCart, FaUserCircle, FaBars } from "react-icons/fa";
+import { FaShoppingCart, FaBars } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import logo from "../assets/logo.png";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { logout, selectCurrentUser } from "../redux/features/auth/authSlice";
 import { useGetSignleUserQuery } from "../redux/features/user/userManagementApi";
+import { useGetCartByEmailQuery } from "../redux/features/cart/cartApi";
+import Badge, { badgeClasses } from '@mui/material/Badge';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCartOutlined';
 
 const Navbar: FC = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -56,6 +60,19 @@ const Navbar: FC = () => {
   const handleLogout = () => {
     dispatch(logout());
   };
+
+  const CartBadge = styled(Badge)`
+  & .${badgeClasses.badge} {
+    top: -12px;
+    right: -6px;
+    color: #fff;
+    background-color: red;
+  }
+`;
+
+  const { data: cartItems } = useGetCartByEmailQuery(user?.userEmail);
+
+  console.log("cartItems", cartItems);
 
   return (
     <AppBar position="sticky">
@@ -161,8 +178,12 @@ const Navbar: FC = () => {
 
             {user?.userEmail ? (
               <>
-                <IconButton onClick={toggleDrawer} color="inherit">
-                  <FaShoppingCart />
+                <IconButton onClick={toggleDrawer} sx={{mr: 1}}>
+                  <ShoppingCartIcon fontSize="medium" sx={{color: "white"}} />
+                  <CartBadge
+                    badgeContent={cartItems?.data?.length}
+                    overlap="circular"
+                  />
                 </IconButton>
                 <IconButton onClick={handleProfileMenuOpen} color="inherit">
                   <Avatar
