@@ -11,3 +11,12 @@ export type TBike = {
   updatedAt: string;
   __v: number;
 };
+export type TCart = {
+  _id: string;
+  userEmail: string;
+  product: TBike,
+  quantity: number;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+};

@@ -32,7 +32,7 @@ const ProductCard = ({ product }: { product: TBike }) => {
     } else {
       toast.error("Please log in to add product to cart", {
         position: "top-center",
-        duration: 1000,
+        duration: 2000,
       });
     }
   };

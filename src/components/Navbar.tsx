@@ -16,8 +16,10 @@ import {
   Avatar,
   Button,
   styled,
+  Fab,
 } from "@mui/material";
-import { FaShoppingCart, FaBars } from "react-icons/fa";
+import {  FaBars } from "react-icons/fa";
+import CloseIcon from "@mui/icons-material/Close";
 import { Link } from "react-router-dom";
 import logo from "../assets/logo.png";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
@@ -26,6 +28,17 @@ import { useGetSignleUserQuery } from "../redux/features/user/userManagementApi"
 import { useGetCartByEmailQuery } from "../redux/features/cart/cartApi";
 import Badge, { badgeClasses } from '@mui/material/Badge';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCartOutlined';
+import { TCart } from "../types";
+import Carts from "../pages/carts/carts";
+
+const CartBadge = styled(Badge)`
+& .${badgeClasses.badge} {
+  top: -12px;
+  right: -6px;
+  color: #fff;
+  background-color: red;
+}
+`;
 
 const Navbar: FC = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -61,18 +74,10 @@ const Navbar: FC = () => {
     dispatch(logout());
   };
 
-  const CartBadge = styled(Badge)`
-  & .${badgeClasses.badge} {
-    top: -12px;
-    right: -6px;
-    color: #fff;
-    background-color: red;
-  }
-`;
-
   const { data: cartItems } = useGetCartByEmailQuery(user?.userEmail);
 
-  console.log("cartItems", cartItems);
+  const totalQuantity = cartItems?.data?.reduce((sum: number, item: TCart) => sum + item.quantity, 0);
+
 
   return (
     <AppBar position="sticky">
@@ -181,7 +186,7 @@ const Navbar: FC = () => {
                 <IconButton onClick={toggleDrawer} sx={{mr: 1}}>
                   <ShoppingCartIcon fontSize="medium" sx={{color: "white"}} />
                   <CartBadge
-                    badgeContent={cartItems?.data?.length}
+                    badgeContent={totalQuantity}
                     overlap="circular"
                   />
                 </IconButton>
@@ -235,9 +240,22 @@ const Navbar: FC = () => {
 
       {/* Drawer for Cart (opens from the right side) */}
       <Drawer anchor="right" open={drawerOpen} onClose={toggleDrawer}>
+        
         <Box sx={{ width: 350, padding: 2 }}>
-          <Typography variant="h6">Cart Information</Typography>
-          {/* Add your cart items or details here */}
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
+            <Typography variant="h6">Cart Items : {totalQuantity}</Typography>
+            <Fab onClick={toggleDrawer} size="small" color="secondary" aria-label="add">
+              <CloseIcon sx={{color: "white"}} />
+            </Fab>
+          </Box>
+          {/* component */}
+          <Carts />
         </Box>
       </Drawer>
 
