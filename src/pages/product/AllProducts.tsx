@@ -6,6 +6,7 @@ import {
   InputLabel,
   MenuItem,
   Select,
+  TextField,
   Typography,
 } from "@mui/material";
 import { useGetAllBikesQuery } from "../../redux/features/bike/bikeApi";
@@ -14,10 +15,13 @@ import { useState } from "react";
 type FilterState = Record<string, string | number>;
 
 const AllProducts = () => {
-  const [params, setParams] = useState<FilterState>({});
+  const [params, setParams] = useState<FilterState>({ limit: 100, search: "" });
   const { data } = useGetAllBikesQuery(params);
 
-  const handleFilterChange = (filterName: string, filterValue: string | number) => {
+  const handleFilterChange = (
+    filterName: string,
+    filterValue: string | number
+  ) => {
     setParams((prevFilters) => ({
       ...prevFilters,
       [filterName]: filterValue,
@@ -39,8 +43,16 @@ const AllProducts = () => {
 
       {/* Filter Section */}
       <Box sx={{ mb: 3, display: "flex", gap: 2, flexWrap: "wrap" }}>
+        {/* searching */}
+        <TextField
+          sx={{ minWidth: 200 }}
+          label="Search by name"
+          variant="outlined"
+          value={params["search"] ?? ""}
+          onChange={(e) => handleFilterChange("search", e.target.value)}
+        />
         {/* Brand Filter */}
-        <FormControl sx={{ minWidth: 200 }}>
+        <FormControl sx={{ minWidth: 100 }}>
           <InputLabel id="brand-filter-label">Brand</InputLabel>
           <Select
             labelId="brand-filter-label"
@@ -49,14 +61,16 @@ const AllProducts = () => {
             label="Brand"
           >
             <MenuItem value="">All</MenuItem>
-            <MenuItem value="Puma">Puma</MenuItem>
-            <MenuItem value="Nike">Nike</MenuItem>
-            <MenuItem value="Adidas">Adidas</MenuItem>
+            {data?.data?.map((product) => (
+              <MenuItem value={product?.brand} key={product._id}>
+                {product?.brand}
+              </MenuItem>
+            ))}
           </Select>
         </FormControl>
 
         {/* Model Filter */}
-        <FormControl sx={{ minWidth: 200 }}>
+        <FormControl sx={{ minWidth: 100 }}>
           <InputLabel id="model-filter-label">Model</InputLabel>
           <Select
             labelId="model-filter-label"
@@ -65,14 +79,16 @@ const AllProducts = () => {
             label="Model"
           >
             <MenuItem value="">All</MenuItem>
-            <MenuItem value="Air MX">Air MX</MenuItem>
-            <MenuItem value="ZoomX">ZoomX</MenuItem>
-            <MenuItem value="Revolution 6">Revolution 6</MenuItem>
+            {data?.data?.map((product) => (
+              <MenuItem value={product?.model} key={product._id}>
+                {product?.model}
+              </MenuItem>
+            ))}
           </Select>
         </FormControl>
 
         {/* Price Range Filter */}
-        <FormControl sx={{ minWidth: 200 }}>
+        <FormControl sx={{ minWidth: 150 }}>
           <InputLabel id="price-filter-label">Price Range</InputLabel>
           <Select
             labelId="price-filter-label"

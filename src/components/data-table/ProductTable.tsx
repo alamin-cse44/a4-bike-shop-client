@@ -30,7 +30,6 @@ import EditIcon from "@mui/icons-material/Edit";
 import CloseIcon from "@mui/icons-material/Close";
 import { toast } from "sonner";
 import { headCells } from "./ProductTableColumns";
-import AddproductForm from "../AddProductForm";
 import UpdateProductForm from "../UpdateProductForm";
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
@@ -199,7 +198,7 @@ export default function ProductTable() {
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
-  const { data } = useGetAllBikesQuery(undefined);
+  const { data } = useGetAllBikesQuery({});
   const rows: TBike[] = data?.data || [];
 
   console.log("seleted rows", selected);
@@ -454,7 +453,7 @@ export default function ProductTable() {
           </Table>
         </TableContainer>
         <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
+          rowsPerPageOptions={[5, 10, 25, 50]}
           component="div"
           count={rows.length}
           rowsPerPage={rowsPerPage}
