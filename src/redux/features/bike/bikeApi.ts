@@ -5,12 +5,14 @@ const bikeApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getAllBikes: builder.query({
       query: (args) => {
-        // const params = new URLSearchParams();
-        // params.append(args[0].name, args[0].value);
+        const params = new URLSearchParams();
+        Object.entries(args).forEach(([key, value]) => {
+          if (value) params.append(key, value.toString());
+        });
         return {
           url: "/bikes",
           method: "GET",
-          //   params: params,
+          params: params,
         };
       },
       // we can return data from here to ignore the others response

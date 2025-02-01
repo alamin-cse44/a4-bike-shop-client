@@ -99,7 +99,14 @@ const ProductDetails = () => {
             fontWeight="bold"
             sx={{ color: "#ff5722", marginBottom: "1.5rem" }}
           >
-            ${data?.data?.price.toFixed(2)}
+            Stock Quantity - {data?.data?.quantity}
+          </Typography>
+          <Typography
+            variant="h5"
+            fontWeight="bold"
+            sx={{ color: "#ff5722", marginBottom: "1.5rem" }}
+          >
+            Price - ${data?.data?.price.toFixed(2)}
           </Typography>
           <Box
             sx={{
