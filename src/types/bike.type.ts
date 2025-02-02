@@ -1,6 +1,7 @@
 export type TBike = {
   _id: string;
   name: string;
+  categories: string;
   brand: string;
   model: string;
   image: string;
@@ -20,3 +21,4 @@ export type TCart = {
   updatedAt: string;
   __v: number;
 };
+

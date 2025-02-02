@@ -11,6 +11,7 @@ import {
 } from "@mui/material";
 import { useGetAllBikesQuery } from "../../redux/features/bike/bikeApi";
 import { useState } from "react";
+import { bikeBrands, bikeCategories } from "../../config/bike";
 
 type FilterState = Record<string, string | number>;
 
@@ -61,27 +62,27 @@ const AllProducts = () => {
             label="Brand"
           >
             <MenuItem value="">All</MenuItem>
-            {data?.data?.map((product) => (
-              <MenuItem value={product?.brand} key={product._id}>
-                {product?.brand}
+            {bikeBrands.map((item) => (
+              <MenuItem value={item.brand} key={item.id}>
+                {item.brand}
               </MenuItem>
             ))}
           </Select>
         </FormControl>
 
-        {/* Model Filter */}
-        <FormControl sx={{ minWidth: 100 }}>
-          <InputLabel id="model-filter-label">Model</InputLabel>
+        {/* Category Filter */}
+        <FormControl sx={{ minWidth: 110 }}>
+          <InputLabel id="category-filter-label">Category</InputLabel>
           <Select
-            labelId="model-filter-label"
-            value={params["model"] || ""}
-            onChange={(e) => handleFilterChange("model", e.target.value)}
-            label="Model"
+            labelId="category-filter-label"
+            value={params["categories"] || ""}
+            onChange={(e) => handleFilterChange("categories", e.target.value)}
+            label="Category"
           >
             <MenuItem value="">All</MenuItem>
-            {data?.data?.map((product) => (
-              <MenuItem value={product?.model} key={product._id}>
-                {product?.model}
+            {bikeCategories?.map((item) => (
+              <MenuItem value={item.category} key={item.id}>
+                {item.category}
               </MenuItem>
             ))}
           </Select>
