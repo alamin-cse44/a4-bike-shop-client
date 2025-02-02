@@ -12,6 +12,7 @@ import {
 } from "react-icons/fa";
 import ProductTable from "../../components/data-table/ProductTable";
 import AddProductForm from "../../components/AddProductForm";
+import TestTable from "../../components/data-table/TestTable";
 
 const DProducts = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -54,7 +55,8 @@ const DProducts = () => {
       </Drawer>
 
       {/* product table */}
-      <ProductTable />
+      {/* <ProductTable /> */}
+      <TestTable />
     </Box>
   );
 };
