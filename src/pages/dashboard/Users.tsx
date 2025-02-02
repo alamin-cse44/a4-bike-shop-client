@@ -19,15 +19,15 @@ import {
 } from "../../redux/features/bike/bikeApi";
 import { toast } from "sonner";
 import { TBike, TResponse } from "../../types";
-import UpdateProductForm from "../UpdateProductForm";
+import { useGetAllUsersQuery } from "../../redux/features/user/userManagementApi";
 
-const ProductTable = () => {
+const Users = () => {
   const [page, setPage] = useState(0); 
   const [limit, setLimit] = useState(10);
   const [search, setSearch] = useState("");
 
   // Fetch data using RTK Query
-  const { data, isLoading } = useGetAllBikesQuery({
+  const { data, isLoading } = useGetAllUsersQuery({
     page: page + 1, // Backend expects 1-based pagination
     limit,
     search,
@@ -147,13 +147,9 @@ const ProductTable = () => {
       ),
     },
     { field: "name", headerName: "Name", width: 250 },
-    { field: "brand", headerName: "Brand", width: 150 },
-    { field: "categories", headerName: "Category", width: 150 },
-    { field: "model", headerName: "Model", width: 150 },
-
-    // { field: "description", headerName: "Description", flex: 2 },
-    { field: "price", headerName: "Price ($)", width: 120 },
-    { field: "quantity", headerName: "Stock", width: 100 },
+    { field: "email", headerName: "Email", width: 220 },
+    { field: "isBlocked", headerName: "IS Blocked", width: 150 },
+    { field: "role", headerName: "Role", width: 150 },
     {
       field: "actions",
       headerName: "Actions",
@@ -234,7 +230,7 @@ const ProductTable = () => {
                 <CloseIcon />
               </Fab>
             </Box>
-            <UpdateProductForm id={selected} />
+            {/* <UpdateProductForm id={selected} /> */}
           </Box>
         </Drawer>
       )}
@@ -242,4 +238,4 @@ const ProductTable = () => {
   );
 };
 
-export default ProductTable;
+export default Users;

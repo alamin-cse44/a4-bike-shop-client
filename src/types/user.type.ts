@@ -5,7 +5,9 @@ export type TUserRegistration = {
   password: string;
   role: string;
   isBlocked: boolean;
+  image: string;
   createdAt: string;
   updatedAt: string;
   __v: number;
 };
+

@@ -26,6 +26,7 @@ import DProducts from "./DProducts";
 import { useAppDispatch } from "../../redux/hooks";
 import { logout } from "../../redux/features/auth/authSlice";
 import UserProfile from "./UserProfile";
+import Users from "./users";
 
 const NAVIGATION: Navigation = [
   {
@@ -45,6 +46,11 @@ const NAVIGATION: Navigation = [
   {
     segment: "products",
     title: "Products",
+    icon: <CategoryIcon />,
+  },
+  {
+    segment: "users",
+    title: "Users",
     icon: <CategoryIcon />,
   },
 ];
@@ -83,6 +89,7 @@ function DemoPageContent({ pathname }: { pathname: string }) {
         {pathname === "/dashboard" && <UserProfile />}
         {pathname === "/orders" && <Orders />}
         {pathname === "/products" && <DProducts />}
+        {pathname === "/users" && <Users />}
       </Container>
     </>
   );
