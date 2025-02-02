@@ -10,9 +10,8 @@ import CloseIcon from "@mui/icons-material/Close";
 import {
   FaPlusCircle,
 } from "react-icons/fa";
-import ProductTable from "../../components/data-table/ProductTable";
 import AddProductForm from "../../components/AddProductForm";
-import TestTable from "../../components/data-table/TestTable";
+import ProductTable from "../../components/data-table/ProductTable";
 
 const DProducts = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -55,8 +54,7 @@ const DProducts = () => {
       </Drawer>
 
       {/* product table */}
-      {/* <ProductTable /> */}
-      <TestTable />
+      <ProductTable />
     </Box>
   );
 };
