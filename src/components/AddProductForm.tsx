@@ -2,19 +2,27 @@ import { FC } from "react";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
-import { Box, Grid, TextField, Button, Typography } from "@mui/material";
+import {
+  Box,
+  Grid,
+  TextField,
+  Button,
+  Typography,
+  MenuItem,
+} from "@mui/material";
 import { toast } from "sonner";
 import { useCreateBikesMutation } from "../redux/features/bike/bikeApi";
 import { TBike, TResponse } from "../types";
+import { bikeBrands, bikeCategories } from "../config/bike";
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().required("Bike name is required"),
+  categories: Yup.string().required("Category name is required"),
   brand: Yup.string().required("Brand name is required"),
   model: Yup.string().required("Model name is required"),
   price: Yup.number().required("Price is required"),
   quantity: Yup.number().required("Quantity is required"),
   description: Yup.string(),
-  // type: Yup.string().required("User type is required"),
   image: Yup.mixed().required("Image is required"),
 });
 
@@ -28,6 +36,7 @@ const AddProductForm: FC = () => {
     resolver: yupResolver(validationSchema),
     defaultValues: {
       name: "Test Bike Name",
+      categories: "Sport",
       brand: "Test Brand",
       model: "Test Model",
       price: 1000,
@@ -39,6 +48,7 @@ const AddProductForm: FC = () => {
   const [createBikes] = useCreateBikesMutation();
 
   const handleCreateProduct: SubmitHandler<FieldValues> = async (data) => {
+    console.log("data", data);
     const toastId = toast.loading("Product is creating...");
     console.log(data);
     const formData = new FormData();
@@ -61,6 +71,7 @@ const AddProductForm: FC = () => {
       if (img_result.url) {
         const bikeInfo = {
           name: data.name,
+          categories: data.categories,
           brand: data.brand,
           model: data.model,
           price: data.price,
@@ -118,14 +129,39 @@ const AddProductForm: FC = () => {
               helperText={errors.name?.message}
             />
             <TextField
+              label="Category Type"
+              variant="outlined"
+              fullWidth
+              margin="normal"
+              select
+              {...register("categories")}
+              error={!!errors.categories}
+              helperText={errors.categories?.message}
+            >
+              <MenuItem value="">Choose Category</MenuItem>
+              {bikeCategories.map((cat) => (
+                <MenuItem key={cat.id} value={cat.category}>
+                  {cat.category}
+                </MenuItem>
+              ))}
+            </TextField>
+            <TextField
               label="Brand Name"
               variant="outlined"
-              margin="normal"
               fullWidth
+              margin="normal"
+              select
               {...register("brand")}
               error={!!errors.brand}
               helperText={errors.brand?.message}
-            />
+            >
+              <MenuItem value="">Choose Brand</MenuItem>
+              {bikeBrands.map((brand) => (
+                <MenuItem key={brand.id} value={brand.brand}>
+                  {brand.brand}
+                </MenuItem>
+              ))}
+            </TextField>
             <TextField
               label="Model Number"
               variant="outlined"
@@ -164,20 +200,7 @@ const AddProductForm: FC = () => {
               fullWidth
               {...register("description")}
             />
-            {/* <TextField
-              label="User Type"
-              variant="outlined"
-              margin="normal"
-              fullWidth
-              select
-              {...register('type')}
-              error={!!errors.type}
-              helperText={errors.type?.message}
-            >
-              <option value="">Choose user type</option>
-              <option value="moderator">Moderator</option>
-              <option value="member">Member</option>
-            </TextField> */}
+
             <Box position="relative">
               <TextField
                 type="file"
