@@ -58,7 +58,7 @@ const Users = () => {
         >
           <Typography variant="h6" sx={{ fontWeight: "medium", color: "blue" }}>
             Are you sure you want to{" "}
-            {isBlocked === true ? "Unblocked" : "Delete"} this user?
+            {isBlocked === true ? "Unblock" : "Delete"} this user?
           </Typography>
           <Box
             sx={{ display: "flex", justifyContent: "center", gap: 2, mt: 2 }}
