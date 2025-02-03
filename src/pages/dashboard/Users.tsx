@@ -184,7 +184,7 @@ const Users = () => {
     <Box sx={{ height: "100%", width: "100%", mt: 2 }}>
       {/* 🔍 Search Input */}
       <TextField
-        label="Search Bikes"
+        label="Search User"
         variant="outlined"
         fullWidth
         sx={{ mb: 2 }}
