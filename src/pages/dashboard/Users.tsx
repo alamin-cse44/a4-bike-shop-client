@@ -13,18 +13,25 @@ import {
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import CloseIcon from "@mui/icons-material/Close";
+import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
 import {
   useDeleteBikesMutation,
   useGetAllBikesQuery,
 } from "../../redux/features/bike/bikeApi";
 import { toast } from "sonner";
 import { TBike, TResponse } from "../../types";
-import { useGetAllUsersQuery } from "../../redux/features/user/userManagementApi";
+import {
+  useDeleteSingleUserMutation,
+  useGetAllUsersQuery,
+} from "../../redux/features/user/userManagementApi";
+import { useAppSelector } from "../../redux/hooks";
+import { selectCurrentUser } from "../../redux/features/auth/authSlice";
 
 const Users = () => {
-  const [page, setPage] = useState(0); 
+  const [page, setPage] = useState(0);
   const [limit, setLimit] = useState(10);
   const [search, setSearch] = useState("");
+  const user = useAppSelector(selectCurrentUser);
 
   // Fetch data using RTK Query
   const { data, isLoading } = useGetAllUsersQuery({
@@ -35,9 +42,9 @@ const Users = () => {
   });
 
   // Delete functionality
-  const [deleteBikes] = useDeleteBikesMutation();
+  const [deleteSignleUser] = useDeleteSingleUserMutation();
 
-  const handleDelete = (rowId: string) => {
+  const handleDelete = (email: string, isBlocked: boolean) => {
     toast.custom(
       (t) => (
         <Box
@@ -50,7 +57,8 @@ const Users = () => {
           }}
         >
           <Typography variant="h6" sx={{ fontWeight: "medium", color: "blue" }}>
-            Are you sure you want to delete this item?
+            Are you sure you want to{" "}
+            {isBlocked === true ? "Unblocked" : "Delete"} this user?
           </Typography>
           <Box
             sx={{ display: "flex", justifyContent: "center", gap: 2, mt: 2 }}
@@ -58,14 +66,14 @@ const Users = () => {
             {/* Confirm Button */}
             <Button
               onClick={async () => {
-                await deleteRow(rowId);
+                await deleteRow(email);
                 toast.dismiss(t); // Close toast after deletion
               }}
               variant="contained"
               color="error"
               sx={{ "&:hover": { backgroundColor: "error.dark" } }}
             >
-              Yes, Delete
+              Yes
             </Button>
 
             {/* Cancel Button */}
@@ -83,7 +91,7 @@ const Users = () => {
                 },
               }}
             >
-              No, Cancel
+              Cancel
             </Button>
           </Box>
         </Box>
@@ -95,21 +103,21 @@ const Users = () => {
     );
   };
 
-  const deleteRow = async (rowId: string) => {
+  const deleteRow = async (email: string) => {
     try {
-      const res = (await deleteBikes(rowId)) as TResponse<TBike>;
+      const res = (await deleteSignleUser(email)) as TResponse<TBike>;
       console.log("res", res);
       if (res.error) {
         toast.error(res.error.data.message, {
           duration: 2000,
         });
       } else {
-        toast.success("The Bike is Deleted successfully", {
+        toast.success("User Active status is updated", {
           duration: 2000,
         });
       }
     } catch (error) {
-      toast.error("Failed to delete product", {
+      toast.error("Failed to delete user", {
         duration: 2000,
       });
     }
@@ -146,9 +154,26 @@ const Users = () => {
         />
       ),
     },
-    { field: "name", headerName: "Name", width: 250 },
+    { field: "name", headerName: "Name", width: 200 },
     { field: "email", headerName: "Email", width: 220 },
-    { field: "isBlocked", headerName: "IS Blocked", width: 150 },
+    {
+      field: "isBlocked",
+      headerName: "IS Blocked",
+      width: 150,
+      renderCell: (params: any) => (
+        <>
+          {params.row.isBlocked ? (
+            <Button color="error" variant="outlined">
+              Blocked
+            </Button>
+          ) : (
+            <Button color="success" variant="outlined">
+              Active
+            </Button>
+          )}
+        </>
+      ),
+    },
     { field: "role", headerName: "Role", width: 150 },
     {
       field: "actions",
@@ -169,11 +194,21 @@ const Users = () => {
           <IconButton
             color="error"
             onClick={() => {
+              if (user?.userRole !== "admin") {
+                toast.error("Only admins can delete users!", {
+                  duration: 2000,
+                });
+                return;
+              }
               console.log("Delete", params.row._id);
-              handleDelete(params.row._id);
+              handleDelete(params.row.email, params.row.isBlocked);
             }}
           >
-            <DeleteIcon />
+            {!params.row.isBlocked ? (
+              <DeleteIcon />
+            ) : (
+              <PersonAddAlt1Icon sx={{ color: "green" }} />
+            )}
           </IconButton>
         </>
       ),

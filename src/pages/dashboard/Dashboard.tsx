@@ -23,10 +23,11 @@ import { Link } from "react-router-dom";
 import Orders from "./Orders";
 import { Button, Container } from "@mui/material";
 import DProducts from "./DProducts";
-import { useAppDispatch } from "../../redux/hooks";
-import { logout } from "../../redux/features/auth/authSlice";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { logout, selectCurrentUser } from "../../redux/features/auth/authSlice";
 import UserProfile from "./UserProfile";
 import Users from "./users";
+import { useGetSignleUserQuery } from "../../redux/features/user/userManagementApi";
 
 const NAVIGATION: Navigation = [
   {
@@ -180,6 +181,8 @@ export default function DashboardLayoutSlots(props: DemoProps) {
   console.log("pathname: ", router);
   // Remove this const when copying and pasting into your project.
   const demoWindow = window !== undefined ? window() : undefined;
+
+ 
 
   return (
     <AppProvider

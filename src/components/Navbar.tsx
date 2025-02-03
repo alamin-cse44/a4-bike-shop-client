@@ -29,7 +29,7 @@ import { useGetCartByEmailQuery } from "../redux/features/cart/cartApi";
 import Badge, { badgeClasses } from '@mui/material/Badge';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCartOutlined';
 import { TCart } from "../types";
-import Carts from "../pages/carts/carts";
+import Carts from "../pages/carts/Carts";
 
 const CartBadge = styled(Badge)`
 & .${badgeClasses.badge} {
