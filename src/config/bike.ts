@@ -11,5 +11,5 @@ export const bikeBrands = [
   { id: 2, brand: "Honda" },
   { id: 3, brand: "Suzuki" },
   { id: 4, brand: "Ducati" },
-  { id: 5, brand: "Kawasaki" },
+  { id: 5, brand: "Kawaski" },
 ];
