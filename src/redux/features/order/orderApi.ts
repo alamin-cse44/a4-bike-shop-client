@@ -1,4 +1,4 @@
-import { TBike, TResponseRedux } from "../../../types";
+import { TOrder, TResponseRedux } from "../../../types";
 import { baseApi } from "../../api/baseApi";
 
 const orderApi = baseApi.injectEndpoints({
@@ -16,7 +16,7 @@ const orderApi = baseApi.injectEndpoints({
         };
       },
       // TODO: order response
-      transformResponse: (response: TResponseRedux<TBike[]>) => {
+      transformResponse: (response: TResponseRedux<TOrder[]>) => {
         // console.log("inside redux", response);
         return {
           data: response?.data,
@@ -63,9 +63,9 @@ const orderApi = baseApi.injectEndpoints({
 });
 
 export const {
-    useCreateOrderMutation,
-    useGetAllOrdersQuery,
-    useDeleteOrderMutation,
-    useGetSignleOrderQuery,
-    useUpdateOrderMutation,
+  useCreateOrderMutation,
+  useGetAllOrdersQuery,
+  useDeleteOrderMutation,
+  useGetSignleOrderQuery,
+  useUpdateOrderMutation,
 } = orderApi;

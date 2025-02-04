@@ -14,10 +14,6 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import CloseIcon from "@mui/icons-material/Close";
 import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
-import {
-  useDeleteBikesMutation,
-  useGetAllBikesQuery,
-} from "../../redux/features/bike/bikeApi";
 import { toast } from "sonner";
 import { TBike, TResponse } from "../../types";
 import {
