@@ -31,7 +31,9 @@ const orderApi = baseApi.injectEndpoints({
         body: orderInfo,
       }),
       // Invalidate the 'Order' list after creation
-      invalidatesTags: [{ type: "Order", id: "LIST" }],
+      invalidatesTags: [
+        { type: "Order", id: "LIST" },
+      ],
     }),
     deleteOrder: builder.mutation({
       query: (id) => ({

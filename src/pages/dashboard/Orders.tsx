@@ -18,7 +18,10 @@ import { toast } from "sonner";
 import { TOrder, TResponse } from "../../types";
 import { useAppSelector } from "../../redux/hooks";
 import { selectCurrentUser } from "../../redux/features/auth/authSlice";
-import { useDeleteOrderMutation, useGetAllOrdersQuery } from "../../redux/features/order/orderApi";
+import {
+  useDeleteOrderMutation,
+  useGetAllOrdersQuery,
+} from "../../redux/features/order/orderApi";
 
 const Orders = () => {
   const [page, setPage] = useState(0);
@@ -34,10 +37,12 @@ const Orders = () => {
     sortOrder: "desc",
   });
 
+  console.log("data", data);
+
   // Delete functionality
   const [deleteOrder] = useDeleteOrderMutation();
 
-  const handleDelete = (email: string, isBlocked: boolean) => {
+  const handleDelete = (productId: string) => {
     toast.custom(
       (t) => (
         <Box
@@ -50,8 +55,7 @@ const Orders = () => {
           }}
         >
           <Typography variant="h6" sx={{ fontWeight: "medium", color: "blue" }}>
-            Are you sure you want to {isBlocked === true ? "Unblock" : "Delete"}{" "}
-            this user?
+            Are you sure you want to delete this product?
           </Typography>
           <Box
             sx={{ display: "flex", justifyContent: "center", gap: 2, mt: 2 }}
@@ -59,7 +63,7 @@ const Orders = () => {
             {/* Confirm Button */}
             <Button
               onClick={async () => {
-                await deleteRow(email);
+                await deleteRow(productId);
                 toast.dismiss(t); // Close toast after deletion
               }}
               variant="contained"
@@ -96,21 +100,21 @@ const Orders = () => {
     );
   };
 
-  const deleteRow = async (email: string) => {
+  const deleteRow = async (productId: string) => {
     try {
-      const res = (await deleteOrder(email)) as TResponse<TOrder>;
+      const res = (await deleteOrder(productId)) as TResponse<TOrder>;
       console.log("res", res);
       if (res.error) {
         toast.error(res.error.data.message, {
           duration: 2000,
         });
       } else {
-        toast.success("User Active status is updated", {
+        toast.success("Product is deleted!", {
           duration: 2000,
         });
       }
     } catch (error) {
-      toast.error("Failed to delete user", {
+      toast.error("Failed to delete Product", {
         duration: 2000,
       });
     }
@@ -137,20 +141,32 @@ const Orders = () => {
     // { field: "_id", headerName: "ID", width: 150 },
     {
       field: "image",
-      headerName: "Image",
+      headerName: "Product Image",
       width: 120,
       renderCell: (params: any) => (
         <img
           src={params.row.product.image}
-          alt="Bike"
+          alt="Product"
           style={{ width: 50, height: 50, borderRadius: 5 }}
         />
       ),
     },
-    { field: "name", headerName: "Name", width: 200, renderCell: (params: any) => (
-        <Typography>{params.row.product.name}</Typography>
-    ) },
+    {
+      field: "productName",
+      headerName: "Product Name",
+      width: 250,
+      renderCell: (params: any) => params.row.product.name,
+    },
+    {
+      field: "customerName",
+      headerName: "Customer Name",
+      width: 200,
+      renderCell: (params: any) => params.row.customer.name,
+    },
     { field: "email", headerName: "Email", width: 220 },
+    { field: "totalPrice", headerName: "Total Price ($)", width: 150 },
+    { field: "orderStatus", headerName: "Order Status", width: 150 },
+    { field: "paymentStatus", headerName: "Payment Status", width: 150 },
     {
       field: "isBlocked",
       headerName: "IS Blocked",
@@ -179,8 +195,8 @@ const Orders = () => {
           <IconButton
             color="primary"
             onClick={() => {
-              console.log("Edit", params.row._id);
-              setSelected(params.row._id);
+              // console.log("Edit", params.row._id);
+              // setSelected(params.row._id);
               toggleDrawer();
             }}
           >
@@ -195,15 +211,11 @@ const Orders = () => {
                 });
                 return;
               }
-              console.log("Delete", params.row._id);
-              handleDelete(params.row.email, params.row.isBlocked);
+              // console.log("Delete", params.row._id);
+              // handleDelete(params.row._id);
             }}
           >
-            {!params.row.isBlocked ? (
-              <DeleteIcon />
-            ) : (
-              <PersonAddAlt1Icon sx={{ color: "green" }} />
-            )}
+            <DeleteIcon />
           </IconButton>
         </>
       ),

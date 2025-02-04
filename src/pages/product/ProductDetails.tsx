@@ -1,5 +1,5 @@
 import { Box, Button, Container, Typography } from "@mui/material";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useGetSignleBikeQuery } from "../../redux/features/bike/bikeApi";
 import { useAppSelector } from "../../redux/hooks";
 import { selectCurrentUser } from "../../redux/features/auth/authSlice";
@@ -131,7 +131,9 @@ const ProductDetails = () => {
             >
               Add to Cart
             </Button>
-            {/* <Button
+            <Button
+              component={Link}
+              to={`/single-checkout/${data?.data?._id}`}
               variant="outlined"
               color="primary"
               sx={{
@@ -145,8 +147,8 @@ const ProductDetails = () => {
                 },
               }}
             >
-              View Details
-            </Button> */}
+              BUY NOW
+            </Button>
           </Box>
         </Box>
 

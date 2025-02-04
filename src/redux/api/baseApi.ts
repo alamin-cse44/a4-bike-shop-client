@@ -33,7 +33,7 @@ const baseQueryWithRefreshToken: BaseQueryFn<
 
   // TODO
   if(result?.error?.status === 403){
-    api.dispatch(logout());
+    // api.dispatch(logout());
   }
 
   if (result?.error?.status === 404) {

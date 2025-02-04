@@ -11,6 +11,7 @@ import ProtectedRoute from "./ProtectedRoute";
 import ProductDetails from "../pages/product/ProductDetails";
 import Checkout from "../pages/product/Checkout";
 import About from "../pages/about/About";
+import SingleCheckout from "../pages/product/SingleCheckout";
 
 export const router = createBrowserRouter([
   {
@@ -36,6 +37,10 @@ export const router = createBrowserRouter([
       {
         path: "/checkout",
         element: <Checkout />,
+      },
+      {
+        path: "/single-checkout/:id",
+        element: <SingleCheckout />,
       },
       {
         path: "signup",
