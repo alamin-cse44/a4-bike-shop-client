@@ -160,32 +160,59 @@ const Orders = () => {
     {
       field: "customerName",
       headerName: "Customer Name",
-      width: 200,
+      width: 150,
       renderCell: (params: any) => params.row.customer.name,
     },
     { field: "email", headerName: "Email", width: 220 },
     { field: "totalPrice", headerName: "Total Price ($)", width: 150 },
-    { field: "orderStatus", headerName: "Order Status", width: 150 },
-    { field: "paymentStatus", headerName: "Payment Status", width: 150 },
     {
-      field: "isBlocked",
-      headerName: "IS Blocked",
+      field: "orderStatus",
+      headerName: "Order Status",
       width: 150,
       renderCell: (params: any) => (
         <>
-          {params.row.isBlocked ? (
-            <Button color="error" variant="outlined">
-              Blocked
+          {params.row.orderStatus === "pending" && (
+            <Button color="primary" variant="contained">
+              {params.row.orderStatus}
             </Button>
-          ) : (
-            <Button color="success" variant="outlined">
-              Active
+          )}
+          {params.row.orderStatus === "confirmed" && (
+            <Button color="secondary" variant="contained">
+              {params.row.orderStatus}
+            </Button>
+          )}
+          {params.row.orderStatus === "delivered" && (
+            <Button color="success" variant="contained">
+              {params.row.orderStatus}
+            </Button>
+          )}
+          {params.row.orderStatus === "cancel" && (
+            <Button color="error" variant="contained">
+              {params.row.orderStatus}
             </Button>
           )}
         </>
       ),
     },
-    { field: "role", headerName: "Role", width: 150 },
+    {
+      field: "paymentStatus",
+      headerName: "Payment Status",
+      width: 150,
+      renderCell: (params: any) => (
+        <>
+          {params.row.paymentStatus === "pending" && (
+            <Button color="primary" variant="outlined">
+              {params.row.paymentStatus}
+            </Button>
+          )}
+          {params.row.paymentStatus === "success" && (
+            <Button color="success" variant="outlined">
+              {params.row.paymentStatus}
+            </Button>
+          )}
+        </>
+      ),
+    },
     {
       field: "actions",
       headerName: "Actions",
@@ -212,7 +239,7 @@ const Orders = () => {
                 return;
               }
               // console.log("Delete", params.row._id);
-              // handleDelete(params.row._id);
+              handleDelete(params.row._id);
             }}
           >
             <DeleteIcon />
