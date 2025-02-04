@@ -15,7 +15,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import CloseIcon from "@mui/icons-material/Close";
 import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
 import { toast } from "sonner";
-import { TBike, TResponse } from "../../types";
+import { TBike, TResponse, TUserRegistration } from "../../types";
 import {
   useDeleteSingleUserMutation,
   useGetAllUsersQuery,
@@ -101,7 +101,7 @@ const Users = () => {
 
   const deleteRow = async (email: string) => {
     try {
-      const res = (await deleteSignleUser(email)) as TResponse<TBike>;
+      const res = (await deleteSignleUser(email)) as TResponse<TUserRegistration>;
       console.log("res", res);
       if (res.error) {
         toast.error(res.error.data.message, {

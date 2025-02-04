@@ -15,13 +15,10 @@ import EditIcon from "@mui/icons-material/Edit";
 import CloseIcon from "@mui/icons-material/Close";
 import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
 import { toast } from "sonner";
-import { TBike, TResponse } from "../../types";
-import {
-  useDeleteSingleUserMutation,
-  useGetAllUsersQuery,
-} from "../../redux/features/user/userManagementApi";
+import { TOrder, TResponse } from "../../types";
 import { useAppSelector } from "../../redux/hooks";
 import { selectCurrentUser } from "../../redux/features/auth/authSlice";
+import { useDeleteOrderMutation, useGetAllOrdersQuery } from "../../redux/features/order/orderApi";
 
 const Orders = () => {
   const [page, setPage] = useState(0);
@@ -30,7 +27,7 @@ const Orders = () => {
   const user = useAppSelector(selectCurrentUser);
 
   // Fetch data using RTK Query
-  const { data, isLoading } = useGetAllUsersQuery({
+  const { data, isLoading } = useGetAllOrdersQuery({
     page: page + 1, // Backend expects 1-based pagination
     limit,
     search,
@@ -38,7 +35,7 @@ const Orders = () => {
   });
 
   // Delete functionality
-  const [deleteSignleUser] = useDeleteSingleUserMutation();
+  const [deleteOrder] = useDeleteOrderMutation();
 
   const handleDelete = (email: string, isBlocked: boolean) => {
     toast.custom(
@@ -101,7 +98,7 @@ const Orders = () => {
 
   const deleteRow = async (email: string) => {
     try {
-      const res = (await deleteSignleUser(email)) as TResponse<TBike>;
+      const res = (await deleteOrder(email)) as TResponse<TOrder>;
       console.log("res", res);
       if (res.error) {
         toast.error(res.error.data.message, {
@@ -144,13 +141,15 @@ const Orders = () => {
       width: 120,
       renderCell: (params: any) => (
         <img
-          src={params.value}
+          src={params.row.product.image}
           alt="Bike"
           style={{ width: 50, height: 50, borderRadius: 5 }}
         />
       ),
     },
-    { field: "name", headerName: "Name", width: 200 },
+    { field: "name", headerName: "Name", width: 200, renderCell: (params: any) => (
+        <Typography>{params.row.product.name}</Typography>
+    ) },
     { field: "email", headerName: "Email", width: 220 },
     {
       field: "isBlocked",

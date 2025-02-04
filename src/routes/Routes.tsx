@@ -10,6 +10,7 @@ import DProducts from "../pages/dashboard/DProducts";
 import ProtectedRoute from "./ProtectedRoute";
 import ProductDetails from "../pages/product/ProductDetails";
 import Checkout from "../pages/product/Checkout";
+import About from "../pages/about/About";
 
 export const router = createBrowserRouter([
   {
@@ -19,6 +20,10 @@ export const router = createBrowserRouter([
       {
         path: "/",
         element: <Home />,
+      },
+      {
+        path: "/about",
+        element: <About />,
       },
       {
         path: "product",
