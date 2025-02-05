@@ -4,16 +4,15 @@ import {
   Box,
   Button,
   CircularProgress,
-  Drawer,
-  Fab,
+  FormControl,
   IconButton,
+  InputLabel,
+  MenuItem,
+  Select,
   TextField,
   Typography,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from "@mui/icons-material/Edit";
-import CloseIcon from "@mui/icons-material/Close";
-import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
 import { toast } from "sonner";
 import { TOrder, TResponse } from "../../types";
 import { useAppSelector } from "../../redux/hooks";
@@ -21,12 +20,16 @@ import { selectCurrentUser } from "../../redux/features/auth/authSlice";
 import {
   useDeleteOrderMutation,
   useGetAllOrdersQuery,
+  useUpdateOrderMutation,
 } from "../../redux/features/order/orderApi";
+
+type FilterState = Record<string, string | number>;
 
 const Orders = () => {
   const [page, setPage] = useState(0);
   const [limit, setLimit] = useState(10);
   const [search, setSearch] = useState("");
+  const [filter, setFilter] = useState("");
   const user = useAppSelector(selectCurrentUser);
 
   // Fetch data using RTK Query
@@ -34,6 +37,7 @@ const Orders = () => {
     page: page + 1, // Backend expects 1-based pagination
     limit,
     search,
+    orderStatus: filter,
     sortOrder: "desc",
   });
 
@@ -120,13 +124,19 @@ const Orders = () => {
     }
   };
 
-  // Update product functionality
-  const [drawerOpen, setDrawerOpen] = useState(false);
-  const [selected, setSelected] = useState("");
+  const [updateOrder] = useUpdateOrderMutation();
 
-  // Toggle cart drawer
-  const toggleDrawer = () => {
-    setDrawerOpen(!drawerOpen);
+  const handleStatusChange = async (orderId: string, newStatus: string) => {
+    const orderInfo = {
+      _id: orderId,
+      orderStatus: newStatus,
+    };
+    try {
+      await updateOrder(orderInfo);
+      toast.success("Order status updated successfully");
+    } catch (error) {
+      toast.error("Failed to update order status");
+    }
   };
 
   const handlePaginationChange = (params: {
@@ -139,6 +149,25 @@ const Orders = () => {
 
   const columns = [
     // { field: "_id", headerName: "ID", width: 150 },
+    {
+      field: "paymentStatus",
+      headerName: "Payment Status",
+      width: 150,
+      renderCell: (params: any) => (
+        <>
+          {params.row.paymentStatus === "pending" && (
+            <Button color="primary" variant="outlined">
+              {params.row.paymentStatus}
+            </Button>
+          )}
+          {params.row.paymentStatus === "success" && (
+            <Button color="success" variant="outlined">
+              {params.row.paymentStatus}
+            </Button>
+          )}
+        </>
+      ),
+    },
     {
       field: "image",
       headerName: "Product Image",
@@ -166,8 +195,8 @@ const Orders = () => {
     { field: "email", headerName: "Email", width: 220 },
     { field: "totalPrice", headerName: "Total Price ($)", width: 150 },
     {
-      field: "orderStatus",
-      headerName: "Order Status",
+      field: "current_status",
+      headerName: "Oreder Status",
       width: 150,
       renderCell: (params: any) => (
         <>
@@ -195,56 +224,110 @@ const Orders = () => {
       ),
     },
     {
-      field: "paymentStatus",
-      headerName: "Payment Status",
-      width: 150,
+      field: "orderStatus",
+      headerName: "Update Status",
+      width: 180,
       renderCell: (params: any) => (
         <>
-          {params.row.paymentStatus === "pending" && (
-            <Button color="primary" variant="outlined">
-              {params.row.paymentStatus}
-            </Button>
+          {params.row.orderStatus === "pending" && (
+            <Select
+              value={params.row.orderStatus}
+              onChange={(e) =>
+                handleStatusChange(params.row._id, e.target.value)
+              }
+              size="small"
+              fullWidth
+            >
+              <MenuItem value="pending" disabled>
+                Pending
+              </MenuItem>
+              <MenuItem value="confirmed">Confirmed</MenuItem>
+              <MenuItem value="delivered">Delivered</MenuItem>
+              <MenuItem value="cancel">Cancel</MenuItem>
+            </Select>
           )}
-          {params.row.paymentStatus === "success" && (
-            <Button color="success" variant="outlined">
-              {params.row.paymentStatus}
-            </Button>
+
+          {params.row.orderStatus === "confirmed" && (
+            <Select
+              value={params.row.orderStatus}
+              onChange={(e) =>
+                handleStatusChange(params.row._id, e.target.value)
+              }
+              size="small"
+              fullWidth
+            >
+              <MenuItem value="pending">Pending</MenuItem>
+              <MenuItem value="confirmed" disabled>
+                Confirmed
+              </MenuItem>
+              <MenuItem value="delivered">Delivered</MenuItem>
+              <MenuItem value="cancel">Cancel</MenuItem>
+            </Select>
+          )}
+
+          {params.row.orderStatus === "delivered" && (
+            <Select
+              value={params.row.orderStatus}
+              onChange={(e) =>
+                handleStatusChange(params.row._id, e.target.value)
+              }
+              size="small"
+              fullWidth
+            >
+              <MenuItem value="pending">Pending</MenuItem>
+              <MenuItem value="confirmed">Confirmed</MenuItem>
+              <MenuItem value="delivered" disabled>
+                Delivered
+              </MenuItem>
+              <MenuItem value="cancel">Cancel</MenuItem>
+            </Select>
+          )}
+          {params.row.orderStatus === "cancel" && (
+            <Select
+              value={params.row.orderStatus}
+              onChange={(e) =>
+                handleStatusChange(params.row._id, e.target.value)
+              }
+              size="small"
+              fullWidth
+            >
+              <MenuItem value="pending" disabled>
+                Pending
+              </MenuItem>
+              <MenuItem value="confirmed" disabled>
+                Confirmed
+              </MenuItem>
+              <MenuItem value="delivered" disabled>
+                Delivered
+              </MenuItem>
+              <MenuItem value="cancel" disabled>
+                Cancel
+              </MenuItem>
+            </Select>
           )}
         </>
       ),
     },
+
     {
       field: "actions",
       headerName: "Actions",
       width: 120,
       renderCell: (params: any) => (
-        <>
-          <IconButton
-            color="primary"
-            onClick={() => {
-              // console.log("Edit", params.row._id);
-              // setSelected(params.row._id);
-              toggleDrawer();
-            }}
-          >
-            <EditIcon />
-          </IconButton>
-          <IconButton
-            color="error"
-            onClick={() => {
-              if (user?.userRole !== "admin") {
-                toast.error("Only admins can delete users!", {
-                  duration: 2000,
-                });
-                return;
-              }
-              // console.log("Delete", params.row._id);
-              handleDelete(params.row._id);
-            }}
-          >
-            <DeleteIcon />
-          </IconButton>
-        </>
+        <IconButton
+          color="error"
+          onClick={() => {
+            if (user?.userRole !== "admin") {
+              toast.error("Only admins can delete users!", {
+                duration: 2000,
+              });
+              return;
+            }
+            handleDelete(params.row._id);
+          }}
+        >
+          <DeleteIcon />
+        </IconButton>
       ),
     },
   ];
@@ -252,14 +335,32 @@ const Orders = () => {
   return (
     <Box sx={{ height: "100%", width: "100%", mt: 2 }}>
       {/* 🔍 Search Input */}
-      <TextField
-        label="Search User"
-        variant="outlined"
-        fullWidth
-        sx={{ mb: 2 }}
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-      />
+      <Box mb={2}>
+        <TextField
+          label="Search order by email, phone or status"
+          variant="outlined"
+          sx={{ minWidth: 300 }}
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+
+        {/* 📌 Order Status Filter */}
+        <TextField
+          select
+          label=""
+          variant="outlined"
+          sx={{ minWidth: 200, ml: 2 }}
+          value={filter}
+          onChange={(e) => setFilter(e.target.value)}
+          SelectProps={{ native: true }}
+        >
+          <option value="">All</option>
+          <option value="pending">Pending</option>
+          <option value="confirmed">Confirmed</option>
+          <option value="delivered">Delivered</option>
+          <option value="cancel">Canceled</option>
+        </TextField>
+      </Box>
 
       {/* 🚴 Data Table */}
       {isLoading && (
@@ -278,31 +379,6 @@ const Orders = () => {
         loading={isLoading}
         getRowId={(row) => row._id} // ✅ Use _id as row key
       />
-      {drawerOpen && (
-        <Drawer anchor="right" open={drawerOpen} onClose={toggleDrawer}>
-          <Box sx={{ width: 350, padding: 2 }}>
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                mt: 8,
-              }}
-            >
-              <Typography variant="h6">Update Your Product</Typography>
-              <Fab
-                onClick={toggleDrawer}
-                size="small"
-                color="secondary"
-                aria-label="add"
-              >
-                <CloseIcon />
-              </Fab>
-            </Box>
-            {/* <UpdateProductForm id={selected} /> */}
-          </Box>
-        </Drawer>
-      )}
     </Box>
   );
 };
