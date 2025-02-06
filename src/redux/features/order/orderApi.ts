@@ -52,6 +52,16 @@ const orderApi = baseApi.injectEndpoints({
       // Invalidate the 'Order' list after creation
       invalidatesTags: [{ type: "Order", id: "LIST" }],
     }),
+    // handle payment
+    createPayment: builder.mutation({
+      query: (orderInfo) => ({
+        url: "/payments",
+        method: "POST",
+        body: orderInfo,
+      }),
+      // Invalidate the 'Order' list after creation
+      invalidatesTags: [{ type: "Order", id: "LIST" }],
+    }),
     deleteOrder: builder.mutation({
       query: (id) => ({
         url: `/orders/${id}`,
@@ -83,6 +93,7 @@ const orderApi = baseApi.injectEndpoints({
 
 export const {
   useCreateOrderMutation,
+  useCreatePaymentMutation,
   useGetAllOrdersQuery,
   useGetOrdersByEmailQuery,
   useDeleteOrderMutation,

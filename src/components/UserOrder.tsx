@@ -15,6 +15,7 @@ import { toast } from "sonner";
 import { useAppSelector } from "../redux/hooks";
 import { selectCurrentUser } from "../redux/features/auth/authSlice";
 import {
+  useCreatePaymentMutation,
   useDeleteOrderMutation,
   useGetOrdersByEmailQuery,
   useUpdateOrderMutation,
@@ -26,7 +27,7 @@ const UserOrder = () => {
   const [limit, setLimit] = useState(10);
   const [filter, setFilter] = useState("");
   const user = useAppSelector(selectCurrentUser);
-
+  const [createPayment] = useCreatePaymentMutation();
   // Fetch data using RTK Query
   const { data, isLoading } = useGetOrdersByEmailQuery({
     page: page + 1, // Backend expects 1-based pagination
@@ -34,6 +35,8 @@ const UserOrder = () => {
     orderStatus: filter,
     sortOrder: "desc",
   });
+
+  console.log(data?.data)
 
   const handlePaginationChange = (params: {
     page: number;
@@ -50,8 +53,22 @@ const UserOrder = () => {
     return <CircularProgress />;
   }
 
+  const handlePayment = async (data: TOrder) => {
+    console.log("row data", data);
+
+    const res = await createPayment(data);
+    console.log("res", res);
+    if (res?.data?.data) {
+      window.open(res?.data?.data, "_blank");
+    } else {
+      toast.error("Failed to create payment", {
+        duration: 2000,
+      });
+    }
+  };
+
   const columns = [
-    // { field: "_id", headerName: "ID", width: 150 },
+    { field: "_id", headerName: "ID", width: 215 },
     {
       field: "paymentStatus",
       headerName: "Payment Status",
@@ -59,19 +76,23 @@ const UserOrder = () => {
       renderCell: (params: any) => (
         <>
           {params.row.paymentStatus === "pending" && (
-            <Box display={"flex"} gap={2}>
+            <Box display={"flex"} gap={2} mt={1}>
               {" "}
               <Button color="error" variant="contained">
-                {/* {params.row.paymentStatus} */} Unpaid
+                Unpaid
               </Button>
-              <Button color="error" variant="outlined">
+              <Button
+                onClick={() => handlePayment(params.row)}
+                color="error"
+                variant="outlined"
+              >
                 Click to pay
               </Button>
             </Box>
           )}
           {params.row.paymentStatus === "success" && (
             <Button color="success" variant="contained">
-               PAID
+              PAID
             </Button>
           )}
         </>

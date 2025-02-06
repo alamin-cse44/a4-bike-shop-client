@@ -152,12 +152,12 @@ const Orders = () => {
       renderCell: (params: any) => (
         <>
           {params.row.paymentStatus === "pending" && (
-            <Button color="primary" variant="outlined">
+            <Button color="primary" variant="contained">
               {params.row.paymentStatus}
             </Button>
           )}
           {params.row.paymentStatus === "success" && (
-            <Button color="success" variant="outlined">
+            <Button color="success" variant="contained">
               {params.row.paymentStatus}
             </Button>
           )}

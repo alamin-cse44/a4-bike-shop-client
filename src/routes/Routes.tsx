@@ -12,6 +12,7 @@ import ProductDetails from "../pages/product/ProductDetails";
 import Checkout from "../pages/product/Checkout";
 import About from "../pages/about/About";
 import SingleCheckout from "../pages/product/SingleCheckout";
+import ErrorPayment from "../pages/payment/ErrorPayment";
 
 export const router = createBrowserRouter([
   {
@@ -43,6 +44,10 @@ export const router = createBrowserRouter([
         element: <SingleCheckout />,
       },
       {
+        path: "/payment-error",
+        element: <ErrorPayment />,
+      },
+      {
         path: "signup",
         element: <Signup />,
       },
@@ -51,10 +56,6 @@ export const router = createBrowserRouter([
         element: <Login />,
       },
     ],
-  },
-  {
-    path: "/checkout",
-    element: <Checkout />,
   },
   {
     path: "/dashboard",

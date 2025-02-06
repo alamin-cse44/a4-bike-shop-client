@@ -29,7 +29,7 @@ const validationSchema = Yup.object().shape({
   address: Yup.string().required("Address is required"),
   phone: Yup.number().required("Phone number is required"),
   quantity: Yup.number().required("Quantity is required").positive(),
-  paymentMethod: Yup.string().required("Provide your own payment method"),
+  // paymentMethod: Yup.string().required("Provide your own payment method"),
 });
 
 const SingleCheckout = () => {
@@ -62,7 +62,7 @@ const SingleCheckout = () => {
       phone: data.phone,
       orderStatus: "pending",
       paymentStatus: "pending",
-      paymentMethod: data.paymentMethod,
+      paymentMethod: "",
       transactionId: "",
     };
     console.log("order info", orderInfo);
@@ -197,7 +197,7 @@ const SingleCheckout = () => {
               error={!!errors.quantity}
               helperText={errors.quantity?.message}
             />
-            <TextField
+            {/* <TextField
               label="Payment Method Name"
               variant="outlined"
               fullWidth
@@ -211,7 +211,7 @@ const SingleCheckout = () => {
               <MenuItem value="Bkash">Bkash</MenuItem>
               <MenuItem value="Nagad">Nagad</MenuItem>
               <MenuItem value="Bank">Bank</MenuItem>
-            </TextField>
+            </TextField> */}
 
             <Button
               type="submit"
