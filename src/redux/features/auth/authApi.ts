@@ -8,6 +8,7 @@ const authApi = baseApi.injectEndpoints({
         method: "POST",
         body: userInfo,
       }),
+      invalidatesTags: [{ type: "Order", id: "LIST" }],
     }),
     changePassword: builder.mutation({
       query: (passInfo) => ({

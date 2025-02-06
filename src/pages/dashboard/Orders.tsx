@@ -4,9 +4,7 @@ import {
   Box,
   Button,
   CircularProgress,
-  FormControl,
   IconButton,
-  InputLabel,
   MenuItem,
   Select,
   TextField,
@@ -22,8 +20,6 @@ import {
   useGetAllOrdersQuery,
   useUpdateOrderMutation,
 } from "../../redux/features/order/orderApi";
-
-type FilterState = Record<string, string | number>;
 
 const Orders = () => {
   const [page, setPage] = useState(0);

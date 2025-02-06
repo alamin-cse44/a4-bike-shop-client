@@ -17,7 +17,26 @@ const orderApi = baseApi.injectEndpoints({
       },
       // TODO: order response
       transformResponse: (response: TResponseRedux<TOrder[]>) => {
-        // console.log("inside redux", response);
+        return {
+          data: response?.data,
+        };
+      },
+      providesTags: [{ type: "Order", id: "LIST" }],
+    }),
+    getOrdersByEmail: builder.query({
+      query: (args) => {
+        const params = new URLSearchParams();
+        Object.entries(args).forEach(([key, value]) => {
+          if (value) params.append(key, value.toString());
+        });
+        return {
+          url: `/orders/by-email`,
+          method: "GET",
+          params: params,
+        };
+      },
+      // TODO: order response
+      transformResponse: (response: TResponseRedux<TOrder[]>) => {
         return {
           data: response?.data,
         };
@@ -31,9 +50,7 @@ const orderApi = baseApi.injectEndpoints({
         body: orderInfo,
       }),
       // Invalidate the 'Order' list after creation
-      invalidatesTags: [
-        { type: "Order", id: "LIST" },
-      ],
+      invalidatesTags: [{ type: "Order", id: "LIST" }],
     }),
     deleteOrder: builder.mutation({
       query: (id) => ({
@@ -67,6 +84,7 @@ const orderApi = baseApi.injectEndpoints({
 export const {
   useCreateOrderMutation,
   useGetAllOrdersQuery,
+  useGetOrdersByEmailQuery,
   useDeleteOrderMutation,
   useGetSignleOrderQuery,
   useUpdateOrderMutation,

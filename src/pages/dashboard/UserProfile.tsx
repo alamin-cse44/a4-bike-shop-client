@@ -23,6 +23,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import { useChangePasswordMutation } from "../../redux/features/auth/authApi";
 import { toast } from "sonner";
+import UserOrder from "../../components/UserOrder";
 
 const validationSchema = Yup.object().shape({
   oldPassword: Yup.string().required("Old password is required"),
@@ -240,6 +241,9 @@ const UserProfile = () => {
           </Box>
         </Modal>
       )}
+
+      {/* orders  */}
+      <UserOrder />
     </>
   );
 };
