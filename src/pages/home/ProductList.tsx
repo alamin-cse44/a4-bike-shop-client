@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 
 
 const ProductList = () => {
-  const { data } = useGetAllBikesQuery({});
+  const { data } = useGetAllBikesQuery({sortOrder: "desc"});
 
   const bikes = data?.data?.slice(0, 6);
   return (

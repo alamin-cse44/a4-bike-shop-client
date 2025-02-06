@@ -83,12 +83,20 @@ const Footer = () => {
               justifyContent={"center"}
               gap={2}
             >
-              <Link to={""}>
+              <a
+                href="https://www.facebook.com/rehan.mohammed.al.amin"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <FaFacebook size={30} />
-              </Link>
-              <Link to={""}>
+              </a>
+              <a
+                href="https://www.linkedin.com/in/al-amin-1b4587216/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <FaLinkedin size={30} />
-              </Link>
+              </a>
             </Box>
             <Typography variant="body2" color="textSecondary">
               © 2025 Rehan. All Rights Reserved.

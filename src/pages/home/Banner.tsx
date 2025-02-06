@@ -1,23 +1,23 @@
 import { Box } from "@mui/material";
 import { useEffect, useState } from "react";
-import "../../styles/banner.css"
+import "../../styles/banner.css";
 
 import {
   FaRegArrowAltCircleLeft,
   FaRegArrowAltCircleRight,
 } from "react-icons/fa";
 
+import b1 from "../../assets/images/banner/b1.webp";
+import b2 from "../../assets/images/banner/b2.webp";
+import b3 from "../../assets/images/banner/b3.webp";
+import b4 from "../../assets/images/banner/b4.webp";
+import b5 from "../../assets/images/banner/b5.webp";
+import b6 from "../../assets/images/banner/b6.webp";
+import b7 from "../../assets/images/banner/b7.webp";
+
 const Banner = () => {
   const [coverflowPosition, setCoverflowPosition] = useState(3); // Set initial position to the middle image
-  const images = [
-    "https://s3-us-west-2.amazonaws.com/s.cdpn.io/168886/bob-ross-1.jpg",
-    "https://s3-us-west-2.amazonaws.com/s.cdpn.io/168886/bob-ross-2.jpg",
-    "https://s3-us-west-2.amazonaws.com/s.cdpn.io/168886/bob-ross-3.jpg",
-    "https://s3-us-west-2.amazonaws.com/s.cdpn.io/168886/bob-ross-4.jpg",
-    "https://s3-us-west-2.amazonaws.com/s.cdpn.io/168886/bob-ross-5.jpg",
-    "https://s3-us-west-2.amazonaws.com/s.cdpn.io/168886/bob-ross-6.jpg",
-    "https://s3-us-west-2.amazonaws.com/s.cdpn.io/168886/bob-ross-7.jpg",
-  ];
+  const images = [b1, b2, b3, b4, b5, b6, b7];
 
   const viewPrevImage = () => {
     setCoverflowPosition(

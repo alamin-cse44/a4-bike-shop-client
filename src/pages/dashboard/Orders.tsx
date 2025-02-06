@@ -350,7 +350,7 @@ const Orders = () => {
           onChange={(e) => setFilter(e.target.value)}
           SelectProps={{ native: true }}
         >
-          <option value="">All</option>
+          <option value="">Filter by order status</option>
           <option value="pending">Pending</option>
           <option value="confirmed">Confirmed</option>
           <option value="delivered">Delivered</option>

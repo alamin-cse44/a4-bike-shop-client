@@ -1,15 +1,7 @@
 import { useState } from "react";
-import {
-  Box,
-  Typography,
-  Drawer,
-  Button,
-  Fab,
-} from "@mui/material";
+import { Box, Typography, Drawer, Button, Fab } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import {
-  FaPlusCircle,
-} from "react-icons/fa";
+import { FaPlusCircle } from "react-icons/fa";
 import AddProductForm from "../../components/AddProductForm";
 import ProductTable from "../../components/data-table/ProductTable";
 
@@ -21,7 +13,6 @@ const DProducts = () => {
     setDrawerOpen(!drawerOpen);
   };
 
-  
   return (
     <Box>
       <Button onClick={toggleDrawer} color="primary" variant="contained">
@@ -31,6 +22,10 @@ const DProducts = () => {
         </Typography>
       </Button>
 
+      <Typography mt={2}>
+        N.B: Please, add one before doing any action like edit, delete, etc.{" "}
+      </Typography>
+
       {/* Drawer for Cart (opens from the right side) */}
       <Drawer anchor="right" open={drawerOpen} onClose={toggleDrawer}>
         <Box sx={{ width: 350, padding: 2 }}>
@@ -39,13 +34,16 @@ const DProducts = () => {
               display: "flex",
               alignItems: "center",
               justifyContent: "space-between",
-              mt: 8
+              mt: 8,
             }}
           >
-            <Typography variant="h6">
-              Product Information
-            </Typography>
-            <Fab onClick={toggleDrawer} size="small" color="secondary" aria-label="add">
+            <Typography variant="h6">Product Information</Typography>
+            <Fab
+              onClick={toggleDrawer}
+              size="small"
+              color="secondary"
+              aria-label="add"
+            >
               <CloseIcon />
             </Fab>
           </Box>

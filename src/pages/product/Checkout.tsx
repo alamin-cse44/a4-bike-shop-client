@@ -174,114 +174,17 @@ const Checkout = () => {
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
+              flexDirection: "column",
             }}
             p={2}
             borderRadius={3}
             boxShadow={2}
           >
-            <form onSubmit={handleSubmit(handleCreateOrder)}>
-              <Typography
-                variant="h6"
-                py={2}
-                textAlign={"center"}
-                fontWeight={"bold"}
-              >
-                Checkout Information
-              </Typography>
-              <TextField
-                label="Bike name"
-                variant="outlined"
-                margin="normal"
-                fullWidth
-                {...register("name")}
-                error={!!errors.name}
-                helperText={errors.name?.message}
-              />
-              <TextField
-                label="Brand Name"
-                variant="outlined"
-                margin="normal"
-                fullWidth
-                {...register("brand")}
-                error={!!errors.brand}
-                helperText={errors.brand?.message}
-              />
-              <TextField
-                label="Model Number"
-                variant="outlined"
-                margin="normal"
-                fullWidth
-                {...register("model")}
-                error={!!errors.model}
-                helperText={errors.model?.message}
-              />
-              <TextField
-                type="number"
-                label="Price"
-                variant="outlined"
-                margin="normal"
-                fullWidth
-                {...register("price")}
-                error={!!errors.price}
-                helperText={errors.price?.message}
-              />
-              <TextField
-                type="number"
-                label="Bike Quantity"
-                variant="outlined"
-                margin="normal"
-                fullWidth
-                {...register("quantity")}
-                error={!!errors.quantity}
-                helperText={errors.quantity?.message}
-              />
-              <TextField
-                multiline
-                maxRows={4}
-                label="Description"
-                variant="outlined"
-                margin="normal"
-                fullWidth
-                {...register("description")}
-              />
-              {/* <TextField
-              label="User Type"
-              variant="outlined"
-              margin="normal"
-              fullWidth
-              select
-              {...register('type')}
-              error={!!errors.type}
-              helperText={errors.type?.message}
-            >
-              <option value="">Choose user type</option>
-              <option value="moderator">Moderator</option>
-              <option value="member">Member</option>
-            </TextField> */}
-              <Box position="relative">
-                <TextField
-                  type="file"
-                  variant="outlined"
-                  margin="normal"
-                  fullWidth
-                  {...register("image")}
-                  error={!!errors.image}
-                  helperText={errors.image?.message}
-                />
-                {errors.image && (
-                  <Typography color="error">{errors.image.message}</Typography>
-                )}
-              </Box>
-              <Button
-                type="submit"
-                sx={{ my: 2, color: "white", borderRadius: 1 }}
-                variant="contained"
-                color="secondary"
-                fullWidth
-              >
-                Confirm Order
-              </Button>
-            </form>
+           <h2>OPPS!</h2>
+           <h3>This functionality, order with the cart items will be implemented later. Here, you can add any product in your cart and also can delete if you want! <br />
+           However, if you want to order any product, please go to the product page. You will get many products, you need to click view details button and then you will be able to make your order. <br />
+           Thank you!
+           </h3>
           </Box>
         </Box>
       )}

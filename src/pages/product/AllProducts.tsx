@@ -16,7 +16,11 @@ import { bikeBrands, bikeCategories } from "../../config/bike";
 type FilterState = Record<string, string | number>;
 
 const AllProducts = () => {
-  const [params, setParams] = useState<FilterState>({ limit: 100, search: "" });
+  const [params, setParams] = useState<FilterState>({
+    limit: 100,
+    search: "",
+    sortOrder: "desc",
+  });
   const { data } = useGetAllBikesQuery(params);
 
   const handleFilterChange = (
@@ -89,7 +93,7 @@ const AllProducts = () => {
         </FormControl>
 
         {/* Price Range Filter */}
-        <FormControl sx={{ minWidth: 150 }}>
+        {/* <FormControl sx={{ minWidth: 150 }}>
           <InputLabel id="price-filter-label">Price Range</InputLabel>
           <Select
             labelId="price-filter-label"
@@ -102,8 +106,12 @@ const AllProducts = () => {
             <MenuItem value="51-100">$51 - $100</MenuItem>
             <MenuItem value="101-200">$101 - $200</MenuItem>
           </Select>
-        </FormControl>
+        </FormControl> */}
       </Box>
+
+      {data?.data?.length === 0 && (
+        <Box height={"60vh"}>No product to show!!!</Box>
+      )}
 
       <Grid container spacing={3}>
         {data?.data?.map((product) => (

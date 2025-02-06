@@ -18,26 +18,27 @@ import {
   styled,
   Fab,
 } from "@mui/material";
-import {  FaBars } from "react-icons/fa";
+import { FaBars } from "react-icons/fa";
 import CloseIcon from "@mui/icons-material/Close";
 import { Link } from "react-router-dom";
 import logo from "../assets/logo.png";
+import logo1 from "../assets/icons/logo1.webp";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { logout, selectCurrentUser } from "../redux/features/auth/authSlice";
 import { useGetSignleUserQuery } from "../redux/features/user/userManagementApi";
 import { useGetCartByEmailQuery } from "../redux/features/cart/cartApi";
-import Badge, { badgeClasses } from '@mui/material/Badge';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCartOutlined';
+import Badge, { badgeClasses } from "@mui/material/Badge";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCartOutlined";
 import { TCart } from "../types";
 import Carts from "../pages/carts/Carts";
 
 const CartBadge = styled(Badge)`
-& .${badgeClasses.badge} {
-  top: -12px;
-  right: -6px;
-  color: #fff;
-  background-color: red;
-}
+  & .${badgeClasses.badge} {
+    top: -12px;
+    right: -6px;
+    color: #fff;
+    background-color: red;
+  }
 `;
 
 const Navbar: FC = () => {
@@ -76,17 +77,26 @@ const Navbar: FC = () => {
 
   const { data: cartItems } = useGetCartByEmailQuery(user?.userEmail);
 
-  const totalQuantity = cartItems?.data?.reduce((sum: number, item: TCart) => sum + item.quantity, 0);
-
+  const totalQuantity = cartItems?.data?.reduce(
+    (sum: number, item: TCart) => sum + item.quantity,
+    0
+  );
 
   return (
-    <AppBar position="sticky">
+    <AppBar position="sticky" sx={{backgroundColor: "#2F3338"}}>
       <Container>
         <Toolbar
           sx={{
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
+            margin: 0,
+            padding: 0,
+            minHeight: "auto",
+            mx: {
+              xs: 0,
+              md: -3.5,
+            },
           }}
         >
           {/* Left side: Logo and Menu icon */}
@@ -106,12 +116,12 @@ const Navbar: FC = () => {
                 marginRight: "20px",
               }}
             >
-              <img src={logo} alt="footer_img" color="white" width={80} />
+              <img src={logo1} alt="footer_img" color="white" width={80} />
             </Link>
           </Box>
 
           {/* Middle: Search Bar */}
-          <Box
+          {/* <Box
             sx={{
               display: "flex",
               justifyContent: "center",
@@ -128,7 +138,7 @@ const Navbar: FC = () => {
                 maxWidth: 600, // To limit the max width of the search bar
               }}
             />
-          </Box>
+          </Box> */}
 
           {/* Right side: Profile and Cart Icons */}
           <Box sx={{ display: "flex", alignItems: "center" }}>
@@ -183,12 +193,9 @@ const Navbar: FC = () => {
 
             {user?.userEmail ? (
               <>
-                <IconButton onClick={toggleDrawer} sx={{mr: 1}}>
-                  <ShoppingCartIcon fontSize="medium" sx={{color: "white"}} />
-                  <CartBadge
-                    badgeContent={totalQuantity}
-                    overlap="circular"
-                  />
+                <IconButton onClick={toggleDrawer} sx={{ mr: 1 }}>
+                  <ShoppingCartIcon fontSize="medium" sx={{ color: "white" }} />
+                  <CartBadge badgeContent={totalQuantity} overlap="circular" />
                 </IconButton>
                 <IconButton onClick={handleProfileMenuOpen} color="inherit">
                   <Avatar
@@ -240,7 +247,6 @@ const Navbar: FC = () => {
 
       {/* Drawer for Cart (opens from the right side) */}
       <Drawer anchor="right" open={drawerOpen} onClose={toggleDrawer}>
-        
         <Box sx={{ width: 350, padding: 2 }}>
           <Box
             sx={{
@@ -250,12 +256,17 @@ const Navbar: FC = () => {
             }}
           >
             <Typography variant="h6">Cart Items : {totalQuantity}</Typography>
-            <Fab onClick={toggleDrawer} size="small" color="secondary" aria-label="add">
-              <CloseIcon sx={{color: "white"}} />
+            <Fab
+              onClick={toggleDrawer}
+              size="small"
+              color="secondary"
+              aria-label="add"
+            >
+              <CloseIcon sx={{ color: "white" }} />
             </Fab>
           </Box>
           {/* component */}
-          <Carts toggleDrawer={toggleDrawer}/>
+          <Carts toggleDrawer={toggleDrawer} />
         </Box>
       </Drawer>
 
@@ -263,6 +274,9 @@ const Navbar: FC = () => {
       <Drawer anchor="left" open={menuOpen} onClose={toggleMenu}>
         <Box sx={{ width: 250, padding: 2 }}>
           <List>
+            <ListItem component={Link} to="/">
+              <ListItemText primary="Home" />
+            </ListItem>
             <ListItem component={Link} to="/product">
               <ListItemText primary="Product" />
             </ListItem>

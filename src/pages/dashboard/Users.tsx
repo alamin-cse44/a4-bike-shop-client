@@ -53,8 +53,8 @@ const Users = () => {
           }}
         >
           <Typography variant="h6" sx={{ fontWeight: "medium", color: "blue" }}>
-            Are you sure you want to{" "}
-            {isBlocked === true ? "Unblock" : "Delete"} this user?
+            Are you sure you want to {isBlocked === true ? "Unblock" : "Delete"}{" "}
+            this user?
           </Typography>
           <Box
             sx={{ display: "flex", justifyContent: "center", gap: 2, mt: 2 }}
@@ -101,7 +101,9 @@ const Users = () => {
 
   const deleteRow = async (email: string) => {
     try {
-      const res = (await deleteSignleUser(email)) as TResponse<TUserRegistration>;
+      const res = (await deleteSignleUser(
+        email
+      )) as TResponse<TUserRegistration>;
       console.log("res", res);
       if (res.error) {
         toast.error(res.error.data.message, {
@@ -177,7 +179,7 @@ const Users = () => {
       width: 120,
       renderCell: (params: any) => (
         <>
-          <IconButton
+          {/* <IconButton
             color="primary"
             onClick={() => {
               console.log("Edit", params.row._id);
@@ -186,7 +188,7 @@ const Users = () => {
             }}
           >
             <EditIcon />
-          </IconButton>
+          </IconButton> */}
           <IconButton
             color="error"
             onClick={() => {

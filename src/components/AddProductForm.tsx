@@ -34,15 +34,15 @@ const AddProductForm: FC = () => {
     formState: { errors },
   } = useForm({
     resolver: yupResolver(validationSchema),
-    defaultValues: {
-      name: "Test Bike Name",
-      categories: "Sport",
-      brand: "Test Brand",
-      model: "Test Model",
-      price: 1000,
-      quantity: 10,
-      description: "Test Description",
-    },
+    // defaultValues: {
+    //   name: "Test Bike Name",
+    //   categories: "Sport",
+    //   brand: "Test Brand",
+    //   model: "Test Model",
+    //   price: 1000,
+    //   quantity: 10,
+    //   description: "Test Description",
+    // },
   });
 
   const [createBikes] = useCreateBikesMutation();

@@ -24,6 +24,8 @@ import * as Yup from "yup";
 import { useChangePasswordMutation } from "../../redux/features/auth/authApi";
 import { toast } from "sonner";
 import UserOrder from "../../components/UserOrder";
+import { useGetCartByEmailQuery } from "../../redux/features/cart/cartApi";
+import { useGetAllOrdersQuery } from "../../redux/features/order/orderApi";
 
 const validationSchema = Yup.object().shape({
   oldPassword: Yup.string().required("Old password is required"),
@@ -41,6 +43,11 @@ const UserProfile = () => {
   const user = useAppSelector(selectCurrentUser);
 
   const { data } = useGetSignleUserQuery(user?.userEmail);
+  const { data: cartItems } = useGetCartByEmailQuery(user?.userEmail);
+  const { data: orderItems } = useGetAllOrdersQuery({
+    page: 1,
+    limit: 100,
+  });
 
   const {
     register,
@@ -50,7 +57,6 @@ const UserProfile = () => {
   } = useForm({ resolver: yupResolver(validationSchema) });
 
   const [changePassword] = useChangePasswordMutation();
-
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     console.log("Password Change Data:", data);
@@ -107,7 +113,10 @@ const UserProfile = () => {
             </Typography>
             <Typography variant="body2">Role: {data?.data?.role}</Typography>
             <Typography variant="body2" sx={{ mt: 2 }}>
-              Orders: 20 | Cart: 5 items
+              Orders:{" "}
+              {orderItems?.data?.length ? orderItems?.data?.length : "0"} items
+              | Cart: {cartItems?.data?.length ? cartItems?.data?.length : "0"}{" "}
+              items
             </Typography>
             <Grid container spacing={2} justifyContent="center" sx={{ mt: 3 }}>
               <Grid item>
@@ -241,7 +250,6 @@ const UserProfile = () => {
           </Box>
         </Modal>
       )}
-
       {/* orders  */}
       <UserOrder />
     </>
