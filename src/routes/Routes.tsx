@@ -16,6 +16,7 @@ import ErrorPayment from "../pages/payment/ErrorPayment";
 import UserProfile from "../pages/dashboard/UserProfile";
 import Users from "../pages/dashboard/Users";
 import MyOrders from "../pages/dashboard/MyOrders";
+import AdminRoute from "./AdminRoute";
 
 export const router = createBrowserRouter([
   {
@@ -73,20 +74,32 @@ export const router = createBrowserRouter([
         element: <UserProfile />,
       },
       {
-        path: "orders",
-        element: <Orders />,
-      },
-      {
         path: "my-orders",
         element: <MyOrders />,
       },
       {
+        path: "orders",
+        element: (
+          <AdminRoute>
+            <Orders />
+          </AdminRoute>
+        ),
+      },
+      {
         path: "dproducts",
-        element: <DProducts />,
+        element: (
+          <AdminRoute>
+            <DProducts />
+          </AdminRoute>
+        ),
       },
       {
         path: "users",
-        element: <Users />,
+        element: (
+          <AdminRoute>
+            <Users />
+          </AdminRoute>
+        ),
       },
     ],
   },

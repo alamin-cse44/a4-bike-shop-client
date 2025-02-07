@@ -2,8 +2,8 @@ import Box from "@mui/material/Box";
 import { AppProvider } from "@toolpad/core/AppProvider";
 import { DashboardLayout } from "@toolpad/core/DashboardLayout";
 import { Link, Outlet, useLocation } from "react-router-dom";
-import { useAppDispatch } from "../../redux/hooks";
-import { logout } from "../../redux/features/auth/authSlice";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { logout, selectCurrentUser } from "../../redux/features/auth/authSlice";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import CategoryIcon from "@mui/icons-material/Category";
@@ -11,7 +11,7 @@ import PeopleIcon from "@mui/icons-material/People";
 import TocIcon from "@mui/icons-material/Toc";
 import { Button, Container, Stack, Typography } from "@mui/material";
 
-const NAVIGATION = [
+const ADMIN_NAVIGATION = [
   { title: "Dashboard", icon: <DashboardIcon />, path: "/dashboard" },
   {
     title: "My Orders",
@@ -21,6 +21,14 @@ const NAVIGATION = [
   { title: "All Orders", icon: <TocIcon />, path: "/dashboard/orders" },
   { title: "Products", icon: <CategoryIcon />, path: "/dashboard/dproducts" },
   { title: "Users", icon: <PeopleIcon />, path: "/dashboard/users" },
+];
+const CUSTOMER_NAVIGATION = [
+  { title: "Dashboard", icon: <DashboardIcon />, path: "/dashboard" },
+  {
+    title: "My Orders",
+    icon: <ShoppingCartIcon />,
+    path: "/dashboard/my-orders",
+  },
 ];
 
 function CustomAppTitle({ dispatch }: { dispatch: any }) {
@@ -42,6 +50,7 @@ function CustomAppTitle({ dispatch }: { dispatch: any }) {
 
 function CustomSidebar() {
   const location = useLocation();
+  const user = useAppSelector(selectCurrentUser);
 
   return (
     <Box
@@ -53,24 +62,50 @@ function CustomSidebar() {
         mt: -6,
       }}
     >
-      {NAVIGATION.map((item) => (
-        <Link
-          key={item.path}
-          to={item.path}
-          style={{
-            display: "flex",
-            alignItems: "center",
-            textDecoration: "none",
-            padding: "15px",
-            borderRadius: "5px",
-            color: location.pathname === item.path ? "#fff" : "",
-            backgroundColor:
-              location.pathname === item.path ? "#ff5722" : "transparent",
-          }}
-        >
-          {item.icon}{" "}
-          <Typography sx={{ ml: 1, fontSize: 18 }}>{item.title}</Typography>
-        </Link>
+      {ADMIN_NAVIGATION.map((item) => (
+        <Box key={item.path}>
+          {user?.userRole === "admin" && (
+            <Link
+              to={item.path}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                textDecoration: "none",
+                padding: "15px",
+                borderRadius: "5px",
+                color: location.pathname === item.path ? "#fff" : "",
+                backgroundColor:
+                  location.pathname === item.path ? "#ff5722" : "transparent",
+              }}
+            >
+              {item.icon}{" "}
+              <Typography sx={{ ml: 1, fontSize: 18 }}>{item.title}</Typography>
+            </Link>
+          )}
+        </Box>
+      ))}
+
+      {CUSTOMER_NAVIGATION.map((item) => (
+        <Box key={item.path}>
+          {user?.userRole === "customer" && (
+            <Link
+              to={item.path}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                textDecoration: "none",
+                padding: "15px",
+                borderRadius: "5px",
+                color: location.pathname === item.path ? "#fff" : "",
+                backgroundColor:
+                  location.pathname === item.path ? "#ff5722" : "transparent",
+              }}
+            >
+              {item.icon}{" "}
+              <Typography sx={{ ml: 1, fontSize: 18 }}>{item.title}</Typography>
+            </Link>
+          )}
+        </Box>
       ))}
     </Box>
   );

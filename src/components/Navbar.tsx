@@ -212,6 +212,9 @@ const Navbar: FC = () => {
                   color: "inherit",
                   textDecoration: "none",
                   marginLeft: "15px",
+                  border: "1px solid #fff",
+                  padding: "5px 10px",
+                  borderRadius: 5,
                 }}
               >
                 <Typography variant="body1">Login</Typography>
