@@ -29,7 +29,6 @@ const validationSchema = Yup.object().shape({
 const AddProductForm: FC = () => {
   const {
     register,
-    reset,
     handleSubmit,
     formState: { errors },
   } = useForm({

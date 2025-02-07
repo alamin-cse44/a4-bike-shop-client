@@ -1,4 +1,3 @@
-import React from "react";
 import { Avatar, Box, Container, Paper, Typography } from "@mui/material";
 
 // Import Swiper React components and required modules

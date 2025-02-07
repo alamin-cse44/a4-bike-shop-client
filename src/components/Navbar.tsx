@@ -4,7 +4,6 @@ import {
   Box,
   Container,
   IconButton,
-  InputBase,
   Toolbar,
   Typography,
   Drawer,
@@ -21,7 +20,6 @@ import {
 import { FaBars } from "react-icons/fa";
 import CloseIcon from "@mui/icons-material/Close";
 import { Link } from "react-router-dom";
-import logo from "../assets/logo.png";
 import logo1 from "../assets/icons/logo1.webp";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { logout, selectCurrentUser } from "../redux/features/auth/authSlice";
@@ -269,7 +267,7 @@ const Navbar: FC = () => {
             </Fab>
           </Box>
           {/* component */}
-          <Carts toggleDrawer={toggleDrawer} />
+          <Carts />
         </Box>
       </Drawer>
 

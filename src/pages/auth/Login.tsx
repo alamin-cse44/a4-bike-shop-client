@@ -37,14 +37,12 @@ const Login: FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const {
     register,
-    reset,
     handleSubmit,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(validationSchema),
     defaultValues: {
-      email: "alamin23712@gmail.com",
-      password: "pass1234",
+      // email: "alamin23712@gmail.com",
     },
   });
 

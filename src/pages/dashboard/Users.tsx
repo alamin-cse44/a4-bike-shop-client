@@ -11,11 +11,10 @@ import {
   Typography,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from "@mui/icons-material/Edit";
 import CloseIcon from "@mui/icons-material/Close";
 import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
 import { toast } from "sonner";
-import { TBike, TResponse, TUserRegistration } from "../../types";
+import {  TResponse, TUserRegistration } from "../../types";
 import {
   useDeleteSingleUserMutation,
   useGetAllUsersQuery,
@@ -123,7 +122,6 @@ const Users = () => {
 
   // Update product functionality
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [selected, setSelected] = useState("");
 
   // Toggle cart drawer
   const toggleDrawer = () => {

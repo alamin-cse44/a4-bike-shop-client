@@ -35,8 +35,15 @@ const SingleCheckout = () => {
 
   const [createOrder] = useCreateOrderMutation();
 
+  if(!user){
+    toast.error("Please log in to buy product!!!", {
+      position: "top-center",
+      // duration: 2000,
+    });
+  }
+
   const handleCreateOrder: SubmitHandler<FieldValues> = async (data: any) => {
-    // console.log("ceheckout data", data);
+    
 
     const orderInfo = {
       email: user?.userEmail,

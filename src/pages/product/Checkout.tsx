@@ -1,11 +1,9 @@
 import {
   Box,
-  Button,
   Container,
   Divider,
   Fab,
   Typography,
-  TextField,
 } from "@mui/material";
 import { useAppSelector } from "../../redux/hooks";
 import { selectCurrentUser } from "../../redux/features/auth/authSlice";
@@ -16,7 +14,7 @@ import {
 import { toast } from "sonner";
 import { TCart, TResponse } from "../../types";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 
@@ -62,24 +60,7 @@ const Checkout = () => {
     }
   };
 
-  const {
-    register,
-    reset,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
-    resolver: yupResolver(validationSchema),
-    defaultValues: {
-      name: "Test Bike Name",
-      brand: "Test Brand",
-      model: "Test Model",
-      price: 1000,
-      quantity: 10,
-      description: "Test Description",
-    },
-  });
 
-  const handleCreateOrder = () => {};
 
   return (
     <Container>

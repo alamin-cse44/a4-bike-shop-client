@@ -37,15 +37,14 @@ const Signup: FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const {
     register,
-    reset,
     handleSubmit,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(validationSchema),
     defaultValues: {
-      name: "Rehan",
-      email: "rehan@gmail.com",
-      password: "pass1234",
+      // name: "Rehan",
+      // email: "rehan@gmail.com",
+      // password: "pass1234",
     },
   });
 

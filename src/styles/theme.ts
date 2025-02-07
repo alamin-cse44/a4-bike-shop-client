@@ -3,10 +3,10 @@ import { createTheme } from "@mui/material/styles";
 // Colors
 const primary = "#314C3D"; // Dark Green
 const primaryLight = "#D5E4DB"; // Light Green
-const primaryBright = "#018037"; // Bright Green
+// const primaryBright = "#018037"; // Bright Green
 const black = "#0F172A"; // Black
-const blackDark = "#1F283B"; // Darker Black
-const blackLight = "#2F3B52"; // Lighter Black
+// const blackDark = "#1F283B"; // Darker Black
+// const blackLight = "#2F3B52"; // Lighter Black
 
 // Breakpoints for responsiveness
 const breakpoints = {

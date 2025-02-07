@@ -35,7 +35,6 @@ const UpdateProductForm: FC<Id> = ({ id }) => {
 
   const {
     register,
-    reset,
     handleSubmit,
     formState: { errors },
   } = useForm({

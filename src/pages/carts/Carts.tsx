@@ -10,7 +10,7 @@ import { TCart, TResponse } from "../../types";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { Link } from "react-router-dom";
 
-const Carts = (toggleDrawer: any) => {
+const Carts = () => {
   const user = useAppSelector(selectCurrentUser);
   const [deleteCart] = useDeleteCartMutation();
 
@@ -47,8 +47,7 @@ const Carts = (toggleDrawer: any) => {
     <Box>
       <Box sx={{ height: "75vh", overflow: "auto" }}>
         {cartItems.data?.map((item: TCart) => (
-          <Box key={item._id} sx={{ display: "flex", p: 2 }}>
-            {/* <Divider /> */}
+          <Box key={item._id} sx={{ display: "flex", justifyContent: "space-between", p: 2 }}>
             <Box>
               <Box display={"flex"} gap={2}>
                 <img
