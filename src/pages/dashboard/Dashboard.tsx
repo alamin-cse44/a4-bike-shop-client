@@ -8,11 +8,17 @@ import DashboardIcon from "@mui/icons-material/Dashboard";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import CategoryIcon from "@mui/icons-material/Category";
 import PeopleIcon from "@mui/icons-material/People";
+import TocIcon from "@mui/icons-material/Toc";
 import { Button, Container, Stack, Typography } from "@mui/material";
 
 const NAVIGATION = [
   { title: "Dashboard", icon: <DashboardIcon />, path: "/dashboard" },
-  { title: "Orders", icon: <ShoppingCartIcon />, path: "/dashboard/orders" },
+  {
+    title: "My Orders",
+    icon: <ShoppingCartIcon />,
+    path: "/dashboard/my-orders",
+  },
+  { title: "All Orders", icon: <TocIcon />, path: "/dashboard/orders" },
   { title: "Products", icon: <CategoryIcon />, path: "/dashboard/dproducts" },
   { title: "Users", icon: <PeopleIcon />, path: "/dashboard/users" },
 ];
@@ -44,7 +50,7 @@ function CustomSidebar() {
         // bgcolor: "#f4f4f4",
         padding: "20px",
         height: "110%",
-        mt: -6
+        mt: -6,
       }}
     >
       {NAVIGATION.map((item) => (
@@ -62,7 +68,8 @@ function CustomSidebar() {
               location.pathname === item.path ? "#ff5722" : "transparent",
           }}
         >
-          {item.icon} <Typography sx={{ ml: 1, fontSize: 18 }}>{item.title}</Typography>
+          {item.icon}{" "}
+          <Typography sx={{ ml: 1, fontSize: 18 }}>{item.title}</Typography>
         </Link>
       ))}
     </Box>
@@ -81,21 +88,13 @@ export default function DashboardLayoutSlots() {
         }}
       >
         {/* Main Content */}
-        <Container sx={{mt: 5}}>
+        <Container sx={{ mt: 5 }}>
           <Outlet />
         </Container>
       </DashboardLayout>
     </AppProvider>
   );
 }
-
-
-
-
-
-
-
-
 
 // import Box from "@mui/material/Box";
 // import IconButton from "@mui/material/IconButton";
@@ -285,4 +284,3 @@ export default function DashboardLayoutSlots() {
 //     </AppProvider>
 //   );
 // }
-

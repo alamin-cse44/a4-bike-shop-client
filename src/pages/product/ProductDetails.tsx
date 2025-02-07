@@ -118,22 +118,6 @@ const ProductDetails = () => {
           >
             <Button
               onClick={handleAddToCart}
-              variant="contained"
-              color="primary"
-              sx={{
-                px: 4,
-                py: 1.5,
-                color: "white",
-                backgroundColor: "#ff5722",
-                "&:hover": { backgroundColor: "#e64a19" },
-              }}
-              startIcon={<FaCartPlus color="white" />}
-            >
-              Add to Cart
-            </Button>
-            <Button
-              component={Link}
-              to={`/single-checkout/${data?.data?._id}`}
               variant="outlined"
               color="primary"
               sx={{
@@ -145,6 +129,22 @@ const ProductDetails = () => {
                   borderColor: "#e64a19",
                   color: "#e64a19",
                 },
+              }}
+              startIcon={<FaCartPlus color="" />}
+            >
+              Add to Cart
+            </Button>
+            <Button
+              component={Link}
+              to={`/single-checkout/${data?.data?._id}`}
+              variant="contained"
+              color="primary"
+              sx={{
+                px: 4,
+                py: 1.5,
+                color: "white",
+                backgroundColor: "#ff5722",
+                "&:hover": { backgroundColor: "#e64a19" },
               }}
             >
               BUY NOW

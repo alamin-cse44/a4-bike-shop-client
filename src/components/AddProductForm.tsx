@@ -138,7 +138,9 @@ const AddProductForm: FC = () => {
               error={!!errors.categories}
               helperText={errors.categories?.message}
             >
-              <MenuItem value="">Choose Category</MenuItem>
+              <MenuItem value="" disabled>
+                Choose Category
+              </MenuItem>
               {bikeCategories.map((cat) => (
                 <MenuItem key={cat.id} value={cat.category}>
                   {cat.category}
@@ -155,7 +157,9 @@ const AddProductForm: FC = () => {
               error={!!errors.brand}
               helperText={errors.brand?.message}
             >
-              <MenuItem value="">Choose Brand</MenuItem>
+              <MenuItem value="" disabled>
+                Choose Brand
+              </MenuItem>
               {bikeBrands.map((brand) => (
                 <MenuItem key={brand.id} value={brand.brand}>
                   {brand.brand}

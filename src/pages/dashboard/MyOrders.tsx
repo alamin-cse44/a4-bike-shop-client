@@ -4,25 +4,18 @@ import {
   Box,
   Button,
   CircularProgress,
-  IconButton,
-  MenuItem,
-  Select,
   TextField,
-  Typography,
 } from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";
 import { toast } from "sonner";
-import { useAppSelector } from "../redux/hooks";
-import { selectCurrentUser } from "../redux/features/auth/authSlice";
+import { useAppSelector } from "../../redux/hooks";
+import { selectCurrentUser } from "../../redux/features/auth/authSlice";
 import {
   useCreatePaymentMutation,
-  useDeleteOrderMutation,
   useGetOrdersByEmailQuery,
-  useUpdateOrderMutation,
-} from "../redux/features/order/orderApi";
-import { TOrder, TResponse } from "../types";
+} from "../../redux/features/order/orderApi";
+import { TOrder } from "../../types";
 
-const UserOrder = () => {
+const MyOrders = () => {
   const [page, setPage] = useState(0);
   const [limit, setLimit] = useState(10);
   const [filter, setFilter] = useState("");
@@ -36,7 +29,7 @@ const UserOrder = () => {
     sortOrder: "desc",
   });
 
-  console.log(data?.data)
+  console.log(data?.data);
 
   const handlePaginationChange = (params: {
     page: number;
@@ -68,7 +61,7 @@ const UserOrder = () => {
   };
 
   const columns = [
-    { field: "_id", headerName: "ID", width: 215 },
+    { field: "_id", headerName: "Order ID", width: 215 },
     {
       field: "paymentStatus",
       headerName: "Payment Status",
@@ -198,4 +191,4 @@ const UserOrder = () => {
   );
 };
 
-export default UserOrder;
+export default MyOrders;

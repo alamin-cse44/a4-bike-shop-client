@@ -1,22 +1,8 @@
-import {
-  Box,
-  Button,
-  Container,
-  Divider,
-  Fab,
-  Typography,
-  TextField,
-  MenuItem,
-} from "@mui/material";
+import { Box, Button, Container, Typography, TextField } from "@mui/material";
 import { useAppSelector } from "../../redux/hooks";
 import { selectCurrentUser } from "../../redux/features/auth/authSlice";
-import {
-  useDeleteCartMutation,
-  useGetCartByEmailQuery,
-} from "../../redux/features/cart/cartApi";
 import { toast } from "sonner";
-import { TCart, TOrder, TResponse } from "../../types";
-import DeleteIcon from "@mui/icons-material/Delete";
+import { TOrder, TResponse } from "../../types";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";

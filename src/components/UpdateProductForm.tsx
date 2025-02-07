@@ -2,16 +2,18 @@ import { FC } from "react";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
-import { Box, Grid, TextField, Button } from "@mui/material";
+import { Box, Grid, TextField, Button, MenuItem } from "@mui/material";
 import { toast } from "sonner";
 import {
   useGetSignleBikeQuery,
   useUpdateBikesMutation,
 } from "../redux/features/bike/bikeApi";
 import { TBike, TResponse } from "../types";
+import { bikeBrands, bikeCategories } from "../config/bike";
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().required("Bike name is required"),
+  categories: Yup.string().required("Category name is required"),
   brand: Yup.string().required("Brand name is required"),
   model: Yup.string().required("Model name is required"),
   price: Yup.number().required("Price is required"),
@@ -27,11 +29,7 @@ type Id = {
 
 const UpdateProductForm: FC<Id> = ({ id }) => {
   const [updateBikes] = useUpdateBikesMutation();
-  const {
-    data: bikeData,
-    isLoading,
-    error,
-  } = useGetSignleBikeQuery(id);
+  const { data: bikeData, isLoading } = useGetSignleBikeQuery(id);
 
   console.log("single data", bikeData?.data);
 
@@ -74,6 +72,7 @@ const UpdateProductForm: FC<Id> = ({ id }) => {
         bikeInfo = {
           _id: id,
           name: data.name,
+          categories: data.categories,
           brand: data.brand,
           model: data.model,
           price: data.price,
@@ -85,6 +84,7 @@ const UpdateProductForm: FC<Id> = ({ id }) => {
         bikeInfo = {
           _id: id,
           name: data.name,
+          categories: data.categories,
           brand: data.brand,
           model: data.model,
           price: data.price,
@@ -103,7 +103,7 @@ const UpdateProductForm: FC<Id> = ({ id }) => {
             duration: 2000,
           });
         } else {
-        //   reset();
+          //   reset();
           toast.success("Product is updated successfully", {
             id: toastId,
             duration: 2000,
@@ -139,15 +139,43 @@ const UpdateProductForm: FC<Id> = ({ id }) => {
               helperText={errors.name?.message}
             />
             <TextField
+              label="Category Type"
+              defaultValue={bikeData?.data?.categories}
+              variant="outlined"
+              fullWidth
+              margin="normal"
+              select
+              {...register("categories")}
+              error={!!errors.categories}
+              helperText={errors.categories?.message}
+            >
+              <MenuItem value="" disabled>
+                Choose Category
+              </MenuItem>
+              {bikeCategories.map((cat) => (
+                <MenuItem key={cat.id} value={cat.category}>
+                  {cat.category}
+                </MenuItem>
+              ))}
+            </TextField>
+            <TextField
               label="Brand Name"
               defaultValue={bikeData?.data?.brand}
               variant="outlined"
-              margin="normal"
               fullWidth
+              margin="normal"
+              select
               {...register("brand")}
               error={!!errors.brand}
               helperText={errors.brand?.message}
-            />
+            >
+              <MenuItem value="" disabled>Choose Brand</MenuItem>
+              {bikeBrands.map((brand) => (
+                <MenuItem key={brand.id} value={brand.brand}>
+                  {brand.brand}
+                </MenuItem>
+              ))}
+            </TextField>
             <TextField
               label="Model Number"
               defaultValue={bikeData?.data?.model}

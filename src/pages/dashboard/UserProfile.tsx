@@ -23,7 +23,6 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import { useChangePasswordMutation } from "../../redux/features/auth/authApi";
 import { toast } from "sonner";
-import UserOrder from "../../components/UserOrder";
 import { useGetCartByEmailQuery } from "../../redux/features/cart/cartApi";
 import { useGetAllOrdersQuery } from "../../redux/features/order/orderApi";
 import { TCart } from "../../types";
@@ -97,7 +96,7 @@ const UserProfile = () => {
   return (
     <>
       {" "}
-      <Grid container justifyContent="center" sx={{ mt: 4 }}>
+      <Grid container justifyContent="center">
         <Grid item xs={12} sm={8} md={6}>
           <Card sx={{ p: 3, textAlign: "center" }}>
             <Avatar
@@ -121,8 +120,7 @@ const UserProfile = () => {
             <Typography variant="body2" sx={{ mt: 2 }}>
               Orders:{" "}
               {orderItems?.data?.length ? orderItems?.data?.length : "0"} items
-              | Cart: {cartItems?.data?.length ? totalQuantity : "0"}{" "}
-              items
+              | Cart: {cartItems?.data?.length ? totalQuantity : "0"} items
             </Typography>
             <Grid container spacing={2} justifyContent="center" sx={{ mt: 3 }}>
               <Grid item>
@@ -256,8 +254,6 @@ const UserProfile = () => {
           </Box>
         </Modal>
       )}
-      {/* orders  */}
-      <UserOrder />
     </>
   );
 };

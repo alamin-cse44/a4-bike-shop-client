@@ -15,6 +15,7 @@ import SingleCheckout from "../pages/product/SingleCheckout";
 import ErrorPayment from "../pages/payment/ErrorPayment";
 import UserProfile from "../pages/dashboard/UserProfile";
 import Users from "../pages/dashboard/Users";
+import MyOrders from "../pages/dashboard/MyOrders";
 
 export const router = createBrowserRouter([
   {
@@ -74,6 +75,10 @@ export const router = createBrowserRouter([
       {
         path: "orders",
         element: <Orders />,
+      },
+      {
+        path: "my-orders",
+        element: <MyOrders />,
       },
       {
         path: "dproducts",

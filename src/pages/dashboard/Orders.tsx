@@ -329,9 +329,9 @@ const Orders = () => {
   ];
 
   return (
-    <Box sx={{ height: "100%", width: "100%", mt: 2 }}>
+    <Box sx={{ height: "auto", width: "100%", mt: 2 }}>
       {/* 🔍 Search Input */}
-      <Box mb={2}>
+      <Box mb={2} gap={2}>
         <TextField
           label="Search order by email, phone or status"
           variant="outlined"
@@ -345,7 +345,11 @@ const Orders = () => {
           select
           label=""
           variant="outlined"
-          sx={{ minWidth: 200, ml: 2 }}
+          sx={{ minWidth: 200, ml: {
+            xs: 0,
+            lg: 2,
+            xl: 2,
+          }, mt:{xs: 1, lg: 0} }}
           value={filter}
           onChange={(e) => setFilter(e.target.value)}
           SelectProps={{ native: true }}
