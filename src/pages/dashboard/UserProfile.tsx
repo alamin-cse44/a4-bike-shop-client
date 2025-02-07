@@ -26,6 +26,7 @@ import { toast } from "sonner";
 import UserOrder from "../../components/UserOrder";
 import { useGetCartByEmailQuery } from "../../redux/features/cart/cartApi";
 import { useGetAllOrdersQuery } from "../../redux/features/order/orderApi";
+import { TCart } from "../../types";
 
 const validationSchema = Yup.object().shape({
   oldPassword: Yup.string().required("Old password is required"),
@@ -79,6 +80,11 @@ const UserProfile = () => {
     }
   };
 
+  const totalQuantity = cartItems?.data?.reduce(
+    (sum: number, item: TCart) => sum + item.quantity,
+    0
+  );
+
   const handleClose = () => {
     setOpen(false);
   };
@@ -115,7 +121,7 @@ const UserProfile = () => {
             <Typography variant="body2" sx={{ mt: 2 }}>
               Orders:{" "}
               {orderItems?.data?.length ? orderItems?.data?.length : "0"} items
-              | Cart: {cartItems?.data?.length ? cartItems?.data?.length : "0"}{" "}
+              | Cart: {cartItems?.data?.length ? totalQuantity : "0"}{" "}
               items
             </Typography>
             <Grid container spacing={2} justifyContent="center" sx={{ mt: 3 }}>

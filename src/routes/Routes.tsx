@@ -13,6 +13,8 @@ import Checkout from "../pages/product/Checkout";
 import About from "../pages/about/About";
 import SingleCheckout from "../pages/product/SingleCheckout";
 import ErrorPayment from "../pages/payment/ErrorPayment";
+import UserProfile from "../pages/dashboard/UserProfile";
+import Users from "../pages/dashboard/Users";
 
 export const router = createBrowserRouter([
   {
@@ -24,7 +26,7 @@ export const router = createBrowserRouter([
         element: <Home />,
       },
       {
-        path: "/about",
+        path: "about",
         element: <About />,
       },
       {
@@ -36,15 +38,15 @@ export const router = createBrowserRouter([
         element: <ProductDetails />,
       },
       {
-        path: "/checkout",
+        path: "checkout",
         element: <Checkout />,
       },
       {
-        path: "/single-checkout/:id",
+        path: "single-checkout/:id",
         element: <SingleCheckout />,
       },
       {
-        path: "/payment-error",
+        path: "payment-error",
         element: <ErrorPayment />,
       },
       {
@@ -66,13 +68,20 @@ export const router = createBrowserRouter([
     ),
     children: [
       {
-        // path: "orders",
         index: true,
+        element: <UserProfile />,
+      },
+      {
+        path: "orders",
         element: <Orders />,
       },
       {
-        path: "dashboard-products",
+        path: "dproducts",
         element: <DProducts />,
+      },
+      {
+        path: "users",
+        element: <Users />,
       },
     ],
   },
