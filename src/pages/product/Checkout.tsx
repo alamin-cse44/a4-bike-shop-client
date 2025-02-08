@@ -14,20 +14,18 @@ import {
 import { toast } from "sonner";
 import { TCart, TResponse } from "../../types";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as Yup from "yup";
+// import * as Yup from "yup";
 
-const validationSchema = Yup.object().shape({
-  name: Yup.string().required("Bike name is required"),
-  brand: Yup.string().required("Brand name is required"),
-  model: Yup.string().required("Model name is required"),
-  price: Yup.number().required("Price is required"),
-  quantity: Yup.number().required("Quantity is required"),
-  description: Yup.string(),
-  // type: Yup.string().required("User type is required"),
-  image: Yup.mixed().required("Image is required"),
-});
+// const validationSchema = Yup.object().shape({
+//   name: Yup.string().required("Bike name is required"),
+//   brand: Yup.string().required("Brand name is required"),
+//   model: Yup.string().required("Model name is required"),
+//   price: Yup.number().required("Price is required"),
+//   quantity: Yup.number().required("Quantity is required"),
+//   description: Yup.string(),
+//   // type: Yup.string().required("User type is required"),
+//   image: Yup.mixed().required("Image is required"),
+// });
 
 const Checkout = () => {
   const user = useAppSelector(selectCurrentUser);
