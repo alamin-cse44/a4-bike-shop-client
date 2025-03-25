@@ -13,14 +13,19 @@ import {
 import { useGetAllBikesQuery } from "../../redux/features/bike/bikeApi";
 import { useState } from "react";
 import { bikeBrands, bikeCategories } from "../../config/bike";
+import { useSearchParams } from "react-router-dom";
 
 type FilterState = Record<string, string | number>;
 
 const AllProducts = () => {
+  const [searchParams] = useSearchParams();
+  const cagegories = searchParams.get("categories");
+
   const [params, setParams] = useState<FilterState>({
     limit: 100,
     search: "",
     sortOrder: "desc",
+    categories: cagegories || "",
   });
   const { data, isLoading } = useGetAllBikesQuery(params);
 

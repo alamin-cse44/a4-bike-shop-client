@@ -6,7 +6,7 @@ import ProductCard from "../../components/ProductCard";
 type FilterState = Record<string, string | number>;
 
 const RelatedProducts = ({ categories }: { categories: string }) => {
-  const [params, setParams] = useState<FilterState>({
+  const [params, ] = useState<FilterState>({
     limit: 100,
     search: "",
     sortOrder: "desc",
