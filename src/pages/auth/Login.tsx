@@ -17,6 +17,7 @@ import { useLoginMutation } from "../../redux/features/auth/authApi";
 import { setUser, TUser } from "../../redux/features/auth/authSlice";
 import { verifyToken } from "../../utils/verifyToken";
 import { toast } from "sonner";
+import { FaHome } from "react-icons/fa";
 
 const validationSchema = Yup.object().shape({
   email: Yup.string()
@@ -154,6 +155,24 @@ const Login: FC = () => {
                   Create your account
                 </Link>
               </Typography>
+              <Box mt={3}>
+                <Link
+                  to="/"
+                  style={{
+                    color: "#333",
+                    textDecoration: "none",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: 10,
+                  }}
+                >
+                  <Button variant="outlined">
+                    <FaHome size={20} style={{ marginRight: "10px" }} />
+                    Go to Homepage
+                  </Button>
+                </Link>
+              </Box>
             </form>
           </Box>
         </Grid>

@@ -22,7 +22,7 @@ import { TBike, TResponse } from "../../types";
 import UpdateProductForm from "../UpdateProductForm";
 
 const ProductTable = () => {
-  const [page, setPage] = useState(0); 
+  const [page, setPage] = useState(0);
   const [limit, setLimit] = useState(10);
   const [search, setSearch] = useState("");
 
@@ -38,61 +38,71 @@ const ProductTable = () => {
   const [deleteBikes] = useDeleteBikesMutation();
 
   const handleDelete = (rowId: string) => {
-    toast.custom(
-      (t) => (
-        <Box
-          sx={{
-            backgroundColor: "white",
-            boxShadow: 3,
-            borderRadius: 2,
-            p: 2,
-            textAlign: "center",
-          }}
-        >
-          <Typography variant="h6" sx={{ fontWeight: "medium", color: "blue" }}>
-            Are you sure you want to delete this item?
-          </Typography>
-          <Box
-            sx={{ display: "flex", justifyContent: "center", gap: 2, mt: 2 }}
-          >
-            {/* Confirm Button */}
-            <Button
-              onClick={async () => {
-                await deleteRow(rowId);
-                toast.dismiss(t); // Close toast after deletion
-              }}
-              variant="contained"
-              color="error"
-              sx={{ "&:hover": { backgroundColor: "error.dark" } }}
-            >
-              Yes, Delete
-            </Button>
-
-            {/* Cancel Button */}
-            <Button
-              onClick={() => {
-                toast.dismiss(t);
-              }}
-              variant="outlined"
-              sx={{
-                borderColor: "grey.300",
-                color: "text.secondary",
-                "&:hover": {
-                  borderColor: "grey.400",
-                  backgroundColor: "grey.100",
-                },
-              }}
-            >
-              No, Cancel
-            </Button>
-          </Box>
-        </Box>
-      ),
-      {
+    if ((data?.data?.length as number) <= 15) {
+      toast.error("Cannot delete! Please, Firstly add one.", {
         position: "top-center",
-        duration: 20000,
-      }
-    );
+      });
+      return;
+    } else {
+      toast.custom(
+        (t) => (
+          <Box
+            sx={{
+              backgroundColor: "white",
+              boxShadow: 3,
+              borderRadius: 2,
+              p: 2,
+              textAlign: "center",
+            }}
+          >
+            <Typography
+              variant="h6"
+              sx={{ fontWeight: "medium", color: "blue" }}
+            >
+              Are you sure you want to delete this item?
+            </Typography>
+            <Box
+              sx={{ display: "flex", justifyContent: "center", gap: 2, mt: 2 }}
+            >
+              {/* Confirm Button */}
+              <Button
+                onClick={async () => {
+                  await deleteRow(rowId);
+                  toast.dismiss(t); // Close toast after deletion
+                }}
+                variant="contained"
+                color="error"
+                sx={{ "&:hover": { backgroundColor: "error.dark" } }}
+              >
+                Yes, Delete
+              </Button>
+
+              {/* Cancel Button */}
+              <Button
+                onClick={() => {
+                  toast.dismiss(t);
+                }}
+                variant="outlined"
+                sx={{
+                  borderColor: "grey.300",
+                  color: "text.secondary",
+                  "&:hover": {
+                    borderColor: "grey.400",
+                    backgroundColor: "grey.100",
+                  },
+                }}
+              >
+                No, Cancel
+              </Button>
+            </Box>
+          </Box>
+        ),
+        {
+          position: "top-center",
+          duration: 20000,
+        }
+      );
+    }
   };
 
   const deleteRow = async (rowId: string) => {
