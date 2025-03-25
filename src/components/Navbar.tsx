@@ -81,7 +81,7 @@ const Navbar: FC = () => {
   );
 
   return (
-    <AppBar position="sticky" sx={{backgroundColor: "#2F3338"}}>
+    <AppBar position="sticky" sx={{ backgroundColor: "#2F3338" }}>
       <Container>
         <Toolbar
           sx={{
@@ -91,10 +91,7 @@ const Navbar: FC = () => {
             margin: 0,
             padding: 0,
             minHeight: "auto",
-            mx: {
-              xs: 0,
-              md: -3.5,
-            },
+            px: { xs: 0, sm: 0 },
           }}
         >
           {/* Left side: Logo and Menu icon */}
@@ -106,37 +103,43 @@ const Navbar: FC = () => {
             >
               <FaBars />
             </IconButton>
+            <Box
+              sx={{
+                display: { xs: "none", md: "block" },
+              }}
+            >
+              <Link
+                to="/"
+                style={{
+                  color: "inherit",
+                  textDecoration: "none",
+                  marginRight: "20px",
+                }}
+              >
+                <img src={logo1} alt="footer_img" color="white" width={80} />
+              </Link>
+            </Box>
+          </Box>
+
+          {/* Middle: Search Bar */}
+          <Box
+            sx={{
+              display: { xs: "block", md: "none" },
+              justifyContent: "center",
+              alignItems: "center",
+              mt: 2,
+            }}
+          >
             <Link
               to="/"
               style={{
                 color: "inherit",
                 textDecoration: "none",
-                marginRight: "20px",
               }}
             >
-              <img src={logo1} alt="footer_img" color="white" width={80} />
+              <img src={logo1} alt="footer_img" color="white" width={60} />
             </Link>
           </Box>
-
-          {/* Middle: Search Bar */}
-          {/* <Box
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              flexGrow: 1, // Allows the search bar to grow and center itself
-            }}
-          >
-            <InputBase
-              placeholder="Search..."
-              sx={{
-                backgroundColor: "#fff",
-                borderRadius: 2,
-                padding: "0 16px",
-                // width: '100%',
-                maxWidth: 600, // To limit the max width of the search bar
-              }}
-            />
-          </Box> */}
 
           {/* Right side: Profile and Cart Icons */}
           <Box sx={{ display: "flex", alignItems: "center" }}>
