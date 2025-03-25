@@ -17,7 +17,10 @@ import * as Yup from "yup";
 import { useParams } from "react-router-dom";
 import { useGetSignleBikeQuery } from "../../redux/features/bike/bikeApi";
 import { useGetSignleUserQuery } from "../../redux/features/user/userManagementApi";
-import { useCreateOrderMutation } from "../../redux/features/order/orderApi";
+import {
+  useCreateOrderMutation,
+  useCreatePaymentMutation,
+} from "../../redux/features/order/orderApi";
 
 const validationSchema = Yup.object().shape({
   address: Yup.string().required("Address is required"),
@@ -31,6 +34,7 @@ const SingleCheckout = () => {
   const { data: userData } = useGetSignleUserQuery(user?.userEmail);
   const { id } = useParams();
   const { data: productData } = useGetSignleBikeQuery(id);
+  const [createPayment] = useCreatePaymentMutation();
   const {
     register,
     reset,
@@ -73,13 +77,93 @@ const SingleCheckout = () => {
           duration: 2000,
         });
       } else {
-        toast.success("Product is purchased successfully", {
-          duration: 2000,
-        });
+        // toast.success("Product is purchased successfully", {
+        //   duration: 2000,
+        // });
+        toast.custom(
+          (t) => (
+            <Box
+              sx={{
+                backgroundColor: "white",
+                boxShadow: 3,
+                borderRadius: 2,
+                p: 2,
+                textAlign: "center",
+              }}
+            >
+              <Typography
+                variant="body1"
+                sx={{ fontWeight: "medium", color: "black" }}
+              >
+                <span style={{ color: "green", fontWeight: "bold" }}>
+                  Product is purchased successfully!
+                </span>{" "}
+                <br /> Please pay your Payment, otherwise, go to the dashboard My Order section!
+              </Typography>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  gap: 2,
+                  mt: 2,
+                }}
+              >
+                {/* Confirm Button */}
+                <Button
+                  onClick={async () => {
+                    const payment = res?.data;
+                    await handlePayment(payment);
+                  }}
+                  variant="contained"
+                  color="success"
+                  sx={{ "&:hover": { backgroundColor: "green" } }}
+                >
+                  PAY
+                </Button>
+
+                {/* Cancel Button */}
+                <Button
+                  onClick={() => {
+                    toast.dismiss(t);
+                  }}
+                  variant="outlined"
+                  sx={{
+                    borderColor: "grey.300",
+                    color: "text.secondary",
+                    "&:hover": {
+                      borderColor: "grey.400",
+                      backgroundColor: "grey.100",
+                    },
+                  }}
+                >
+                  Cancel
+                </Button>
+              </Box>
+            </Box>
+          ),
+          {
+            position: "top-center",
+            duration: 20000,
+          }
+        );
         reset();
       }
     } catch (error) {
       toast.error("Failed to purchase product", {
+        duration: 2000,
+      });
+    }
+  };
+
+  const handlePayment = async (data: any) => {
+    console.log("row data", data);
+
+    const res = await createPayment(data?.data);
+    console.log("res", res);
+    if (res?.data?.data) {
+      window.open(res?.data?.data, "_blank");
+    } else {
+      toast.error("Failed to create payment", {
         duration: 2000,
       });
     }
@@ -116,7 +200,7 @@ const SingleCheckout = () => {
               <Typography variant="h6">{productData?.data?.name}</Typography>
             </Box>
 
-            <Divider sx={{my: 2}} />
+            <Divider sx={{ my: 2 }} />
 
             <Box
               display="flex"
@@ -144,7 +228,7 @@ const SingleCheckout = () => {
               </Typography>
             </Box>
 
-            <Divider sx={{my: 1}} />
+            <Divider sx={{ my: 1 }} />
 
             <Box
               display="flex"
@@ -167,7 +251,7 @@ const SingleCheckout = () => {
                 textAlign="center"
               >
                 <span style={{ color: "#ff5722" }}>
-                ${productData?.data?.price.toFixed(2)}
+                  ${productData?.data?.price.toFixed(2)}
                 </span>
               </Typography>
             </Box>
