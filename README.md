@@ -1,50 +1,28 @@
-# React + TypeScript + Vite
+### Title: Bike Shop
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+### Overview
+The goal of this assignment is to develop a backend for a bike shop platform where users can purchase, update, and delete their orders. The system will have two roles: Admin and Customer. The Admin has special permissions to manage users and their products, while users can perform CRUD operations on their own orders. The backend will include secure authentication, role-based access control, and a public API for viewing PRODUCTS with search, sort, and filter functionalities.
 
-Currently, two official plugins are available:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### Frontend Deployment link :
 
-## Expanding the ESLint configuration
+- https://a4-bike-shop-client.vercel.app/
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
 
-- Configure the top-level `parserOptions` property like this:
+In this project I have used node package manager(npm/ yarn) to install all kinds of required dependency. I have followed the modular pattern in my project building.
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+### To run this project locally, what you need to install?
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+- REACT
+- TYPESCRIPT
+- REACT ROUTER 6
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+For the better code writing and avoiding unnecessary error I have installed —
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+- TYPESCRIPT ESLINT AND PRETTIER
+
+
+
+### For the deployement I have created the vercel.json file. In this file, I have added the public credentials. I have deployed my APP in vercel with vercel cli
+
+
