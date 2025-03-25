@@ -6,6 +6,8 @@ import { selectCurrentUser } from "../../redux/features/auth/authSlice";
 import { useCreateCartMutation } from "../../redux/features/cart/cartApi";
 import { toast } from "sonner";
 import { FaCartPlus } from "react-icons/fa";
+import RelatedProducts from "./RelatedProducts";
+
 const ProductDetails = () => {
   const { id } = useParams();
   const { data, isLoading } = useGetSignleBikeQuery(id);
@@ -34,15 +36,12 @@ const ProductDetails = () => {
 
   return (
     <Container>
-      {/* Left Section */}
-      {!data?.data && <h2>Loading....</h2>}
-      <Typography
+      {/* <Typography
         variant="h4"
         sx={{
           fontWeight: "bold",
           my: 5,
           fontSize: { xs: "18px", md: "35px" },
-          textAlign: "center",
         }}
       >
         {isLoading ? (
@@ -50,7 +49,7 @@ const ProductDetails = () => {
         ) : (
           `Details of ${data?.data?.name}`
         )}
-      </Typography>
+      </Typography> */}
       {isLoading ? (
         <Box
           sx={{
@@ -72,7 +71,8 @@ const ProductDetails = () => {
             flexDirection: { xs: "column", md: "row" },
             alignItems: "center",
             justifyContent: "space-between",
-            p: 4,
+            // p: 4,
+            my: 5,
             gap: 4,
           }}
         >
@@ -107,6 +107,14 @@ const ProductDetails = () => {
               sx={{ color: "#666" }}
             >
               Model - {data?.data?.model}
+            </Typography>
+            <Typography
+              variant="h6"
+              fontWeight="medium"
+              gutterBottom
+              sx={{ color: "#666" }}
+            >
+              Category - {data?.data?.categories}
             </Typography>
             <Typography
               variant="body1"
@@ -206,6 +214,8 @@ const ProductDetails = () => {
           </Box>
         </Box>
       )}
+
+      {!isLoading && <RelatedProducts categories={data?.data?.categories} />}
     </Container>
   );
 };
