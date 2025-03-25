@@ -1,11 +1,12 @@
 import ProductCard from "../../components/ProductCard";
-import { Button, Typography } from "@mui/material";
+import { Button, Skeleton, Typography } from "@mui/material";
 import { useGetAllBikesQuery } from "../../redux/features/bike/bikeApi";
 import { Link } from "react-router-dom";
 
-
 const ProductList = () => {
-  const { data } = useGetAllBikesQuery({sortOrder: "desc"});
+  const { data, isLoading } = useGetAllBikesQuery({ sortOrder: "desc" });
+
+  console.log("home bikes", data);
 
   const bikes = data?.data?.slice(0, 6);
   return (
@@ -18,7 +19,7 @@ const ProductList = () => {
           fontSize: { xs: "18px", md: "35px" },
         }}
       >
-        Our Products
+        {isLoading ? <Skeleton width={300} /> : "Our Products"}
       </Typography>
       <div
         style={{
@@ -27,6 +28,10 @@ const ProductList = () => {
           gap: "16px",
         }}
       >
+        {isLoading &&
+          Array.from(new Array(3)).map((_, index) => (
+            <Skeleton key={index} variant="rectangular" height={300} />
+          ))}
         {bikes?.map((product) => (
           <ProductCard key={product._id} product={product} />
         ))}
@@ -39,9 +44,9 @@ const ProductList = () => {
           to="/product"
           variant="contained"
           color="primary"
-          sx={{color: "white", fontWeight: "bold"}}
+          sx={{ color: "white", fontWeight: "bold" }}
         >
-          View More
+          {isLoading ? <Skeleton width={300} /> : "View More"}
         </Button>
       </div>
     </>
@@ -49,5 +54,3 @@ const ProductList = () => {
 };
 
 export default ProductList;
-
-

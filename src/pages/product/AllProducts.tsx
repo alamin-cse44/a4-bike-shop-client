@@ -6,6 +6,7 @@ import {
   InputLabel,
   MenuItem,
   Select,
+  Skeleton,
   TextField,
   Typography,
 } from "@mui/material";
@@ -21,7 +22,7 @@ const AllProducts = () => {
     search: "",
     sortOrder: "desc",
   });
-  const { data } = useGetAllBikesQuery(params);
+  const { data, isLoading } = useGetAllBikesQuery(params);
 
   const handleFilterChange = (
     filterName: string,
@@ -42,58 +43,73 @@ const AllProducts = () => {
           fontSize: { xs: "18px", md: "35px" },
         }}
       >
-        Our Products
+        {isLoading ? <Skeleton width={300} /> : "Our Products"}
       </Typography>
-      {!data?.data && <Box height={"90vh"}>Loading...</Box>}
 
-      {/* Filter Section */}
-      <Box sx={{ mb: 3, display: "flex", gap: 2, flexWrap: "wrap" }}>
-        {/* searching */}
-        <TextField
-          sx={{ minWidth: 200 }}
-          label="Search by name"
-          variant="outlined"
-          value={params["search"] ?? ""}
-          onChange={(e) => handleFilterChange("search", e.target.value)}
-        />
-        {/* Brand Filter */}
-        <FormControl sx={{ minWidth: 100 }}>
-          <InputLabel id="brand-filter-label">Brand</InputLabel>
-          <Select
-            labelId="brand-filter-label"
-            value={params["brand"] || ""}
-            onChange={(e) => handleFilterChange("brand", e.target.value)}
-            label="Brand"
-          >
-            <MenuItem value="">All</MenuItem>
-            {bikeBrands.map((item) => (
-              <MenuItem value={item.brand} key={item.id}>
-                {item.brand}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+      {isLoading ? (
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
+            gap: "16px",
+          }}
+        >
+          {Array.from(new Array(6)).map((_, index) => (
+            <Skeleton key={index} variant="rectangular" height={300} />
+          ))}
+        </div>
+      ) : (
+        <>
+          {/* Filter Section */}
+          <Box sx={{ mb: 3, display: "flex", gap: 2, flexWrap: "wrap" }}>
+            {/* searching */}
+            <TextField
+              sx={{ minWidth: 200 }}
+              label="Search by name"
+              variant="outlined"
+              value={params["search"] ?? ""}
+              onChange={(e) => handleFilterChange("search", e.target.value)}
+            />
+            {/* Brand Filter */}
+            <FormControl sx={{ minWidth: 100 }}>
+              <InputLabel id="brand-filter-label">Brand</InputLabel>
+              <Select
+                labelId="brand-filter-label"
+                value={params["brand"] || ""}
+                onChange={(e) => handleFilterChange("brand", e.target.value)}
+                label="Brand"
+              >
+                <MenuItem value="">All</MenuItem>
+                {bikeBrands.map((item) => (
+                  <MenuItem value={item.brand} key={item.id}>
+                    {item.brand}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
 
-        {/* Category Filter */}
-        <FormControl sx={{ minWidth: 110 }}>
-          <InputLabel id="category-filter-label">Category</InputLabel>
-          <Select
-            labelId="category-filter-label"
-            value={params["categories"] || ""}
-            onChange={(e) => handleFilterChange("categories", e.target.value)}
-            label="Category"
-          >
-            <MenuItem value="">All</MenuItem>
-            {bikeCategories?.map((item) => (
-              <MenuItem value={item.category} key={item.id}>
-                {item.category}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+            {/* Category Filter */}
+            <FormControl sx={{ minWidth: 110 }}>
+              <InputLabel id="category-filter-label">Category</InputLabel>
+              <Select
+                labelId="category-filter-label"
+                value={params["categories"] || ""}
+                onChange={(e) =>
+                  handleFilterChange("categories", e.target.value)
+                }
+                label="Category"
+              >
+                <MenuItem value="">All</MenuItem>
+                {bikeCategories?.map((item) => (
+                  <MenuItem value={item.category} key={item.id}>
+                    {item.category}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
 
-        {/* Price Range Filter */}
-        {/* <FormControl sx={{ minWidth: 150 }}>
+            {/* Price Range Filter */}
+            {/* <FormControl sx={{ minWidth: 150 }}>
           <InputLabel id="price-filter-label">Price Range</InputLabel>
           <Select
             labelId="price-filter-label"
@@ -107,19 +123,21 @@ const AllProducts = () => {
             <MenuItem value="101-200">$101 - $200</MenuItem>
           </Select>
         </FormControl> */}
-      </Box>
+          </Box>
+
+          <Grid container spacing={3}>
+            {data?.data?.map((product) => (
+              <Grid item xs={12} sm={6} md={3} key={product._id}>
+                <ProductCard product={product} />
+              </Grid>
+            ))}
+          </Grid>
+        </>
+      )}
 
       {data?.data?.length === 0 && (
         <Box height={"60vh"}>No product to show!!!</Box>
       )}
-
-      <Grid container spacing={3}>
-        {data?.data?.map((product) => (
-          <Grid item xs={12} sm={6} md={3} key={product._id}>
-            <ProductCard product={product} />
-          </Grid>
-        ))}
-      </Grid>
     </>
   );
 };
