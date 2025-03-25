@@ -11,7 +11,7 @@ import {
   Typography,
   Container,
 } from "@mui/material";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../../redux/hooks";
 import { useLoginMutation } from "../../redux/features/auth/authApi";
 import { setUser, TUser } from "../../redux/features/auth/authSlice";
@@ -34,6 +34,7 @@ const validationSchema = Yup.object().shape({
 const Login: FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
   const [showPassword, setShowPassword] = useState(false);
   const {
     register,
@@ -42,9 +43,12 @@ const Login: FC = () => {
   } = useForm({
     resolver: yupResolver(validationSchema),
     defaultValues: {
-      // email: "alamin23712@gmail.com",
+      email: "alamin23712@gmail.com",
+      password: "pass12345",
     },
   });
+
+  const from = location.state?.from?.pathname || "/";
 
   const [login] = useLoginMutation();
 
@@ -62,7 +66,8 @@ const Login: FC = () => {
       console.log(user);
       dispatch(setUser({ user: user, token: res.data.accessToken }));
       toast.success("Logged in successfully", { id: toastId, duration: 2000 });
-      navigate("/dashboard");
+      // navigate("/dashboard");
+      navigate(from, { replace: true });
     } catch (error) {
       toast.error("Invalid email or password", { id: toastId, duration: 2000 });
     }

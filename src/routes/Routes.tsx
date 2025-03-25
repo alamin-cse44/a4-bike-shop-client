@@ -45,7 +45,11 @@ export const router = createBrowserRouter([
       },
       {
         path: "single-checkout/:id",
-        element: <SingleCheckout />,
+        element: (
+          <ProtectedRoute>
+            <SingleCheckout />
+          </ProtectedRoute>
+        ),
       },
       {
         path: "payment-error",
