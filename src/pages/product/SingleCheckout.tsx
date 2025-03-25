@@ -1,4 +1,12 @@
-import { Box, Button, Container, Typography, TextField } from "@mui/material";
+import {
+  Box,
+  Button,
+  Container,
+  Typography,
+  TextField,
+  Grid,
+  Divider,
+} from "@mui/material";
 import { useAppSelector } from "../../redux/hooks";
 import { selectCurrentUser } from "../../redux/features/auth/authSlice";
 import { toast } from "sonner";
@@ -35,7 +43,7 @@ const SingleCheckout = () => {
 
   const [createOrder] = useCreateOrderMutation();
 
-  if(!user){
+  if (!user) {
     toast.error("Please log in to buy product!!!", {
       position: "top-center",
       // duration: 2000,
@@ -43,8 +51,6 @@ const SingleCheckout = () => {
   }
 
   const handleCreateOrder: SubmitHandler<FieldValues> = async (data: any) => {
-    
-
     const orderInfo = {
       email: user?.userEmail,
       customer: userData?.data?._id,
@@ -80,144 +86,152 @@ const SingleCheckout = () => {
   };
 
   return (
-    <Container>
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: { xs: "column", md: "row" },
-          alignItems: "center",
-          justifyContent: "space-between",
-          p: 4,
-          gap: 4,
-        }}
-      >
-        {/* Left Section */}
-        <Box boxShadow={2} p={2}>
-          <Typography
-            variant="h6"
-            py={2}
-            textAlign={"center"}
-            fontWeight={"bold"}
-          >
-            Product Item
-          </Typography>
-          <Box>
-            <Box display={"flex"} gap={2}>
-              <img
-                src={productData?.data?.image}
-                alt={productData?.data?.name}
-                width="50"
-                height="50"
-                style={{ borderRadius: "8px", objectFit: "cover" }}
-              />
-              <Box>
-                <Typography variant="body2" sx={{ fontSize: "20px" }}>
-                  {productData?.data?.name}
-                </Typography>
-              </Box>
-            </Box>
-            <Typography
-              variant="h6"
-              fontWeight="bold"
-              my={2}
-              textAlign={"center"}
-            >
-              Stock Quantity :{" "}
-              <span style={{ color: "#ff5722" }}>
-                {productData?.data?.quantity}
-              </span>
-            </Typography>
-            <Typography variant="h6" fontWeight="bold" textAlign={"center"}>
-              Price :{" "}
-              <span style={{ color: "#ff5722" }}>
-                ${productData?.data?.price.toFixed(2)}
-              </span>
-            </Typography>
-          </Box>
-        </Box>
-
-        {/* Right Section */}
-
-        <Box
-          sx={{
-            flex: 1,
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-          p={2}
-          borderRadius={3}
-          boxShadow={2}
-        >
-          <form onSubmit={handleSubmit(handleCreateOrder)}>
+    <Container sx={{ py: 6 }}>
+      <Grid container spacing={4} alignItems="center">
+        {/* Left Section (Product Details) - 5 Columns */}
+        <Grid item xs={12} md={5}>
+          <Box boxShadow={3} p={3} borderRadius={2}>
             <Typography
               variant="h6"
               py={2}
-              textAlign={"center"}
-              fontWeight={"bold"}
+              textAlign="center"
+              fontWeight="bold"
             >
-              Checkout Information
+              Product Item
             </Typography>
 
-            <TextField
-              label="Shipping Address"
-              variant="outlined"
-              margin="normal"
-              fullWidth
-              {...register("address")}
-              error={!!errors.address}
-              helperText={errors.address?.message}
-            />
-
-            <TextField
-              type="number"
-              label="Phone Number"
-              variant="outlined"
-              margin="normal"
-              fullWidth
-              {...register("phone")}
-              error={!!errors.phone}
-              helperText={errors.phone?.message}
-            />
-
-            <TextField
-              type="number"
-              label="Bike Quantity"
-              variant="outlined"
-              margin="normal"
-              fullWidth
-              {...register("quantity")}
-              error={!!errors.quantity}
-              helperText={errors.quantity?.message}
-            />
-            {/* <TextField
-              label="Payment Method Name"
-              variant="outlined"
-              fullWidth
-              margin="normal"
-              select
-              {...register("paymentMethod")}
-              error={!!errors.paymentMethod}
-              helperText={errors.paymentMethod?.message}
+            <Box
+              display="flex"
+              alignItems="center"
+              justifyContent={"space-between"}
+              gap={2}
             >
-              <MenuItem value="">Choose payment method</MenuItem>
-              <MenuItem value="Bkash">Bkash</MenuItem>
-              <MenuItem value="Nagad">Nagad</MenuItem>
-              <MenuItem value="Bank">Bank</MenuItem>
-            </TextField> */}
+              <img
+                src={productData?.data?.image}
+                alt={productData?.data?.name}
+                width="60"
+                height="60"
+                style={{ borderRadius: "8px", objectFit: "cover" }}
+              />
+              <Typography variant="h6">{productData?.data?.name}</Typography>
+            </Box>
 
-            <Button
-              type="submit"
-              sx={{ my: 2, color: "white", borderRadius: 1 }}
-              variant="contained"
-              color="secondary"
-              fullWidth
+            <Divider sx={{my: 2}} />
+
+            <Box
+              display="flex"
+              alignItems="center"
+              justifyContent={"space-between"}
+              gap={2}
             >
-              Confirm Order
-            </Button>
-          </form>
-        </Box>
-      </Box>
+              <Typography
+                variant="h6"
+                fontWeight="bold"
+                my={2}
+                textAlign="center"
+              >
+                Stock Quantity:{" "}
+              </Typography>
+              <Typography
+                variant="h6"
+                fontWeight="bold"
+                my={1}
+                textAlign="center"
+              >
+                <span style={{ color: "#ff5722" }}>
+                  {productData?.data?.quantity}
+                </span>
+              </Typography>
+            </Box>
+
+            <Divider sx={{my: 1}} />
+
+            <Box
+              display="flex"
+              alignItems="center"
+              justifyContent={"space-between"}
+              gap={2}
+            >
+              <Typography
+                variant="h6"
+                fontWeight="bold"
+                my={2}
+                textAlign="center"
+              >
+                Price:{" "}
+              </Typography>
+              <Typography
+                variant="h6"
+                fontWeight="bold"
+                my={1}
+                textAlign="center"
+              >
+                <span style={{ color: "#ff5722" }}>
+                ${productData?.data?.price.toFixed(2)}
+                </span>
+              </Typography>
+            </Box>
+          </Box>
+        </Grid>
+
+        {/* Right Section (Checkout Form) - 7 Columns */}
+        <Grid item xs={12} md={7}>
+          <Box p={3} borderRadius={3} boxShadow={3}>
+            <form onSubmit={handleSubmit(handleCreateOrder)}>
+              <Typography
+                variant="h6"
+                py={2}
+                textAlign="center"
+                fontWeight="bold"
+              >
+                Checkout Information
+              </Typography>
+
+              <TextField
+                label="Shipping Address"
+                variant="outlined"
+                margin="normal"
+                fullWidth
+                {...register("address")}
+                error={!!errors.address}
+                helperText={errors.address?.message}
+              />
+
+              <TextField
+                type="number"
+                label="Phone Number"
+                variant="outlined"
+                margin="normal"
+                fullWidth
+                {...register("phone")}
+                error={!!errors.phone}
+                helperText={errors.phone?.message}
+              />
+
+              <TextField
+                type="number"
+                label="Bike Quantity"
+                variant="outlined"
+                margin="normal"
+                fullWidth
+                {...register("quantity")}
+                error={!!errors.quantity}
+                helperText={errors.quantity?.message}
+              />
+
+              <Button
+                type="submit"
+                sx={{ mt: 3, color: "white", borderRadius: 1 }}
+                variant="contained"
+                color="secondary"
+                fullWidth
+              >
+                Confirm Order
+              </Button>
+            </form>
+          </Box>
+        </Grid>
+      </Grid>
     </Container>
   );
 };

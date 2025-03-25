@@ -56,10 +56,10 @@ const KeyFeatures = () => {
         Why choose us? Here are some of the amazing benefits we offer.
       </Typography>
 
-      <Grid container spacing={4}>
+      <Grid container spacing={3}>
         {features.map((feature) => (
           <Grid item xs={12} sm={6} md={3} key={feature.id} >
-            <Card sx={{ textAlign: "center", p: 2, boxShadow: 3, borderRadius: 2 }}>
+            <Card sx={{ textAlign: "center", p: 2, boxShadow: 0, borderRadius: 2 }}>
               <CardContent>
                 <Box mb={2}>{feature.icon}</Box>
                 <Typography variant="body1" fontWeight="bold">
