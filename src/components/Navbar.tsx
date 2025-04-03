@@ -81,7 +81,7 @@ const Navbar: FC = () => {
   );
 
   return (
-    <AppBar position="sticky" sx={{ backgroundColor: "#2F3338" }}>
+    <AppBar position="sticky" sx={{ backgroundColor: "primary" }}>
       <Container>
         <Toolbar
           sx={{
@@ -106,6 +106,7 @@ const Navbar: FC = () => {
             <Box
               sx={{
                 display: { xs: "none", md: "block" },
+                marginTop: "5px",
               }}
             >
               <Link
@@ -114,9 +115,10 @@ const Navbar: FC = () => {
                   color: "inherit",
                   textDecoration: "none",
                   marginRight: "20px",
+                  borderRadius: "5px",
                 }}
               >
-                <img src={logo1} alt="footer_img" color="white" width={80} />
+                <img src={logo1} alt="footer_img" color="white" width={60} />
               </Link>
             </Box>
           </Box>
@@ -228,6 +230,14 @@ const Navbar: FC = () => {
               onClose={handleProfileMenuClose}
               MenuListProps={{
                 "aria-labelledby": "basic-button",
+              }}
+              anchorOrigin={{
+                vertical: "bottom",
+                horizontal: "right",
+              }}
+              transformOrigin={{
+                vertical: "top",
+                horizontal: "right",
               }}
             >
               <MenuItem>

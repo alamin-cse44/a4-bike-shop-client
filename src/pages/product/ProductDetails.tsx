@@ -135,14 +135,14 @@ const ProductDetails = () => {
             <Typography
               variant="h5"
               fontWeight="bold"
-              sx={{ color: "#ff5722", marginBottom: "1.5rem" }}
+              sx={{ color: "", marginBottom: "1.5rem" }}
             >
               Stock Quantity - {data?.data?.quantity}
             </Typography>
             <Typography
               variant="h5"
               fontWeight="bold"
-              sx={{ color: "#ff5722", marginBottom: "1.5rem" }}
+              sx={{ color: "", marginBottom: "1.5rem" }}
             >
               Price - ${data?.data?.price.toFixed(2)}
             </Typography>
@@ -161,8 +161,9 @@ const ProductDetails = () => {
                 sx={{
                   px: 4,
                   py: 1.5,
-                  borderColor: "#ff5722",
-                  color: "#ff5722",
+                  borderColor: "primary",
+                  // color: "#ff5722",
+                  color: "primary",
                   "&:hover": {
                     borderColor: "#e64a19",
                     color: "#e64a19",
@@ -181,8 +182,8 @@ const ProductDetails = () => {
                   px: 4,
                   py: 1.5,
                   color: "white",
-                  backgroundColor: "#ff5722",
-                  "&:hover": { backgroundColor: "#e64a19" },
+                  backgroundColor: "primary",
+                  // "&:hover": { backgroundColor: "#e64a19" },
                 }}
               >
                 BUY NOW
