@@ -1,7 +1,6 @@
 import {
   Box,
   Container,
-  Divider,
   IconButton,
   Typography,
   Paper,

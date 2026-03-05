@@ -4,7 +4,6 @@ import {
   Container,
   Grid,
   Skeleton,
-  Stack,
   Typography,
 } from "@mui/material";
 import ProductCard from "../../components/ProductCard";

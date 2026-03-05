@@ -3,7 +3,6 @@ import { DataGrid } from "@mui/x-data-grid";
 import {
   Box,
   Button,
-  CircularProgress,
   Drawer,
   Fab,
   IconButton,
@@ -13,7 +12,6 @@ import {
 import DeleteIcon from "@mui/icons-material/Delete";
 import CloseIcon from "@mui/icons-material/Close";
 import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
-import Skeleton from "@mui/material/Skeleton";
 import TableSkeleton from "../../components/skeleton/TableSkeleton";
 import CustomPagination from "../../components/data-table/CustomPagination";
 import { toast } from "sonner";

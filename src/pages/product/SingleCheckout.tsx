@@ -9,7 +9,6 @@ import {
   Paper,
   Stack,
   Avatar,
-  IconButton,
   Breadcrumbs,
   Link as MuiLink,
 } from "@mui/material";
@@ -27,7 +26,7 @@ import {
   useCreateOrderMutation,
   useCreatePaymentMutation,
 } from "../../redux/features/order/orderApi";
-import { FaShieldAlt, FaTruck, FaLock, FaArrowLeft } from "react-icons/fa";
+import { FaShieldAlt, FaTruck, FaLock } from "react-icons/fa";
 
 const validationSchema = Yup.object().shape({
   address: Yup.string().required("Shipping address is required"),

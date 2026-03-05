@@ -18,13 +18,7 @@ import { useAppSelector } from "../../redux/hooks";
 import { selectCurrentUser } from "../../redux/features/auth/authSlice";
 import { useCreateCartMutation } from "../../redux/features/cart/cartApi";
 import { toast } from "sonner";
-import {
-  FaCartPlus,
-  FaCheckCircle,
-  FaTruck,
-  FaUndo,
-  FaShieldAlt,
-} from "react-icons/fa";
+import { FaCartPlus, FaTruck, FaUndo, FaShieldAlt } from "react-icons/fa";
 import RelatedProducts from "./RelatedProducts";
 
 const ProductDetails = () => {

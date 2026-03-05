@@ -12,8 +12,6 @@ import {
 import {
   FaFacebook,
   FaLinkedin,
-  FaTwitter,
-  FaInstagram,
   FaMapMarkerAlt,
   FaPhoneAlt,
   FaEnvelope,

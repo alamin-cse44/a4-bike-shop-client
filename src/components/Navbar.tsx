@@ -104,7 +104,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-const NavLink = styled(Link)(({ theme }) => ({
+const NavLink = styled(Link)(() => ({
   color: "#fff",
   textDecoration: "none",
   display: "flex",

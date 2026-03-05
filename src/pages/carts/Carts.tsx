@@ -1,4 +1,4 @@
-import { Box, Button, Divider, IconButton, Typography } from "@mui/material";
+import { Box, Button, IconButton, Typography } from "@mui/material";
 import { useAppSelector } from "../../redux/hooks";
 import { selectCurrentUser } from "../../redux/features/auth/authSlice";
 import {

@@ -10,12 +10,7 @@ import {
   styled,
   IconButton,
 } from "@mui/material";
-import {
-  FaCartPlus,
-  FaFire,
-  FaShoppingCart,
-  FaInfoCircle,
-} from "react-icons/fa";
+import { FaCartPlus, FaFire, FaInfoCircle } from "react-icons/fa";
 import { TBike } from "../types";
 import { useAppSelector } from "../redux/hooks";
 import { selectCurrentUser } from "../redux/features/auth/authSlice";

@@ -13,7 +13,6 @@ import {
   Chip,
   FormControl,
   InputLabel,
-  Skeleton,
 } from "@mui/material";
 import TableSkeleton from "../../components/skeleton/TableSkeleton";
 import CustomPagination from "../../components/data-table/CustomPagination";
