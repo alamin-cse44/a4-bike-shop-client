@@ -274,7 +274,11 @@ const Navbar: FC = () => {
               <img
                 src={mainLogo}
                 alt="Rehan Bike Shop"
-                style={{ height: "50px", objectFit: "contain" }}
+                style={{
+                  height: "50px",
+                  objectFit: "contain",
+                  borderRadius: "8px",
+                }}
               />
             </Link>
           </Box>
@@ -318,27 +322,20 @@ const Navbar: FC = () => {
                 </IconButton>
               </>
             ) : (
-              <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                <Button
-                  component={Link}
-                  to="/login"
-                  variant="contained"
-                  sx={{
-                    backgroundColor: "#00CA52",
-                    "&:hover": { backgroundColor: "#00ac46" },
-                    textTransform: "none",
-                    borderRadius: "5px",
-                    px: 3,
-                  }}
-                >
-                  Login / Sign Up
-                </Button>
-                <IconButton onClick={toggleDrawer}>
-                  <CartBadge badgeContent={totalQuantity} overlap="circular">
-                    <ShoppingCartIcon sx={{ color: "#333" }} />
-                  </CartBadge>
-                </IconButton>
-              </Box>
+              <Button
+                component={Link}
+                to="/login"
+                variant="contained"
+                sx={{
+                  backgroundColor: "#00CA52",
+                  "&:hover": { backgroundColor: "#00ac46" },
+                  textTransform: "none",
+                  borderRadius: "5px",
+                  px: 3,
+                }}
+              >
+                Login / Sign Up
+              </Button>
             )}
           </Box>
         </Toolbar>
@@ -471,7 +468,7 @@ const Navbar: FC = () => {
               <CloseIcon />
             </IconButton>
           </Box>
-          <Carts />
+          <Carts onClose={toggleDrawer} />
         </Box>
       </Drawer>
 
@@ -486,7 +483,11 @@ const Navbar: FC = () => {
               mb: 3,
             }}
           >
-            <img src={mainLogo} alt="Logo" style={{ height: "40px" }} />
+            <img
+              src={mainLogo}
+              alt="Logo"
+              style={{ height: "40px", borderRadius: "5px" }}
+            />
             <IconButton onClick={toggleMenu}>
               <CloseIcon />
             </IconButton>
