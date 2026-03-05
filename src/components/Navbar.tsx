@@ -16,6 +16,7 @@ import {
   Button,
   styled,
   InputBase,
+  Collapse,
 } from "@mui/material";
 import {
   FaBars,
@@ -26,8 +27,11 @@ import {
   FaInfoCircle,
   FaSearch,
   FaPhoneAlt,
+  FaChevronDown,
 } from "react-icons/fa";
 import CloseIcon from "@mui/icons-material/Close";
+import ExpandLess from "@mui/icons-material/ExpandLess";
+import ExpandMore from "@mui/icons-material/ExpandMore";
 import {
   Link,
   useNavigate,
@@ -43,6 +47,7 @@ import Badge, { badgeClasses } from "@mui/material/Badge";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCartOutlined";
 import { TCart } from "../types";
 import Carts from "../pages/carts/Carts";
+import { bikeCategories } from "../config/bike";
 
 const CartBadge = styled(Badge)`
   & .${badgeClasses.badge} {
@@ -110,6 +115,7 @@ const NavLink = styled(Link)(({ theme }) => ({
   fontSize: "0.95rem",
   fontWeight: 500,
   transition: "background-color 0.3s",
+  cursor: "pointer",
   "&:hover": {
     backgroundColor: "rgba(255, 255, 255, 0.15)",
   },
@@ -119,6 +125,11 @@ const Navbar: FC = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [categoryAnchorEl, setCategoryAnchorEl] = useState<null | HTMLElement>(
+    null,
+  );
+  const [mobileCategoriesOpen, setMobileCategoriesOpen] = useState(false);
+
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const location = useLocation();
@@ -146,6 +157,16 @@ const Navbar: FC = () => {
   const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) =>
     setAnchorEl(event.currentTarget);
   const handleProfileMenuClose = () => setAnchorEl(null);
+
+  const handleCategoryMenuOpen = (event: React.MouseEvent<HTMLElement>) =>
+    setCategoryAnchorEl(event.currentTarget);
+  const handleCategoryMenuClose = () => setCategoryAnchorEl(null);
+
+  const handleCategoryClick = (categoryName: string) => {
+    navigate(`/product?categories=${categoryName}`);
+    handleCategoryMenuClose();
+    if (menuOpen) setMenuOpen(false);
+  };
 
   const dispatch = useAppDispatch();
   const user = useAppSelector(selectCurrentUser);
@@ -362,8 +383,13 @@ const Navbar: FC = () => {
             <NavLink to="/product">
               <FaBiking /> Product
             </NavLink>
-            <NavLink to="/categories">
-              <FaList /> Categories
+            <NavLink
+              to="#"
+              onClick={handleCategoryMenuOpen}
+              onMouseEnter={handleCategoryMenuOpen}
+            >
+              <FaList /> Categories{" "}
+              <FaChevronDown style={{ fontSize: "10px" }} />
             </NavLink>
             <NavLink to="/about">
               <FaInfoCircle /> About
@@ -371,6 +397,42 @@ const Navbar: FC = () => {
           </Box>
         </Container>
       </Box>
+
+      {/* Categories Menu */}
+      <Menu
+        anchorEl={categoryAnchorEl}
+        open={Boolean(categoryAnchorEl)}
+        onClose={handleCategoryMenuClose}
+        MenuListProps={{
+          onMouseLeave: handleCategoryMenuClose,
+        }}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        transformOrigin={{ vertical: "top", horizontal: "center" }}
+        sx={{
+          "& .MuiPaper-root": {
+            minWidth: "180px",
+            boxShadow: "0 4px 20px rgba(0,0,0,0.1)",
+            mt: 0.5,
+          },
+        }}
+      >
+        {bikeCategories.map((category) => (
+          <MenuItem
+            key={category.id}
+            onClick={() => handleCategoryClick(category.category)}
+            sx={{
+              py: 1.5,
+              fontSize: "0.9rem",
+              "&:hover": {
+                backgroundColor: "#f0fff4",
+                color: "#00CA52",
+              },
+            }}
+          >
+            {category.category}
+          </MenuItem>
+        ))}
+      </Menu>
 
       {/* Profile Menu */}
       <Menu
@@ -448,12 +510,41 @@ const Navbar: FC = () => {
                 <ListItemText primary="Product" />
               </Box>
             </ListItem>
-            <ListItem component={Link} to="/categories" onClick={toggleMenu}>
-              <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-                <FaList color="#00CA52" />
-                <ListItemText primary="Categories" />
+
+            {/* Mobile Categories */}
+            <ListItem
+              onClick={() => setMobileCategoriesOpen(!mobileCategoriesOpen)}
+              sx={{ cursor: "pointer" }}
+            >
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  width: "100%",
+                }}
+              >
+                <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                  <FaList color="#00CA52" />
+                  <ListItemText primary="Categories" />
+                </Box>
+                {mobileCategoriesOpen ? <ExpandLess /> : <ExpandMore />}
               </Box>
             </ListItem>
+            <Collapse in={mobileCategoriesOpen} timeout="auto" unmountOnExit>
+              <List component="div" disablePadding>
+                {bikeCategories.map((category) => (
+                  <ListItem
+                    key={category.id}
+                    onClick={() => handleCategoryClick(category.category)}
+                    sx={{ pl: 7, cursor: "pointer" }}
+                  >
+                    <ListItemText primary={category.category} />
+                  </ListItem>
+                ))}
+              </List>
+            </Collapse>
+
             <ListItem component={Link} to="/about" onClick={toggleMenu}>
               <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
                 <FaInfoCircle color="#00CA52" />
