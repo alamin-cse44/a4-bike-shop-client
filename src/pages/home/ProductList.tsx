@@ -1,55 +1,113 @@
+import {
+  Box,
+  Button,
+  Container,
+  Grid,
+  Skeleton,
+  Stack,
+  Typography,
+} from "@mui/material";
 import ProductCard from "../../components/ProductCard";
-import { Button, Skeleton, Typography } from "@mui/material";
 import { useGetAllBikesQuery } from "../../redux/features/bike/bikeApi";
 import { Link } from "react-router-dom";
+import { FaArrowRight } from "react-icons/fa";
 
 const ProductList = () => {
   const { data, isLoading } = useGetAllBikesQuery({ sortOrder: "desc" });
 
-  console.log("home bikes", data);
-
   const bikes = data?.data?.slice(0, 6);
-  return (
-    <>
-      <Typography
-        variant="h4"
-        sx={{
-          fontWeight: "bold",
-          mb: 2,
-          fontSize: { xs: "18px", md: "35px" },
-        }}
-      >
-        {isLoading ? <Skeleton width={300} /> : "Our Products"}
-      </Typography>
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
-          gap: "16px",
-        }}
-      >
-        {isLoading &&
-          Array.from(new Array(3)).map((_, index) => (
-            <Skeleton key={index} variant="rectangular" height={300} />
-          ))}
-        {bikes?.map((product) => (
-          <ProductCard key={product._id} product={product} />
-        ))}
-      </div>
 
-      {/* View More Button */}
-      <div style={{ textAlign: "center", marginTop: "40px" }}>
-        <Button
-          component={Link}
-          to="/product"
-          variant="contained"
-          color="primary"
-          sx={{ color: "white", fontWeight: "bold" }}
+  return (
+    <Container maxWidth="lg">
+      <Box my={12}>
+        {/* Header Section */}
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: { xs: "column", sm: "row" },
+            justifyContent: "space-between",
+            alignItems: { xs: "flex-start", sm: "flex-end" },
+            mb: 6,
+            gap: 2,
+          }}
         >
-          {isLoading ? <Skeleton width={300} /> : "View More"}
-        </Button>
-      </div>
-    </>
+          <Box>
+            <Typography
+              variant="overline"
+              sx={{
+                color: "#00CA52",
+                fontWeight: "bold",
+                letterSpacing: 2,
+              }}
+            >
+              OUR COLLECTION
+            </Typography>
+            <Typography
+              variant="h3"
+              sx={{
+                fontWeight: "bold",
+                mt: 1,
+                fontSize: { xs: "28px", md: "42px" },
+                color: "#1a1a1a",
+              }}
+            >
+              {isLoading ? <Skeleton width={250} /> : "Our Featured Products"}
+            </Typography>
+            <Box
+              sx={{
+                width: 60,
+                height: 4,
+                backgroundColor: "#00CA52",
+                mt: 2,
+                borderRadius: 2,
+              }}
+            />
+          </Box>
+
+          {!isLoading && (
+            <Button
+              component={Link}
+              to="/product"
+              variant="outlined"
+              endIcon={<FaArrowRight />}
+              sx={{
+                borderColor: "#00CA52",
+                color: "#00CA52",
+                fontWeight: "bold",
+                borderRadius: "100px",
+                px: 3,
+                textTransform: "none",
+                "&:hover": {
+                  borderColor: "#00b548",
+                  bgcolor: "rgba(0, 202, 82, 0.05)",
+                },
+              }}
+            >
+              See All
+            </Button>
+          )}
+        </Box>
+
+        {/* Products Grid */}
+        <Grid container spacing={3}>
+          {isLoading
+            ? Array.from(new Array(6)).map((_, index) => (
+                <Grid item xs={12} sm={6} md={4} key={index}>
+                  <Skeleton
+                    variant="rectangular"
+                    height={400}
+                    sx={{ borderRadius: "20px" }}
+                  />
+                </Grid>
+              ))
+            : bikes?.map((product) => (
+                <Grid item xs={12} sm={6} md={4} key={product._id}>
+                  <ProductCard product={product} />
+                </Grid>
+              ))}
+        </Grid>
+      </Box>
+    </Container>
   );
 };
 
