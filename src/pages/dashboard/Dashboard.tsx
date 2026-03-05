@@ -1,4 +1,5 @@
-import { useNavigate, Outlet } from "react-router-dom";
+import React from "react";
+import { useNavigate, Outlet, useLocation } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { logout, selectCurrentUser } from "../../redux/features/auth/authSlice";
 import DashboardIcon from "@mui/icons-material/Dashboard";
@@ -42,7 +43,7 @@ const NAVIGATION: Navigation = [
     icon: <TocIcon />,
   },
   {
-    segment: "dashboard/dproducts",
+    segment: "dashboard/products",
     title: "Products",
     icon: <CategoryIcon />,
   },
@@ -82,6 +83,15 @@ export default function DashboardLayoutSlots() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const user = useAppSelector(selectCurrentUser);
+  const location = useLocation();
+
+  const router = React.useMemo(() => {
+    return {
+      pathname: location.pathname,
+      searchParams: new URLSearchParams(location.search),
+      navigate: (path: string | URL) => navigate(path),
+    };
+  }, [location, navigate]);
 
   const handleLogout = () => {
     dispatch(logout());
@@ -116,7 +126,7 @@ export default function DashboardLayoutSlots() {
         const segment = (item as any).segment;
         if (
           segment === "dashboard/orders" ||
-          segment === "dashboard/dproducts" ||
+          segment === "dashboard/products" ||
           segment === "dashboard/users"
         )
           return false;
@@ -131,6 +141,7 @@ export default function DashboardLayoutSlots() {
       navigation={filteredNavigation}
       branding={branding}
       theme={dashboardTheme}
+      router={router}
     >
       <DashboardLayout
         slots={{

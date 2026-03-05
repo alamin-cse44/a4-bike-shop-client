@@ -13,7 +13,9 @@ import {
   Chip,
   FormControl,
   InputLabel,
+  Skeleton,
 } from "@mui/material";
+import TableSkeleton from "../../components/skeleton/TableSkeleton";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { toast } from "sonner";
 import { TOrder, TResponse } from "../../types";
@@ -280,28 +282,31 @@ const Orders = () => {
         </Box>
 
         <Box sx={{ height: 600, width: "100%" }}>
-          <DataGrid
-            rows={data?.data || []}
-            columns={columns}
-            rowCount={data?.meta?.total || 0}
-            paginationMode="server"
-            paginationModel={{ page, pageSize: limit }}
-            onPaginationModelChange={handlePaginationChange}
-            pageSizeOptions={[5, 10, 20]}
-            loading={isLoading}
-            getRowId={(row) => row._id}
-            disableRowSelectionOnClick
-            sx={{
-              border: "none",
-              "& .MuiDataGrid-columnHeaders": {
-                backgroundColor: "rgba(0, 0, 0, 0.04)",
-                fontWeight: "bold",
-              },
-              "& .MuiDataGrid-cell:focus": {
-                outline: "none",
-              },
-            }}
-          />
+          {isLoading ? (
+            <TableSkeleton columns={9} rows={8} />
+          ) : (
+            <DataGrid
+              rows={data?.data || []}
+              columns={columns}
+              rowCount={data?.meta?.total || 0}
+              paginationMode="server"
+              paginationModel={{ page, pageSize: limit }}
+              onPaginationModelChange={handlePaginationChange}
+              pageSizeOptions={[5, 10, 20]}
+              getRowId={(row) => row._id}
+              disableRowSelectionOnClick
+              sx={{
+                border: "none",
+                "& .MuiDataGrid-columnHeaders": {
+                  backgroundColor: "rgba(0, 0, 0, 0.04)",
+                  fontWeight: "bold",
+                },
+                "& .MuiDataGrid-cell:focus": {
+                  outline: "none",
+                },
+              }}
+            />
+          )}
         </Box>
       </Paper>
     </Box>

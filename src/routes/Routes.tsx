@@ -1,4 +1,4 @@
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, Navigate } from "react-router-dom";
 import Main from "../layout/Main";
 import Signup from "../pages/auth/Signup";
 import Home from "../pages/home/Home";
@@ -17,15 +17,21 @@ import UserProfile from "../pages/dashboard/UserProfile";
 import Users from "../pages/dashboard/Users";
 import MyOrders from "../pages/dashboard/MyOrders";
 import AdminRoute from "./AdminRoute";
+import NotFound from "../pages/error/NotFound";
 
 export const router = createBrowserRouter([
   {
     path: "/",
     element: <Main />,
+    errorElement: <NotFound />,
     children: [
       {
         path: "/",
         element: <Home />,
+      },
+      {
+        path: "my-orders",
+        element: <Navigate to="/dashboard/my-orders" replace />,
       },
       {
         path: "about",
@@ -90,7 +96,7 @@ export const router = createBrowserRouter([
         ),
       },
       {
-        path: "dproducts",
+        path: "products",
         element: (
           <AdminRoute>
             <DProducts />
