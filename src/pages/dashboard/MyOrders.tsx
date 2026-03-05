@@ -14,6 +14,7 @@ import {
   Skeleton,
 } from "@mui/material";
 import TableSkeleton from "../../components/skeleton/TableSkeleton";
+import CustomPagination from "../../components/data-table/CustomPagination";
 import { toast } from "sonner";
 import { useAppSelector } from "../../redux/hooks";
 import { selectCurrentUser } from "../../redux/features/auth/authSlice";
@@ -32,11 +33,15 @@ const MyOrders = () => {
 
   // Fetch data using RTK Query
   const { data, isLoading } = useGetOrdersByEmailQuery({
-    page: page + 1, // Backend expects 1-based pagination
-    limit,
+    page: 1, // Always fetch from page 1
+    limit: 999, // Fetch a large number to get "all" data for manual pagination
     orderStatus: filter,
     sortOrder: "desc",
   });
+
+  const allOrders = data?.data || [];
+  const totalItems = allOrders.length;
+  const paginatedOrders = allOrders.slice(page * limit, (page + 1) * limit);
 
   const handlePaginationChange = (params: {
     page: number;
@@ -206,27 +211,36 @@ const MyOrders = () => {
           {isLoading ? (
             <TableSkeleton columns={7} rows={8} />
           ) : (
-            <DataGrid
-              rows={data?.data || []}
-              columns={columns}
-              rowCount={data?.meta?.total || 0}
-              paginationMode="server"
-              paginationModel={{ page, pageSize: limit }}
-              onPaginationModelChange={handlePaginationChange}
-              pageSizeOptions={[5, 10, 20]}
-              getRowId={(row) => row._id}
-              disableRowSelectionOnClick
-              sx={{
-                border: "none",
-                "& .MuiDataGrid-columnHeaders": {
-                  backgroundColor: "rgba(0, 0, 0, 0.04)",
-                  fontWeight: "bold",
-                },
-                "& .MuiDataGrid-cell:focus": {
-                  outline: "none",
-                },
-              }}
-            />
+            <Box>
+              <DataGrid
+                rows={paginatedOrders}
+                columns={columns}
+                rowCount={totalItems}
+                paginationMode="server"
+                paginationModel={{ page, pageSize: limit }}
+                onPaginationModelChange={handlePaginationChange}
+                pageSizeOptions={[5, 10, 20]}
+                getRowId={(row) => row._id}
+                disableRowSelectionOnClick
+                hideFooterPagination
+                sx={{
+                  border: "none",
+                  "& .MuiDataGrid-columnHeaders": {
+                    backgroundColor: "rgba(0, 0, 0, 0.04)",
+                    fontWeight: "bold",
+                  },
+                  "& .MuiDataGrid-cell:focus": {
+                    outline: "none",
+                  },
+                }}
+              />
+              <CustomPagination
+                page={page}
+                total={totalItems}
+                limit={limit}
+                onPageChange={(newPage) => setPage(newPage)}
+              />
+            </Box>
           )}
         </Box>
       </Paper>

@@ -13,8 +13,11 @@ import {
 import DeleteIcon from "@mui/icons-material/Delete";
 import CloseIcon from "@mui/icons-material/Close";
 import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
+import Skeleton from "@mui/material/Skeleton";
+import TableSkeleton from "../../components/skeleton/TableSkeleton";
+import CustomPagination from "../../components/data-table/CustomPagination";
 import { toast } from "sonner";
-import {  TResponse, TUserRegistration } from "../../types";
+import { TResponse, TUserRegistration } from "../../types";
 import {
   useDeleteSingleUserMutation,
   useGetAllUsersQuery,
@@ -30,11 +33,15 @@ const Users = () => {
 
   // Fetch data using RTK Query
   const { data, isLoading } = useGetAllUsersQuery({
-    page: page + 1, // Backend expects 1-based pagination
-    limit,
+    page: 1, // Always fetch from page 1
+    limit: 999, // Fetch a large number to get "all" data for manual pagination
     search,
     sortOrder: "desc",
   });
+
+  const allUsers = data?.data || [];
+  const totalItems = allUsers.length;
+  const paginatedUsers = allUsers.slice(page * limit, (page + 1) * limit);
 
   // Delete functionality
   const [deleteSignleUser] = useDeleteSingleUserMutation();
@@ -94,14 +101,14 @@ const Users = () => {
       {
         position: "top-center",
         duration: 20000,
-      }
+      },
     );
   };
 
   const deleteRow = async (email: string) => {
     try {
       const res = (await deleteSignleUser(
-        email
+        email,
       )) as TResponse<TUserRegistration>;
       console.log("res", res);
       if (res.error) {
@@ -224,22 +231,40 @@ const Users = () => {
       />
 
       {/* 🚴 Data Table */}
-      {isLoading && (
-        <Box sx={{ display: "flex", justifyContent: "center", mt: 5 }}>
-          <CircularProgress />
+      {isLoading ? (
+        <TableSkeleton columns={6} rows={8} />
+      ) : (
+        <Box>
+          <DataGrid
+            rows={paginatedUsers}
+            columns={columns}
+            rowCount={totalItems} // ✅ Total count from backend
+            paginationMode="server" // ✅ Enable server-side pagination
+            paginationModel={{ page, pageSize: limit }}
+            onPaginationModelChange={handlePaginationChange} // ✅ Handle pagination
+            pageSizeOptions={[5, 10, 20, 50]}
+            getRowId={(row) => row._id} // ✅ Use _id as row key
+            disableRowSelectionOnClick
+            hideFooterPagination
+            sx={{
+              border: "none",
+              "& .MuiDataGrid-columnHeaders": {
+                backgroundColor: "rgba(0, 0, 0, 0.04)",
+                fontWeight: "bold",
+              },
+              "& .MuiDataGrid-cell:focus": {
+                outline: "none",
+              },
+            }}
+          />
+          <CustomPagination
+            page={page}
+            total={totalItems}
+            limit={limit}
+            onPageChange={(newPage) => setPage(newPage)}
+          />
         </Box>
       )}
-      <DataGrid
-        rows={data?.data || []}
-        columns={columns}
-        rowCount={data?.data?.length || 0} // ✅ Total count from backend
-        paginationMode="server" // ✅ Enable server-side pagination
-        paginationModel={{ page, pageSize: limit }}
-        onPaginationModelChange={handlePaginationChange} // ✅ Handle pagination
-        pageSizeOptions={[5, 10, 20, 50]}
-        loading={isLoading}
-        getRowId={(row) => row._id} // ✅ Use _id as row key
-      />
       {drawerOpen && (
         <Drawer anchor="right" open={drawerOpen} onClose={toggleDrawer}>
           <Box sx={{ width: 350, padding: 2 }}>

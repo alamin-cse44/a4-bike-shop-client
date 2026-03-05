@@ -13,6 +13,9 @@ import {
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import CloseIcon from "@mui/icons-material/Close";
+import Skeleton from "@mui/material/Skeleton";
+import TableSkeleton from "../skeleton/TableSkeleton";
+import CustomPagination from "./CustomPagination";
 import {
   useDeleteBikesMutation,
   useGetAllBikesQuery,
@@ -28,11 +31,15 @@ const ProductTable = () => {
 
   // Fetch data using RTK Query
   const { data, isLoading } = useGetAllBikesQuery({
-    page: page + 1, // Backend expects 1-based pagination
-    limit,
+    page: 1, // Always fetch from page 1
+    limit: 999, // Fetch a large number to get "all" data for manual pagination
     search,
     sortOrder: "desc",
   });
+
+  const allBikes = data?.data || [];
+  const totalItems = allBikes.length;
+  const paginatedBikes = allBikes.slice(page * limit, (page + 1) * limit);
 
   // Delete functionality
   const [deleteBikes] = useDeleteBikesMutation();
@@ -100,7 +107,7 @@ const ProductTable = () => {
         {
           position: "top-center",
           duration: 20000,
-        }
+        },
       );
     }
   };
@@ -207,22 +214,40 @@ const ProductTable = () => {
       />
 
       {/* 🚴 Data Table */}
-      {isLoading && (
-        <Box sx={{ display: "flex", justifyContent: "center", mt: 5 }}>
-          <CircularProgress />
+      {isLoading ? (
+        <TableSkeleton columns={8} rows={8} />
+      ) : (
+        <Box>
+          <DataGrid
+            rows={paginatedBikes}
+            columns={columns}
+            rowCount={totalItems} // ✅ Total count from backend
+            paginationMode="server" // ✅ Enable server-side pagination
+            paginationModel={{ page, pageSize: limit }}
+            onPaginationModelChange={handlePaginationChange} // ✅ Handle pagination
+            pageSizeOptions={[5, 10, 20, 50]}
+            getRowId={(row) => row._id} // ✅ Use _id as row key
+            disableRowSelectionOnClick
+            hideFooterPagination
+            sx={{
+              border: "none",
+              "& .MuiDataGrid-columnHeaders": {
+                backgroundColor: "rgba(0, 0, 0, 0.04)",
+                fontWeight: "bold",
+              },
+              "& .MuiDataGrid-cell:focus": {
+                outline: "none",
+              },
+            }}
+          />
+          <CustomPagination
+            page={page}
+            total={totalItems}
+            limit={limit}
+            onPageChange={(newPage) => setPage(newPage)}
+          />
         </Box>
       )}
-      <DataGrid
-        rows={data?.data || []}
-        columns={columns}
-        rowCount={data?.data?.length || 0} // ✅ Total count from backend
-        paginationMode="server" // ✅ Enable server-side pagination
-        paginationModel={{ page, pageSize: limit }}
-        onPaginationModelChange={handlePaginationChange} // ✅ Handle pagination
-        pageSizeOptions={[5, 10, 20, 50]}
-        loading={isLoading}
-        getRowId={(row) => row._id} // ✅ Use _id as row key
-      />
       {drawerOpen && (
         <Drawer anchor="right" open={drawerOpen} onClose={toggleDrawer}>
           <Box sx={{ width: 350, padding: 2 }}>
