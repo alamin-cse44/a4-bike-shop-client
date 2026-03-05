@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { DataGrid } from "@mui/x-data-grid";
+import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import {
   Box,
   Button,
@@ -9,6 +9,10 @@ import {
   Select,
   TextField,
   Typography,
+  Paper,
+  Chip,
+  FormControl,
+  InputLabel,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { toast } from "sonner";
@@ -37,101 +41,59 @@ const Orders = () => {
     sortOrder: "desc",
   });
 
-  console.log("data", data);
-
-  // Delete functionality
   const [deleteOrder] = useDeleteOrderMutation();
+  const [updateOrder] = useUpdateOrderMutation();
 
-  const handleDelete = (productId: string) => {
+  const handleDelete = (orderId: string) => {
     toast.custom(
       (t) => (
-        <Box
-          sx={{
-            backgroundColor: "white",
-            boxShadow: 3,
-            borderRadius: 2,
-            p: 2,
-            textAlign: "center",
-          }}
+        <Paper
+          elevation={6}
+          sx={{ p: 3, borderRadius: 2, textAlign: "center" }}
         >
-          <Typography variant="h6" sx={{ fontWeight: "medium", color: "blue" }}>
-            Are you sure you want to delete this product?
+          <Typography variant="h6" sx={{ mb: 2, fontWeight: "medium" }}>
+            Are you sure you want to delete this order?
           </Typography>
-          <Box
-            sx={{ display: "flex", justifyContent: "center", gap: 2, mt: 2 }}
-          >
-            {/* Confirm Button */}
+          <Box display="flex" justifyContent="center" gap={2}>
             <Button
               onClick={async () => {
-                await deleteRow(productId);
-                toast.dismiss(t); // Close toast after deletion
+                await deleteRow(orderId);
+                toast.dismiss(t);
               }}
               variant="contained"
               color="error"
-              sx={{ "&:hover": { backgroundColor: "error.dark" } }}
             >
-              Yes
+              Yes, Delete
             </Button>
-
-            {/* Cancel Button */}
-            <Button
-              onClick={() => {
-                toast.dismiss(t);
-              }}
-              variant="outlined"
-              sx={{
-                borderColor: "grey.300",
-                color: "text.secondary",
-                "&:hover": {
-                  borderColor: "grey.400",
-                  backgroundColor: "grey.100",
-                },
-              }}
-            >
+            <Button onClick={() => toast.dismiss(t)} variant="outlined">
               Cancel
             </Button>
           </Box>
-        </Box>
+        </Paper>
       ),
-      {
-        position: "top-center",
-        duration: 20000,
-      }
+      { position: "top-center", duration: 5000 },
     );
   };
 
-  const deleteRow = async (productId: string) => {
+  const deleteRow = async (orderId: string) => {
     try {
-      const res = (await deleteOrder(productId)) as TResponse<TOrder>;
-      console.log("res", res);
+      const res = (await deleteOrder(orderId)) as TResponse<TOrder>;
       if (res.error) {
-        toast.error(res.error.data.message, {
-          duration: 2000,
-        });
+        toast.error(res.error.data.message);
       } else {
-        toast.success("Product is deleted!", {
-          duration: 2000,
-        });
+        toast.success("Order deleted successfully!");
       }
     } catch (error) {
-      toast.error("Failed to delete Product", {
-        duration: 2000,
-      });
+      toast.error("Failed to delete order");
     }
   };
 
-  const [updateOrder] = useUpdateOrderMutation();
-
   const handleStatusChange = async (orderId: string, newStatus: string) => {
-    const orderInfo = {
-      _id: orderId,
-      orderStatus: newStatus,
-    };
     try {
-      await updateOrder(orderInfo);
-      toast.success("Order status updated successfully");
+      await updateOrder({ _id: orderId, orderStatus: newStatus });
+      toast.success("Order status updated!");
     } catch (error) {
-      toast.error("Failed to update order status");
+      toast.error("Failed to update status");
     }
   };
 
@@ -143,242 +105,205 @@ const Orders = () => {
     setLimit(params.pageSize);
   };
 
-  const columns = [
-    // { field: "_id", headerName: "ID", width: 150 },
+  const columns: GridColDef[] = [
     {
       field: "paymentStatus",
-      headerName: "Payment Status",
-      width: 150,
-      renderCell: (params: any) => (
-        <>
-          {params.row.paymentStatus === "pending" && (
-            <Button color="primary" variant="contained">
-              {params.row.paymentStatus}
-            </Button>
-          )}
-          {params.row.paymentStatus === "success" && (
-            <Button color="success" variant="contained">
-              {params.row.paymentStatus}
-            </Button>
-          )}
-        </>
+      headerName: "Payment",
+      width: 140,
+      renderCell: (params) => (
+        <Box display="flex" alignItems="center" height="100%">
+          <Chip
+            label={params.value?.toUpperCase()}
+            color={params.value === "success" ? "success" : "warning"}
+            size="small"
+            variant="outlined"
+          />
+        </Box>
       ),
     },
     {
       field: "image",
-      headerName: "Product Image",
-      width: 120,
-      renderCell: (params: any) => (
-        <img
-          src={params.row.product.image}
-          alt="Product"
-          style={{ width: 50, height: 50, borderRadius: 5 }}
-        />
+      headerName: "Product",
+      width: 100,
+      renderCell: (params) => (
+        <Box display="flex" alignItems="center" height="100%">
+          <img
+            src={params.row.product?.image}
+            alt="Product"
+            style={{
+              width: 40,
+              height: 40,
+              borderRadius: 8,
+              objectFit: "cover",
+            }}
+          />
+        </Box>
       ),
     },
     {
       field: "productName",
       headerName: "Product Name",
-      width: 250,
-      renderCell: (params: any) => params.row.product.name,
+      width: 200,
+      valueGetter: (_value, row) => row.product?.name,
     },
     {
       field: "customerName",
-      headerName: "Customer Name",
+      headerName: "Customer",
       width: 150,
-      renderCell: (params: any) => params.row.customer.name,
+      valueGetter: (_value, row) => row.customer?.name,
     },
-    { field: "email", headerName: "Email", width: 220 },
-    { field: "totalPrice", headerName: "Total Price ($)", width: 150 },
+    { field: "email", headerName: "Email", width: 200 },
     {
-      field: "current_status",
-      headerName: "Oreder Status",
-      width: 150,
-      renderCell: (params: any) => (
-        <>
-          {params.row.orderStatus === "pending" && (
-            <Button color="primary" variant="contained">
-              {params.row.orderStatus}
-            </Button>
-          )}
-          {params.row.orderStatus === "confirmed" && (
-            <Button color="secondary" variant="contained">
-              {params.row.orderStatus}
-            </Button>
-          )}
-          {params.row.orderStatus === "delivered" && (
-            <Button color="success" variant="contained">
-              {params.row.orderStatus}
-            </Button>
-          )}
-          {params.row.orderStatus === "cancel" && (
-            <Button color="error" variant="contained">
-              {params.row.orderStatus}
-            </Button>
-          )}
-        </>
-      ),
+      field: "totalPrice",
+      headerName: "Price",
+      width: 100,
+      valueFormatter: (value) => `$${value}`,
     },
     {
       field: "orderStatus",
+      headerName: "Status",
+      width: 140,
+      renderCell: (params) => {
+        const status = params.value;
+        let color: "warning" | "primary" | "success" | "error" = "primary";
+        if (status === "pending") color = "warning";
+        else if (status === "delivered") color = "success";
+        else if (status === "cancel" || status === "cancelled") color = "error";
+
+        return (
+          <Box display="flex" alignItems="center" height="100%">
+            <Chip label={status?.toUpperCase()} color={color} size="small" />
+          </Box>
+        );
+      },
+    },
+    {
+      field: "updateStatus",
       headerName: "Update Status",
       width: 180,
-      renderCell: (params: any) => (
-        <>
-          {params.row.orderStatus === "pending" && (
-            <Select
-              value={params.row.orderStatus}
-              onChange={(e) =>
-                handleStatusChange(params.row._id, e.target.value)
-              }
-              size="small"
-              fullWidth
-            >
-              <MenuItem value="pending" disabled>
-                Pending
-              </MenuItem>
-              <MenuItem value="confirmed">Confirmed</MenuItem>
-              <MenuItem value="delivered">Delivered</MenuItem>
-              <MenuItem value="cancel">Cancel</MenuItem>
-            </Select>
-          )}
-
-          {params.row.orderStatus === "confirmed" && (
-            <Select
-              value={params.row.orderStatus}
-              onChange={(e) =>
-                handleStatusChange(params.row._id, e.target.value)
-              }
-              size="small"
-              fullWidth
-            >
-              <MenuItem value="pending">Pending</MenuItem>
-              <MenuItem value="confirmed" disabled>
-                Confirmed
-              </MenuItem>
-              <MenuItem value="delivered">Delivered</MenuItem>
-              <MenuItem value="cancel">Cancel</MenuItem>
-            </Select>
-          )}
-
-          {params.row.orderStatus === "delivered" && (
-            <Select
-              value={params.row.orderStatus}
-              onChange={(e) =>
-                handleStatusChange(params.row._id, e.target.value)
-              }
-              size="small"
-              fullWidth
-            >
-              <MenuItem value="pending">Pending</MenuItem>
-              <MenuItem value="confirmed">Confirmed</MenuItem>
-              <MenuItem value="delivered" disabled>
-                Delivered
-              </MenuItem>
-              <MenuItem value="cancel">Cancel</MenuItem>
-            </Select>
-          )}
-          {params.row.orderStatus === "cancel" && (
-            <Select
-              value={params.row.orderStatus}
-              onChange={(e) =>
-                handleStatusChange(params.row._id, e.target.value)
-              }
-              size="small"
-              fullWidth
-            >
-              <MenuItem value="pending" disabled>
-                Pending
-              </MenuItem>
-              <MenuItem value="confirmed" disabled>
-                Confirmed
-              </MenuItem>
-              <MenuItem value="delivered" disabled>
-                Delivered
-              </MenuItem>
-              <MenuItem value="cancel" disabled>
-                Cancel
-              </MenuItem>
-            </Select>
-          )}
-        </>
+      renderCell: (params) => (
+        <Box display="flex" alignItems="center" height="100%" width="100%">
+          <Select
+            value={params.row.orderStatus}
+            onChange={(e) => handleStatusChange(params.row._id, e.target.value)}
+            size="small"
+            fullWidth
+            disabled={
+              params.row.orderStatus === "cancel" ||
+              params.row.orderStatus === "delivered"
+            }
+          >
+            <MenuItem value="pending">Pending</MenuItem>
+            <MenuItem value="confirmed">Confirmed</MenuItem>
+            <MenuItem value="delivered">Delivered</MenuItem>
+            <MenuItem value="cancel">Cancel</MenuItem>
+          </Select>
+        </Box>
       ),
     },
-
     {
       field: "actions",
       headerName: "Actions",
-      width: 120,
-      renderCell: (params: any) => (
-        <IconButton
-          color="error"
-          onClick={() => {
-            if (user?.userRole !== "admin") {
-              toast.error("Only admins can delete users!", {
-                duration: 2000,
-              });
-              return;
-            }
-            handleDelete(params.row._id);
-          }}
-        >
-          <DeleteIcon />
-        </IconButton>
+      width: 100,
+      renderCell: (params) => (
+        <Box display="flex" alignItems="center" height="100%">
+          <IconButton
+            color="error"
+            onClick={() => {
+              if (user?.userRole !== "admin") {
+                toast.error("Admins only!");
+                return;
+              }
+              handleDelete(params.row._id);
+            }}
+          >
+            <DeleteIcon />
+          </IconButton>
+        </Box>
       ),
     },
   ];
 
-  return (
-    <Box sx={{ height: "auto", width: "100%", mt: 2 }}>
-      {/* 🔍 Search Input */}
-      <Box mb={2} gap={2}>
-        <TextField
-          label="Search order by email, phone or status"
-          variant="outlined"
-          sx={{ minWidth: 300 }}
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
-
-        {/* 📌 Order Status Filter */}
-        <TextField
-          select
-          label=""
-          variant="outlined"
-          sx={{ minWidth: 200, ml: {
-            xs: 0,
-            lg: 2,
-            xl: 2,
-          }, mt:{xs: 1, lg: 0} }}
-          value={filter}
-          onChange={(e) => setFilter(e.target.value)}
-          SelectProps={{ native: true }}
-        >
-          <option value="">Filter by order status</option>
-          <option value="pending">Pending</option>
-          <option value="confirmed">Confirmed</option>
-          <option value="delivered">Delivered</option>
-          <option value="cancel">Canceled</option>
-        </TextField>
+  if (!user?.userEmail) {
+    return (
+      <Box sx={{ display: "flex", justifyContent: "center", mt: 10 }}>
+        <CircularProgress />
       </Box>
+    );
+  }
 
-      {/* 🚴 Data Table */}
-      {isLoading && (
-        <Box sx={{ display: "flex", justifyContent: "center", mt: 5 }}>
-          <CircularProgress />
+  return (
+    <Box sx={{ width: "100%", mt: 3, px: 2 }}>
+      <Typography
+        variant="h5"
+        sx={{ mb: 3, fontWeight: "bold", color: "primary.main" }}
+      >
+        Orders Management (Admin)
+      </Typography>
+
+      <Paper elevation={3} sx={{ p: 3, borderRadius: 2 }}>
+        <Box
+          mb={3}
+          display="flex"
+          justifyContent="space-between"
+          alignItems="center"
+          flexWrap="wrap"
+          gap={2}
+        >
+          <TextField
+            label="Search orders..."
+            placeholder="Email, name, status"
+            size="small"
+            variant="outlined"
+            sx={{ minWidth: 250 }}
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+
+          <FormControl sx={{ minWidth: 200 }} size="small">
+            <InputLabel id="admin-status-filter-label">
+              Filter by Status
+            </InputLabel>
+            <Select
+              labelId="admin-status-filter-label"
+              value={filter}
+              label="Filter by Status"
+              onChange={(e) => setFilter(e.target.value)}
+            >
+              <MenuItem value="">All Statuses</MenuItem>
+              <MenuItem value="pending">Pending</MenuItem>
+              <MenuItem value="confirmed">Confirmed</MenuItem>
+              <MenuItem value="delivered">Delivered</MenuItem>
+              <MenuItem value="cancel">Cancelled</MenuItem>
+            </Select>
+          </FormControl>
         </Box>
-      )}
-      <DataGrid
-        rows={data?.data || []}
-        columns={columns}
-        rowCount={data?.data?.length || 0} // ✅ Total count from backend
-        paginationMode="server" // ✅ Enable server-side pagination
-        paginationModel={{ page, pageSize: limit }}
-        onPaginationModelChange={handlePaginationChange} // ✅ Handle pagination
-        pageSizeOptions={[5, 10, 20, 50]}
-        loading={isLoading}
-        getRowId={(row) => row._id} // ✅ Use _id as row key
-      />
+
+        <Box sx={{ height: 600, width: "100%" }}>
+          <DataGrid
+            rows={data?.data || []}
+            columns={columns}
+            rowCount={data?.meta?.total || 0}
+            paginationMode="server"
+            paginationModel={{ page, pageSize: limit }}
+            onPaginationModelChange={handlePaginationChange}
+            pageSizeOptions={[5, 10, 20]}
+            loading={isLoading}
+            getRowId={(row) => row._id}
+            disableRowSelectionOnClick
+            sx={{
+              border: "none",
+              "& .MuiDataGrid-columnHeaders": {
+                backgroundColor: "rgba(0, 0, 0, 0.04)",
+                fontWeight: "bold",
+              },
+              "& .MuiDataGrid-cell:focus": {
+                outline: "none",
+              },
+            }}
+          />
+        </Box>
+      </Paper>
     </Box>
   );
 };

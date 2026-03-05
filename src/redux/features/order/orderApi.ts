@@ -19,6 +19,7 @@ const orderApi = baseApi.injectEndpoints({
       transformResponse: (response: TResponseRedux<TOrder[]>) => {
         return {
           data: response?.data,
+          meta: response?.meta,
         };
       },
       providesTags: [{ type: "Order", id: "LIST" }],
@@ -39,6 +40,7 @@ const orderApi = baseApi.injectEndpoints({
       transformResponse: (response: TResponseRedux<TOrder[]>) => {
         return {
           data: response?.data,
+          meta: response?.meta,
         };
       },
       providesTags: [{ type: "Order", id: "LIST" }],

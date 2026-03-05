@@ -104,14 +104,23 @@ export default function DashboardLayoutSlots() {
     if (user?.userRole === "admin") return true;
     if (user?.userRole === "customer") {
       // Allow general items and customer specific ones
-      if (item.kind === "header" && item.title === "Admin Management")
-        return false;
+      // Use 'in' operator to safely check for properties on union types
       if (
-        item.segment === "dashboard/orders" ||
-        item.segment === "dashboard/dproducts" ||
-        item.segment === "dashboard/users"
+        "kind" in item &&
+        item.kind === "header" &&
+        (item as any).title === "Admin Management"
       )
         return false;
+
+      if ("segment" in item) {
+        const segment = (item as any).segment;
+        if (
+          segment === "dashboard/orders" ||
+          segment === "dashboard/dproducts" ||
+          segment === "dashboard/users"
+        )
+          return false;
+      }
       return true;
     }
     return false;
