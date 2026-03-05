@@ -1,11 +1,11 @@
 import { Box } from "@mui/material";
-import { useEffect, useState } from "react";
-import "../../styles/banner.css";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay, EffectCoverflow, Pagination } from "swiper/modules";
 
-import {
-  FaRegArrowAltCircleLeft,
-  FaRegArrowAltCircleRight,
-} from "react-icons/fa";
+// Import Swiper styles
+import "swiper/css";
+import "swiper/css/effect-coverflow";
+import "swiper/css/pagination";
 
 import b1 from "../../assets/images/banner/b1.webp";
 import b2 from "../../assets/images/banner/b2.webp";
@@ -16,84 +16,79 @@ import b6 from "../../assets/images/banner/b6.webp";
 import b7 from "../../assets/images/banner/b7.webp";
 
 const Banner = () => {
-  const [coverflowPosition, setCoverflowPosition] = useState(3); // Set initial position to the middle image
   const images = [b1, b2, b3, b4, b5, b6, b7];
 
-  const viewPrevImage = () => {
-    setCoverflowPosition(
-      (prev) => (prev > 1 ? prev - 1 : images.length) // If at the first image, loop back to the last
-    );
-  };
-
-  const viewNextImage = () => {
-    setCoverflowPosition(
-      (prev) => (prev < images.length ? prev + 1 : 1) // If at the last image, loop back to the first
-    );
-  };
-
-  const jumpToImage = (index: number) => {
-    setCoverflowPosition(index + 1);
-  };
-
-  // Autoplay functionality
-  useEffect(() => {
-    const interval = setInterval(() => {
-      viewNextImage();
-    }, 4000); // Change slide every 3 seconds
-
-    return () => clearInterval(interval); // Cleanup on component unmount
-  }, []);
   return (
-    <Box>
-      <Box className="coverflow" data-coverflow-position={coverflowPosition}>
-        <Box
-          sx={{
-            display: { xs: "none", sm: "block" },
-          }}
-        >
-          <FaRegArrowAltCircleLeft
-            className="prev-arrow"
-            onClick={viewPrevImage}
-            size={35}
-          />
-        </Box>
+    <Box
+      sx={{
+        py: 4,
+        overflow: "hidden",
+        bgcolor: "#fcfcfc",
+        "& .swiper": {
+          paddingBottom: "50px",
+          paddingTop: "20px",
+        },
+        "& .swiper-pagination-bullet-active": {
+          bgcolor: "#00CA52",
+        },
+      }}
+    >
+      <Swiper
+        effect={"coverflow"}
+        grabCursor={true}
+        centeredSlides={true}
+        slidesPerView={"auto"}
+        loop={true}
+        autoplay={{
+          delay: 3000,
+          disableOnInteraction: false,
+        }}
+        coverflowEffect={{
+          rotate: 30,
+          stretch: 0,
+          depth: 100,
+          modifier: 1,
+          slideShadows: true,
+        }}
+        pagination={{
+          clickable: true,
+        }}
+        modules={[Autoplay, EffectCoverflow, Pagination]}
+        className="bannerSwiper"
+      >
         {images.map((image, index) => (
-          <Box
+          <SwiperSlide
             key={index}
-            component="img"
-            src={image}
-            alt={`Coverflow ${index + 1}`}
-            onClick={() => jumpToImage(index)}
-            data-coverflow-index={index + 1}
-            className="coverflow__image"
-            sx={{
-              width: {
-                xs: "360px",
-                md: "450px",
-              },
-              height: {
-                xs: "300px",
-                md: "300px",
-              },
-              ml: {
-                xs: 2.5,
-                md: 0,
-              },
+            style={{
+              width: "auto",
+              display: "flex",
+              justifyContent: "center",
             }}
-          />
+          >
+            <Box
+              component="img"
+              src={image}
+              alt={`Banner ${index + 1}`}
+              sx={{
+                width: {
+                  xs: "300px",
+                  sm: "450px",
+                  md: "600px",
+                },
+                height: {
+                  xs: "200px",
+                  sm: "300px",
+                  md: "400px",
+                },
+                borderRadius: "24px",
+                objectFit: "cover",
+                boxShadow: "0 20px 40px rgba(0,0,0,0.15)",
+                transition: "transform 0.3s ease",
+              }}
+            />
+          </SwiperSlide>
         ))}
-        <Box
-          sx={{
-            display: { xs: "none", sm: "block" },
-          }}
-        >
-          <FaRegArrowAltCircleRight
-            className="next-arrow"
-            onClick={viewNextImage}
-            size={35}
-          />
-        </Box>
-      </Box>
+      </Swiper>
     </Box>
   );
 };
