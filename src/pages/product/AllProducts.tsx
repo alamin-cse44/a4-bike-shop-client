@@ -1,149 +1,292 @@
 import ProductCard from "../../components/ProductCard";
 import {
   Box,
-  FormControl,
+  Checkbox,
+  Container,
+  FormControlLabel,
+  FormGroup,
   Grid,
-  InputLabel,
-  MenuItem,
-  Select,
+  Paper,
   Skeleton,
-  TextField,
+  Slider,
   Typography,
+  Button,
+  Divider,
 } from "@mui/material";
 import { useGetAllBikesQuery } from "../../redux/features/bike/bikeApi";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { bikeBrands, bikeCategories } from "../../config/bike";
 import { useSearchParams } from "react-router-dom";
 
-type FilterState = Record<string, string | number>;
+type FilterState = Record<string, string | number | boolean | undefined>;
 
 const AllProducts = () => {
-  const [searchParams] = useSearchParams();
-  const cagegories = searchParams.get("categories");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [priceRange, setPriceRange] = useState<number[]>([0, 200000]);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
+  const [inStock, setInStock] = useState(false);
 
-  const [params, setParams] = useState<FilterState>({
+  const search = searchParams.get("search") || "";
+
+  const params: FilterState = {
     limit: 100,
-    search: "",
+    search: search || undefined,
     sortOrder: "desc",
-    categories: cagegories || "",
-  });
+    categories:
+      selectedCategories.length > 0 ? selectedCategories.join(",") : undefined,
+    brand: selectedBrands.length > 0 ? selectedBrands.join(",") : undefined,
+    minPrice: priceRange[0] > 0 ? priceRange[0] : undefined,
+    maxPrice: priceRange[1] < 200000 ? priceRange[1] : undefined,
+  };
+
   const { data, isLoading } = useGetAllBikesQuery(params);
 
-  const handleFilterChange = (
-    filterName: string,
-    filterValue: string | number
-  ) => {
-    setParams((prevFilters) => ({
-      ...prevFilters,
-      [filterName]: filterValue,
-    }));
+  useEffect(() => {
+    const urlCategories = searchParams.get("categories");
+    if (urlCategories) {
+      setSelectedCategories(urlCategories.split(","));
+    }
+  }, [searchParams]);
+
+  const handlePriceChange = (_event: Event, newValue: number | number[]) => {
+    setPriceRange(newValue as number[]);
   };
+
+  const handleToggleCategory = (category: string) => {
+    const newCategories = selectedCategories.includes(category)
+      ? selectedCategories.filter((c) => c !== category)
+      : [...selectedCategories, category];
+    setSelectedCategories(newCategories);
+  };
+
+  const handleToggleBrand = (brand: string) => {
+    const newBrands = selectedBrands.includes(brand)
+      ? selectedBrands.filter((b) => b !== brand)
+      : [...selectedBrands, brand];
+    setSelectedBrands(newBrands);
+  };
+
+  const handleClearFilters = () => {
+    setPriceRange([0, 200000]);
+    setSelectedCategories([]);
+    setSelectedBrands([]);
+    setInStock(false);
+    setSearchParams({});
+  };
+
   return (
-    <>
-      <Typography
-        variant="h4"
-        sx={{
-          fontWeight: "bold",
-          my: 5,
-          fontSize: { xs: "18px", md: "35px" },
-        }}
-      >
-        {isLoading ? <Skeleton width={300} /> : "Our Products"}
-      </Typography>
-
-      {isLoading ? (
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
-            gap: "16px",
-          }}
-        >
-          {Array.from(new Array(6)).map((_, index) => (
-            <Skeleton key={index} variant="rectangular" height={300} />
-          ))}
-        </div>
-      ) : (
-        <>
-          {/* Filter Section */}
-          <Box sx={{ mb: 3, display: "flex", gap: 2, flexWrap: "wrap" }}>
-            {/* searching */}
-            <TextField
-              sx={{ minWidth: 200 }}
-              label="Search by name"
-              variant="outlined"
-              value={params["search"] ?? ""}
-              onChange={(e) => handleFilterChange("search", e.target.value)}
-            />
-            {/* Brand Filter */}
-            <FormControl sx={{ minWidth: 100 }}>
-              <InputLabel id="brand-filter-label">Brand</InputLabel>
-              <Select
-                labelId="brand-filter-label"
-                value={params["brand"] || ""}
-                onChange={(e) => handleFilterChange("brand", e.target.value)}
-                label="Brand"
-              >
-                <MenuItem value="">All</MenuItem>
-                {bikeBrands.map((item) => (
-                  <MenuItem value={item.brand} key={item.id}>
-                    {item.brand}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-
-            {/* Category Filter */}
-            <FormControl sx={{ minWidth: 110 }}>
-              <InputLabel id="category-filter-label">Category</InputLabel>
-              <Select
-                labelId="category-filter-label"
-                value={params["categories"] || ""}
-                onChange={(e) =>
-                  handleFilterChange("categories", e.target.value)
-                }
-                label="Category"
-              >
-                <MenuItem value="">All</MenuItem>
-                {bikeCategories?.map((item) => (
-                  <MenuItem value={item.category} key={item.id}>
-                    {item.category}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-
-            {/* Price Range Filter */}
-            {/* <FormControl sx={{ minWidth: 150 }}>
-          <InputLabel id="price-filter-label">Price Range</InputLabel>
-          <Select
-            labelId="price-filter-label"
-            value={params["priceRange"] || ""}
-            onChange={(e) => handleFilterChange("priceRange", e.target.value)}
-            label="Price Range"
+    <Container maxWidth="lg" sx={{ py: 4 }}>
+      <Grid container spacing={4}>
+        {/* Sidebar Filter */}
+        <Grid item xs={12} md={3}>
+          <Paper
+            elevation={0}
+            sx={{ p: 3, border: "1px solid #eee", borderRadius: "12px" }}
           >
-            <MenuItem value="">All</MenuItem>
-            <MenuItem value="0-50">$0 - $50</MenuItem>
-            <MenuItem value="51-100">$51 - $100</MenuItem>
-            <MenuItem value="101-200">$101 - $200</MenuItem>
-          </Select>
-        </FormControl> */}
+            <Box mb={4}>
+              <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
+                Price Range
+              </Typography>
+              <Box sx={{ display: "flex", gap: 2, mb: 2 }}>
+                <Box>
+                  <Typography variant="caption" color="text.secondary">
+                    Min
+                  </Typography>
+                  <Paper variant="outlined" sx={{ px: 1, py: 0.5 }}>
+                    <Typography variant="body2">{priceRange[0]} ৳</Typography>
+                  </Paper>
+                </Box>
+                <Box sx={{ display: "flex", alignItems: "center", pt: 2 }}>
+                  —
+                </Box>
+                <Box>
+                  <Typography variant="caption" color="text.secondary">
+                    Max
+                  </Typography>
+                  <Paper variant="outlined" sx={{ px: 1, py: 0.5 }}>
+                    <Typography variant="body2">{priceRange[1]} ৳</Typography>
+                  </Paper>
+                </Box>
+              </Box>
+              <Slider
+                value={priceRange}
+                onChange={handlePriceChange}
+                valueLabelDisplay="auto"
+                min={0}
+                max={200000}
+                sx={{ color: "#00CA52" }}
+              />
+            </Box>
+
+            <Divider sx={{ my: 3 }} />
+
+            <Box mb={4}>
+              <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
+                Product Categories
+              </Typography>
+              <FormGroup>
+                {bikeCategories.map((cat) => (
+                  <FormControlLabel
+                    key={cat.id}
+                    control={
+                      <Checkbox
+                        checked={selectedCategories.includes(cat.category)}
+                        onChange={() => handleToggleCategory(cat.category)}
+                        sx={{
+                          color: "#00CA52",
+                          "&.Mui-checked": { color: "#00CA52" },
+                        }}
+                      />
+                    }
+                    label={cat.category}
+                    sx={{ "& .MuiTypography-root": { fontSize: "0.9rem" } }}
+                  />
+                ))}
+              </FormGroup>
+            </Box>
+
+            <Divider sx={{ my: 3 }} />
+
+            <Box mb={4}>
+              <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
+                Filter by Brands
+              </Typography>
+              <FormGroup>
+                {bikeBrands.map((brand) => (
+                  <FormControlLabel
+                    key={brand.id}
+                    control={
+                      <Checkbox
+                        checked={selectedBrands.includes(brand.brand)}
+                        onChange={() => handleToggleBrand(brand.brand)}
+                        sx={{
+                          color: "#00CA52",
+                          "&.Mui-checked": { color: "#00CA52" },
+                        }}
+                      />
+                    }
+                    label={brand.brand}
+                    sx={{ "& .MuiTypography-root": { fontSize: "0.9rem" } }}
+                  />
+                ))}
+              </FormGroup>
+            </Box>
+
+            <Divider sx={{ my: 3 }} />
+
+            <Box mb={4}>
+              <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
+                Product Status
+              </Typography>
+              <FormGroup>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={inStock}
+                      onChange={(e) => setInStock(e.target.checked)}
+                      sx={{
+                        color: "#00CA52",
+                        "&.Mui-checked": { color: "#00CA52" },
+                      }}
+                    />
+                  }
+                  label="In Stock"
+                  sx={{ "& .MuiTypography-root": { fontSize: "0.9rem" } }}
+                />
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      sx={{
+                        color: "#00CA52",
+                        "&.Mui-checked": { color: "#00CA52" },
+                      }}
+                    />
+                  }
+                  label="On Sale"
+                  sx={{ "& .MuiTypography-root": { fontSize: "0.9rem" } }}
+                />
+              </FormGroup>
+            </Box>
+
+            <Button
+              fullWidth
+              variant="outlined"
+              onClick={handleClearFilters}
+              sx={{
+                borderColor: "#eee",
+                color: "#666",
+                textTransform: "none",
+                borderRadius: "8px",
+                "&:hover": { borderColor: "#00CA52", color: "#00CA52" },
+              }}
+            >
+              Clear all filters
+            </Button>
+          </Paper>
+        </Grid>
+
+        {/* Product Grid */}
+        <Grid item xs={12} md={9}>
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+            mb={3}
+          >
+            <Typography variant="h5" fontWeight="bold">
+              {search ? `Search results for "${search}"` : "Our Products"}
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                component="span"
+                sx={{ ml: 2, fontWeight: "normal" }}
+              >
+                ({data?.data?.length || 0} items found)
+              </Typography>
+            </Typography>
           </Box>
 
-          <Grid container spacing={3}>
-            {data?.data?.map((product) => (
-              <Grid item xs={12} sm={6} md={3} key={product._id}>
-                <ProductCard product={product} />
-              </Grid>
-            ))}
-          </Grid>
-        </>
-      )}
-
-      {data?.data?.length === 0 && (
-        <Box height={"60vh"}>No product to show!!!</Box>
-      )}
-    </>
+          {isLoading ? (
+            <Grid container spacing={3}>
+              {Array.from(new Array(6)).map((_, index) => (
+                <Grid item xs={12} sm={6} lg={4} key={index}>
+                  <Skeleton
+                    variant="rectangular"
+                    height={350}
+                    sx={{ borderRadius: "12px" }}
+                  />
+                </Grid>
+              ))}
+            </Grid>
+          ) : (
+            <>
+              {data?.data?.length === 0 ? (
+                <Box sx={{ py: 10, textAlign: "center" }}>
+                  <Typography variant="h6" color="text.secondary">
+                    No products found matching your filters.
+                  </Typography>
+                  <Button
+                    sx={{ mt: 2, color: "#00CA52" }}
+                    onClick={handleClearFilters}
+                  >
+                    Clear all filters
+                  </Button>
+                </Box>
+              ) : (
+                <Grid container spacing={3}>
+                  {data?.data?.map((product) => (
+                    <Grid item xs={12} sm={6} lg={4} key={product._id}>
+                      <ProductCard product={product} />
+                    </Grid>
+                  ))}
+                </Grid>
+              )}
+            </>
+          )}
+        </Grid>
+      </Grid>
+    </Container>
   );
 };
 

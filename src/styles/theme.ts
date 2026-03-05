@@ -1,7 +1,7 @@
 import { createTheme } from "@mui/material/styles";
 
 // Colors
-const primary = "#314C3D"; // Dark Green
+const primary = "#00CA52"; // Brighter Green (Rehan Bike Shop Primary)
 const primaryLight = "#D5E4DB"; // Light Green
 // const primaryBright = "#018037"; // Bright Green
 const black = "#0F172A"; // Black

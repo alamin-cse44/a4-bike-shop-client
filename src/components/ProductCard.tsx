@@ -6,8 +6,16 @@ import {
   CardMedia,
   Rating,
   Typography,
+  LinearProgress,
+  styled,
+  IconButton,
 } from "@mui/material";
-import { FaCartPlus, FaJediOrder } from "react-icons/fa";
+import {
+  FaCartPlus,
+  FaFire,
+  FaShoppingCart,
+  FaInfoCircle,
+} from "react-icons/fa";
 import { TBike } from "../types";
 import { useAppSelector } from "../redux/hooks";
 import { selectCurrentUser } from "../redux/features/auth/authSlice";
@@ -15,15 +23,28 @@ import { toast } from "sonner";
 import { useCreateCartMutation } from "../redux/features/cart/cartApi";
 import { Link } from "react-router-dom";
 
+const CustomLinearProgress = styled(LinearProgress)({
+  height: 8,
+  borderRadius: 5,
+  backgroundColor: "#f0f0f0",
+  [`& .MuiLinearProgress-bar`]: {
+    borderRadius: 5,
+    backgroundColor: "#00CA52",
+  },
+});
+
 const ProductCard = ({ product }: { product: TBike }) => {
   const user = useAppSelector(selectCurrentUser);
   const [createCart] = useCreateCartMutation();
 
-  const handleAddToCart = async () => {
+  const handleAddToCart = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
     if (user) {
       const cartInfo = {
         userEmail: user?.userEmail,
         product: product?._id,
+        quantity: 1,
       };
       const res = await createCart(cartInfo);
       console.log("Cart created", res);
@@ -37,104 +58,208 @@ const ProductCard = ({ product }: { product: TBike }) => {
       });
     }
   };
+
+  const discount = 25; // Placeholder
+  const timeLeft = 2; // Placeholder
+  const joined = 10; // Placeholder
+  const maxJoined = 20; // Placeholder
+  const progress = (joined / maxJoined) * 100;
+
   return (
-    <Card sx={{ position: "relative", height: "380px" }}>
-      <CardMedia
-        component="img"
-        height="200"
-        image={product.image}
-        alt={product.name}
-      />
-      <CardContent>
-        <Box sx={{display: "flex", alignItems: "center", justifyContent: "space-between"}}>
-          <Typography gutterBottom variant="body1">
-            {product.name}
-          </Typography>
-          <Button
-            onClick={handleAddToCart}
+    <Card
+      sx={{
+        position: "relative",
+        borderRadius: "15px",
+        overflow: "hidden",
+        border: "1px solid #eee",
+        transition: "transform 0.3s, box-shadow 0.3s",
+        "&:hover": {
+          transform: "translateY(-5px)",
+          boxShadow: "0 10px 20px rgba(0,0,0,0.1)",
+        },
+      }}
+    >
+      {/* Badges */}
+      <Box
+        sx={{
+          position: "absolute",
+          top: 12,
+          left: 12,
+          display: "flex",
+          gap: 1,
+          zIndex: 1,
+        }}
+      >
+        <Typography
+          sx={{
+            background: "#FF3D00",
+            color: "white",
+            px: 1,
+            py: 0.2,
+            borderRadius: "5px",
+            fontSize: "0.75rem",
+            fontWeight: "bold",
+          }}
+        >
+          {discount}% OFF
+        </Typography>
+        <Typography
+          sx={{
+            background: "#FF9100",
+            color: "white",
+            px: 1,
+            py: 0.2,
+            borderRadius: "5px",
+            fontSize: "0.75rem",
+            fontWeight: "bold",
+            display: "flex",
+            alignItems: "center",
+            gap: 0.5,
+          }}
+        >
+          {timeLeft} days left
+        </Typography>
+      </Box>
+
+      <Link
+        to={`/product/${product._id}`}
+        style={{ textDecoration: "none", color: "inherit" }}
+      >
+        <CardMedia
+          component="img"
+          height="220"
+          image={product.image}
+          alt={product.name}
+          sx={{ objectFit: "cover" }}
+        />
+        <CardContent sx={{ p: 2, textAlign: "left" }}>
+          <Box
             sx={{
-              background: "white",
-              borderRadius: 5,
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "flex-start",
+              gap: 1,
+              mb: 1,
             }}
-            variant="outlined"
           >
-            <FaCartPlus color="black" size={20} />
-          </Button>
-        </Box>
-        <Box mt={2} display="flex" justifyContent="space-between" alignItems="center">
-          <Box display="flex" justifyContent="" alignItems="center">
             <Typography
-              sx={{ fontWeight: "bold", mr: 0.5, fontSize: "20px" }}
-              variant="h5"
-              component="div"
+              gutterBottom
+              variant="subtitle1"
+              fontWeight="bold"
+              sx={{
+                height: "48px",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                display: "-webkit-box",
+                WebkitLineClamp: 2,
+                WebkitBoxOrient: "vertical",
+                fontSize: "0.95rem",
+                lineHeight: 1.3,
+                flexGrow: 1,
+              }}
             >
-              ${product.price}
+              {product.name}
             </Typography>
-            <Typography
-              variant="body2"
-              color="text.secondary"
-              style={{ textDecoration: "line-through" }}
+            <IconButton
+              onClick={handleAddToCart}
+              sx={{
+                color: "#00CA52",
+                border: "1px solid #00CA52",
+                padding: "8px",
+                "&:hover": {
+                  backgroundColor: "#00CA52",
+                  color: "white",
+                },
+              }}
             >
-              {/* {product?.originalPrice} */}
-            </Typography>
+              <FaCartPlus style={{ fontSize: "1.2rem" }} />
+            </IconButton>
           </Box>
-          <Box display="flex" justifyContent="" alignItems="center">
+
+          <Box
+            sx={{ display: "flex", alignItems: "center", gap: 0.5, mb: 1.5 }}
+          >
             <Rating
               name="read-only"
               value={4.5}
               readOnly
-              precision={0.1}
-              sx={{ fontSize: "20px", color: "#FCD800" }}
+              precision={0.5}
+              size="small"
             />
-            <Typography
-              sx={{
-                background: "yellow",
-                borderRadius: 2,
-                px: 1,
-                ml: 1,
-                top: "10px",
-              }}
-            >
-              4.8
+            <Typography variant="caption" color="text.secondary">
+              (4.5)
             </Typography>
           </Box>
-        </Box>
-        <Typography
-          sx={{
-            background: "red",
-            pl: 1.5,
-            borderRadius: 5,
-            width: "20%",
-            position: "absolute",
-            top: "10px",
-            color: "white",
-          }}
-          variant="body2"
-        >
-          {/* {product.discount}% OFF */}
-          New
-        </Typography>
 
-        <Box
-          sx={{
-            position: "absolute",
-            bottom: "10px",
-            width: "90%",
-          }}
-        >
+          {/* Progress Bar Area */}
+          <Box sx={{ mb: 2 }}>
+            <Box
+              sx={{ display: "flex", justifyContent: "space-between", mb: 0.5 }}
+            >
+              <Typography
+                variant="caption"
+                color="text.secondary"
+                sx={{ display: "flex", alignItems: "center", gap: 0.5 }}
+              >
+                <FaFire color="#FF3D00" /> {joined}/{maxJoined} joined
+              </Typography>
+              <Typography
+                variant="caption"
+                color="text.secondary"
+                fontWeight="bold"
+              >
+                (Max: 300) {progress}%
+              </Typography>
+            </Box>
+            <CustomLinearProgress variant="determinate" value={progress} />
+          </Box>
+
+          {/* Price Area */}
+          <Box sx={{ display: "flex", alignItems: "baseline", gap: 1, mb: 2 }}>
+            <Typography
+              variant="subtitle2"
+              component="span"
+              fontWeight="bold"
+              color="#666"
+            >
+              মূল্য:
+            </Typography>
+            <Typography
+              variant="h6"
+              component="span"
+              sx={{ color: "#00CA52", fontWeight: "bold" }}
+            >
+              {product.price} ৳
+            </Typography>
+            <Typography
+              variant="caption"
+              color="text.secondary"
+              sx={{ textDecoration: "line-through" }}
+            >
+              {Math.round(product.price * 1.25)} ৳
+            </Typography>
+          </Box>
+
           <Button
-            component={Link}
-            to={`/product/${product._id}`}
-            variant="contained"
-            color="secondary"
             fullWidth
-            sx={{ color: "white" }}
-            startIcon={<FaJediOrder color="white" />}
+            variant="contained"
+            sx={{
+              backgroundColor: "#00CA52",
+              color: "white",
+              borderRadius: "8px",
+              textTransform: "none",
+              py: 1,
+              fontWeight: "bold",
+              gap: 1,
+              "&:hover": {
+                backgroundColor: "#00b548",
+              },
+            }}
           >
-            View Details
+            <FaInfoCircle /> View Details
           </Button>
-        </Box>
-      </CardContent>
+        </CardContent>
+      </Link>
     </Card>
   );
 };
